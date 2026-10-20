@@ -1,0 +1,136 @@
+================================================================================
+CASO DE PRUEBA: #CP-PUB-001
+================================================================================
+ID del caso de prueba : #CP-PUB-001
+Módulo : 1. Información (Home)
+Escenario de prueba : Carga y visualización correcta de la página principal (Home).
+Pasos de la prueba :
+1. El usuario abre el navegador y navega a la URL raíz del sitio web ('/').
+2. El usuario visualiza la barra de navegación pública y los enlaces principales.
+3. El usuario se desplaza por las secciones de información de la cancha, dimensiones y ubicación.
+4. El usuario verifica el pie de página con información de contacto.
+
+Requisitos previos : Servidor web y base de datos en funcionamiento con datos de contacto.
+Navegador : Chrome en Windows.
+Datos de prueba : URL: http://localhost/ (o dominio configurado).
+Resultados esperados : La página carga rápidamente sin errores, mostrando el nombre del negocio, características de la cancha sintética, dirección en Chinique, Guatemala y botón de inicio de sesión.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-PUB-002
+================================================================================
+ID del caso de prueba : #CP-PUB-002
+Módulo : 2. Horarios
+Escenario de prueba : Visualización de las tarjetas de Horario Semanal con día, fecha y rango de horas.
+Pasos de la prueba :
+1. El usuario hace clic en el enlace 'Horarios' en la barra de navegación o visita '/horarios'.
+2. El usuario observa la sección 'Horario Semanal'.
+3. El usuario verifica las 7 tarjetas correspondientes a los días de la semana.
+4. El usuario constata que cada tarjeta contenga el nombre del día, la fecha exacta y el horario de inicio y fin (ej. 06:00 - 23:00).
+5. El usuario verifica que no aparezcan contadores ni textos de 'horas ocupadas' en estas tarjetas.
+
+Requisitos previos : Horarios de atención configurados en la base de datos.
+Navegador : Chrome en Windows.
+Datos de prueba : Ruta pública /horarios.
+Resultados esperados : Se muestran las 7 tarjetas con día, fecha formateada y rango horario de atención, sin información de ocupación en las tarjetas semanales.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-PUB-003
+================================================================================
+ID del caso de prueba : #CP-PUB-003
+Módulo : 2. Horarios
+Escenario de prueba : Navegación por semanas (+2 semanas adicionales) en Horarios.
+Pasos de la prueba :
+1. El usuario se encuentra en la vista '/horarios' observando la 'Semana Actual'.
+2. El usuario hace clic en el botón 'Semana Siguiente →'.
+3. El usuario verifica que las fechas de las 7 tarjetas cambien a la semana inmediata posterior ('Próxima Semana').
+4. El usuario hace clic nuevamente en 'Semana Siguiente →' para observar la semana +2 ('En 2 Semanas').
+5. El usuario verifica que el botón de avanzar se inhabilite al alcanzar el límite de 2 semanas más.
+6. El usuario hace clic en '← Semana Anterior' para retroceder hasta la semana actual.
+
+Requisitos previos : Módulo de horarios cargado con datos de las 3 semanas.
+Navegador : Chrome en Windows.
+Datos de prueba : Interacción con botones de desplazamiento de semana.
+Resultados esperados : Las tarjetas de días y fechas se actualizan dinámicamente de forma fluida permitiendo explorar un total de 3 semanas (Semana actual + 2 semanas futuras).
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-PUB-004
+================================================================================
+ID del caso de prueba : #CP-PUB-004
+Módulo : 2. Horarios
+Escenario de prueba : Consulta de disponibilidad horaria por cuadros de 1 hora en Calendario Detallado.
+Pasos de la prueba :
+1. En la vista '/horarios', el usuario hace clic sobre una tarjeta de día (ej. Lunes o Sábado).
+2. El usuario observa la sección 'Calendario Detallado' que se actualiza para el día seleccionado.
+3. El usuario cuenta y examina los cuadros de horas individuales generados entre la hora de apertura y cierre.
+4. El usuario verifica que cada cuadro muestre:
+   - El rango de 1 hora (ej. '08:00 - 09:00', '19:00 - 20:00').
+   - El estado 'Disponible' con color verde si no tiene reservas o bloqueos.
+   - El estado 'No disponible' con color rojo si coincide con una reserva o bloqueo.
+5. El usuario comprueba que no se revele información privada de clientes.
+
+Requisitos previos : Base de datos con horarios y reservas de prueba.
+Navegador : Chrome en Windows.
+Datos de prueba : Selección de días con reservas confirmadas y días con espacios libres.
+Resultados esperados : La cuadrícula muestra exactamente un cuadro por cada bloque de 1 hora con su hora inicio-fin, estado claro y color representativo según disponibilidad.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-PUB-005
+================================================================================
+ID del caso de prueba : #CP-PUB-005
+Módulo : 3. Torneos
+Escenario de prueba : Visualización de Torneos públicos, premios y costos en Quetzales (Q.).
+Pasos de la prueba :
+1. El usuario navega a '/torneos'.
+2. El usuario observa las tarjetas de torneos (ej. 'Copa Amistad 2026', 'Liga Sub-20').
+3. El usuario verifica la descripción de premios y los costos de inscripción.
+4. El usuario revisa la tabla de posiciones del torneo en curso.
+
+Requisitos previos : Torneos registrados en estado 'en_curso' e 'inscripciones_abiertas'.
+Navegador : Chrome en Windows.
+Datos de prueba : Ruta pública /torneos.
+Resultados esperados : Se visualizan los torneos correctamente, con costos de inscripción expresados en Quetzales (Q.) y descripción de premios en Q., junto a la tabla de posiciones con partidos jugados, ganados, goles y puntos.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-PUB-006
+================================================================================
+ID del caso de prueba : #CP-PUB-006
+Módulo : 4. Anuncios
+Escenario de prueba : Visualización de noticias, promociones y eventos publicados.
+Pasos de la prueba :
+1. El usuario navega a la sección de 'Anuncios' o ingresa a '/anuncios'.
+2. El usuario examina las publicaciones, títulos, fechas y contenidos de los comunicados.
+
+Requisitos previos : Anuncios publicados en el sistema.
+Navegador : Chrome en Windows.
+Datos de prueba : Ruta pública /anuncios.
+Resultados esperados : Se muestran los comunicados activos o el mensaje de estado cuando no hay anuncios disponibles.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-PUB-007
+================================================================================
+ID del caso de prueba : #CP-PUB-007
+Módulo : 5. Contacto
+Escenario de prueba : Visualización de información de Contacto ubicada en Guatemala.
+Pasos de la prueba :
+1. El usuario hace clic en 'Contacto' en la barra de navegación o ingresa a '/contacto'.
+2. El usuario revisa la dirección física, teléfonos, horario de atención y mapa.
+3. El usuario verifica el prefijo telefónico (+502) y la ciudad (Chinique, Guatemala).
+
+Requisitos previos : Información de contacto configurada para Guatemala.
+Navegador : Chrome en Windows.
+Datos de prueba : Ruta pública /contacto.
+Resultados esperados : Se muestra la información institucional completa, teléfono con formato guatemalteco (+502) y ubicación en Chinique.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado

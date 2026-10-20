@@ -1,0 +1,31 @@
+// el diagrama esta hecho en codigo sirena mediante mermaid.
+
+---
+config:
+  theme: default
+  fontFamily: '''Merriweather Variable'', serif'
+---
+gantt
+    title Diagrama de Gantt del Proyecto
+    dateFormat  YYYY-MM-DD
+    axisFormat  %d %b
+
+    section Fases del Proyecto
+    Inicio del proyecto - entrevista dirigida :active, task1, 2026-07-21, 1d
+    Formulación de requerimientos            :task2, 2026-08-10, 5d
+    Autenticación y seguridad               :task3, 2026-08-15, 10d
+    Gestión de reservas                     :task4, 2026-08-20, 12d
+    Calendario y disponibilidad             :task5, 2026-08-25, 12d
+    Anuncios y noticias                     :task6, 2026-08-30, 12d
+    Torneos y campeonatos                   :task7, 2026-09-05, 10d
+    Equipos y jugadores                     :task8, 2026-09-12, 10d
+    Estadísticas y reportes                 :task9, 2026-09-18, 10d
+    Historial                               :task10, 2026-09-24, 8d
+    Configuración del sistema               :task11, 2026-09-28, 8d
+    Gestión de instalaciones                :task12, 2026-10-02, 7d
+    Tarifas y precios                       :task13, 2026-10-05, 6d
+    Bloqueos de cancha                      :task14, 2026-10-07, 6d
+    Galeria de imágenes                     :task15, 2026-10-10, 5d
+    Información de contacto                 :task16, 2026-10-12, 5d
+    Casos de prueba y planificación         :task17, 2026-09-08, 5d
+    Finalización del proyecto               :milestone, task18, 2026-10-21, 1d

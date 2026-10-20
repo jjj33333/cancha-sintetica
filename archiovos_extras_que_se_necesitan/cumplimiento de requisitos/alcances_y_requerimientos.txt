@@ -1,0 +1,56 @@
+1. Objetivos del Proyecto
+Objetivo General
+Desarrollar una aplicación web con Laravel que permita al dueño de una cancha sintética gestionar de forma eficiente su agenda de reservas, visualizar anuncios y torneos activos, y facilitar a los clientes la consulta del estado de disponibilidad de la cancha.
+Objetivos Específicos
+Permitir al dueño gestionar el calendario de reservas y visualizar a nombre de quién se ha realizado cada reserva.
+Mostrar a los clientes interesados un calendario público con las horas ocupadas y los nombres de los encargados de las mismas.
+Ofrecer una sección dedicada a anuncios y campeonatos activos en la cancha.
+Brindar al administrador un panel completo para gestionar toda la información del sistema.
+Asegurar la integridad y privacidad de los datos administrativos mediante un sistema de autenticación robusto.
+2. Alcance del Proyecto
+Funcionalidades para Visitantes/Clientes
+Visualización pública del calendario con las reservas confirmadas (nombre del responsable y hora).
+Consulta de anuncios y torneos activos.
+Funcionalidades para Administrador (Con Login)
+Autenticación segura.
+Gestión del calendario de reservas (agregar, editar, eliminar).
+Visualización de historial de reservas.
+Creación y edición de anuncios y campeonatos.
+Panel de control general con estadísticas básicas de uso de la cancha.
+No incluye
+Sistema de reservas en línea.
+Notificaciones push o por correo electrónico.
+Aplicación móvil.
+Sistema de pagos o integración con pasarelas.
+Registro de usuarios externos.
+3. Requerimientos del Proyecto
+Requisitos Funcionales (RF)
+ID
+Descripción
+RF-01
+El sistema debe mostrar un calendario público con las reservas confirmadas, indicando nombre del responsable y horario.
+RF-02
+El sistema debe permitir al administrador iniciar sesión.
+RF-03
+El sistema debe permitir al administrador gestionar reservas (crear, editar, eliminar).
+RF-04
+El sistema debe permitir al administrador gestionar anuncios y campeonatos.
+RF-05
+El sistema debe mostrar una sección pública con anuncios y campeonatos activos.
+RF-06
+El sistema debe registrar y mostrar el historial de reservas.
+RF-07
+El sistema debe incluir un panel de administración con estadísticas básicas.
+Requisitos No Funcionales (RNF)
+ID
+Descripción
+RNF-01
+La aplicación debe ser responsiva y funcionar correctamente en navegadores modernos.
+RNF-02
+El sistema debe garantizar la seguridad de las credenciales del administrador.
+RNF-03
+El sistema debe tener tiempos de respuesta aceptables (menos de 3 segundos).
+RNF-04
+La interfaz debe ser intuitiva para facilitar la administración.
+RNF-05
+El sistema debe permitir fácil mantenimiento y escalabilidad.

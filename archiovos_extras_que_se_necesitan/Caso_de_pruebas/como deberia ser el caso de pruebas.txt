@@ -1,0 +1,17 @@
+Crea un ejemplo de caso de prueba basado en un escenario específico. Aquí tienes un ejemplo.
+ID del caso de prueba : #BST001
+Escenario de prueba : Autenticar un inicio de sesión de usuario exitoso en Gmail.com.
+Pasos de la prueba:
+El usuario navega a Gmail.com.
+El usuario introduce una dirección de correo electrónico registrada en el campo 'correo electrónico'.
+El usuario hace clic en el botón 'Siguiente'.
+El usuario introduce la contraseña registrada.
+El usuario hace clic en 'Iniciar sesión'.
+
+Requisitos previos : Una cuenta de Gmail registrada con un nombre de usuario y una contraseña únicos.
+Navegador : hrome Dispositivo, Lenovo.
+Datos de prueba: Nombre de usuario y contraseña válidos.
+Resultados esperados: Una vez introducidos el nombre de usuario y la contraseña, la página web redirige a la bandeja de entrada del usuario, mostrando y destacando los nuevos correos electrónicos en la parte superior.
+Resultados reales: Como se esperaba
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+

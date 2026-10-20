@@ -1,0 +1,462 @@
+========================================================================================================================
+GUÍA TÉCNICA Y PLANIFICACIÓN DE DESPLIEGUE EN RAILWAY
+SISTEMA DE GESTIÓN DE CANCHA SINTÉTICA (LARAVEL 11 + MYSQL)
+========================================================================================================================
+Proyecto       : Cancha Sintética Deportiva
+Framework      : Laravel 11 (PHP 8.2+) + Vite (Tailwind CSS, Alpine.js)
+Motor BD       : MySQL 8.0 (XAMPP local -> Railway Managed MySQL)
+Plataforma     : Railway (railway.app)
+Elaborado por  : Josue
+Fecha          : Octubre 2026
+========================================================================================================================
+
+ÍNDICE DE CONTENIDOS:
+1. ARQUITECTURA GENERAL EN RAILWAY
+2. DETALLE DE CAMBIOS A REALIZAR (QUÉ SE MODIFICARÁ Y DÓNDE)
+   2.1. bootstrap/app.php (Configuración de Proxy Reverso)
+   2.2. app/Providers/AppServiceProvider.php (Forzado de HTTPS en Producción)
+   2.3. Dockerfile (Entorno de Ejecución en Contenedor)
+   2.4. docker/apache.conf (Configuración del DocumentRoot hacia /public)
+   2.5. docker/run.sh (Script de Inicialización y Caché)
+   2.6. .dockerignore (Optimización del Contexto de Construcción)
+   2.7. database/canchasintetica_backup.sql (Respaldo de Base de Datos para Migración)
+   2.8. .env.production.example (Plantilla de Variables de Entorno)
+3. PASO A PASO DETALLADO PARA SUBIR TODO A RAILWAY
+   3.1. Fase 1: Respaldo y Exportación de la Base de Datos Local
+   3.2. Fase 2: Creación del Proyecto y Servicio MySQL en Railway
+   3.3. Fase 3: Importación de los Datos a la Base de Datos en Railway
+   3.4. Fase 4: Preparación del Repositorio Git y Subida a GitHub
+   3.5. Fase 5: Conexión de GitHub con Railway y Creación del Servicio Web
+   3.6. Fase 6: Configuración de Variables de Entorno en Railway
+   3.7. Fase 7: Generación del Dominio Público y Verificación en Vivo
+4. RESOLUCIÓN DE PROBLEMAS FRECUENTES (TROUBLESHOOTING)
+
+========================================================================================================================
+1. ARQUITECTURA GENERAL EN RAILWAY
+========================================================================================================================
+
+Railway organiza las aplicaciones mediante "Proyectos", en los cuales se ejecutan servicios interconectados dentro
+de una red privada segura de alta velocidad (.railway.internal).
+
+Para nuestro sistema se aprovisionarán dos servicios dentro del mismo proyecto:
+
+[ SERVICIO 1: Base de Datos MySQL ]
+- Motor: MySQL 8.0 gestionado por Railway.
+- Red Privada: Accesible internamente por Laravel en el host 'mysql.railway.internal' en el puerto 3306.
+- Red Pública (TCP Proxy): Permite la conexión externa temporal mediante herramientas de escritorio (DBeaver,
+  HeidiSQL, MySQL Workbench o consola CMD) para importar la estructura y datos de XAMPP.
+
+[ SERVICIO 2: Aplicación Web Laravel 11 ]
+- Servidor: Contenedor Linux con PHP 8.2, Apache 2, Composer y extensiones de MySQL (pdo_mysql, mbstring, gd, bcmath).
+- Compilación de Frontend: Vite compila los estilos Tailwind CSS y scripts Alpine.js durante la fase de 'build'.
+- Servidor Web: Apache configurado con 'mod_rewrite' y apuntando al directorio raíz 'public/'.
+- Terminación SSL: Railway gestiona los certificados HTTPS automáticamente en el borde (Edge Proxy/Cloudflare).
+
+
+========================================================================================================================
+2. DETALLE DE CAMBIOS A REALIZAR (QUÉ SE MODIFICARÁ Y DÓNDE)
+========================================================================================================================
+
+Antes de subir el proyecto a producción, se deben preparar los siguientes archivos para que Laravel opere de forma
+óptima detrás del proxy de Railway y sirva los recursos con total seguridad.
+
+------------------------------------------------------------------------------------------------------------------------
+2.1. Archivo: bootstrap/app.php
+------------------------------------------------------------------------------------------------------------------------
+* Dónde: bootstrap/app.php
+* Por qué: Railway utiliza un proxy inverso para dirigir el tráfico de internet al contenedor. Si Laravel no confía
+  en este proxy, detecta las peticiones entrantes como HTTP simple (puerto 80 interno), provocando bucles de redirección,
+  fallas en redirecciones de login y errores de CORS/seguridad.
+* Cambio a realizar:
+  Agregar la directiva '$middleware->trustProxies(at: "*");' en la sección de middlewares.
+
+  [CÓDIGO ACTUAL]:
+  --------------------------------------------------------------------------------------
+  ->withMiddleware(function (Middleware $middleware) {
+      //
+  })
+  --------------------------------------------------------------------------------------
+
+  [CÓDIGO NUEVO]:
+  --------------------------------------------------------------------------------------
+  ->withMiddleware(function (Middleware $middleware) {
+      $middleware->trustProxies(at: '*');
+  })
+  --------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+2.2. Archivo: app/Providers/AppServiceProvider.php
+------------------------------------------------------------------------------------------------------------------------
+* Dónde: app/Providers/AppServiceProvider.php
+* Por qué: Cuando la aplicación se despliega en producción con HTTPS, todas las URLs generadas por Laravel (rutas,
+  enlaces de paginación, llamadas asset(), imágenes del storage) deben usar estrictamente 'https://'. De lo contrario,
+  los navegadores modernos bloquean los recursos por advertencia de "Contenido Mixto" (Mixed Content).
+* Cambio a realizar:
+  Forzar el esquema HTTPS en el método 'boot()' cuando el entorno sea de producción.
+
+  [CÓDIGO ACTUAL]:
+  --------------------------------------------------------------------------------------
+  public function boot(): void
+  {
+      Paginator::useTailwind();
+      Carbon::setLocale('es');
+  }
+  --------------------------------------------------------------------------------------
+
+  [CÓDIGO NUEVO]:
+  --------------------------------------------------------------------------------------
+  public function boot(): void
+  {
+      Paginator::useTailwind();
+      Carbon::setLocale('es');
+
+      if ($this->app->environment('production') || env('APP_ENV') === 'production') {
+          \Illuminate\Support\Facades\URL::forceScheme('https');
+      }
+  }
+  --------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+2.3. Archivo: Dockerfile (Archivo Nuevo en la Raíz)
+------------------------------------------------------------------------------------------------------------------------
+* Dónde: ./Dockerfile (en la raíz del proyecto)
+* Por qué: Railway detecta automáticamente un Dockerfile para compilar y ejecutar el proyecto exactamente con las
+  extensiones de PHP y la versión de Apache que necesita Laravel 11.
+* Cambio a realizar:
+  Crear el archivo Dockerfile con dos etapas (Multi-stage build):
+  1) Etapa Node.js: Instala dependencias npm y compila los assets con 'npm run build'.
+  2) Etapa PHP/Apache: Instala extensiones PHP (pdo_mysql, gd, zip, bcmath, intl), instala dependencias de Composer
+     optimizadas sin paquetes de desarrollo (--no-dev), copia los assets compilados y expone el puerto.
+
+  [CONTENIDO DEL DOCKERFILE]:
+  --------------------------------------------------------------------------------------
+  # Etapa 1: Compilación de Frontend con Node.js
+  FROM node:20-alpine AS node-builder
+  WORKDIR /app
+  COPY package*.json ./
+  RUN npm ci
+  COPY . .
+  RUN npm run build
+
+  # Etapa 2: Entorno de Producción PHP 8.2 con Apache
+  FROM php:8.2-apache
+
+  # Instalar dependencias del sistema y extensiones PHP
+  RUN apt-get update && apt-get install -y \
+      git \
+      curl \
+      libpng-dev \
+      libonig-dev \
+      libxml2-dev \
+      libzip-dev \
+      zip \
+      unzip \
+      && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip \
+      && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+  # Habilitar mod_rewrite de Apache
+  RUN a2enmod rewrite
+
+  # Instalar Composer
+  COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+  WORKDIR /var/www/html
+
+  # Copiar código fuente
+  COPY . .
+
+  # Copiar assets compilados de la etapa Node
+  COPY --from=node-builder /app/public/build ./public/build
+
+  # Instalar dependencias de PHP sin dependencias de desarrollo
+  RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+  # Configurar Apache DocumentRoot hacia /var/www/html/public
+  COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
+
+  # Permisos para almacenamiento y caché
+  RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+      && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+  # Copiar y preparar script de inicio
+  COPY docker/run.sh /usr/local/bin/run.sh
+  RUN chmod +x /usr/local/bin/run.sh
+
+  EXPOSE 80
+
+  ENTRYPOINT ["/usr/local/bin/run.sh"]
+  --------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+2.4. Archivo: docker/apache.conf (Archivo Nuevo)
+------------------------------------------------------------------------------------------------------------------------
+* Dónde: docker/apache.conf
+* Por qué: Por defecto, Apache sirve la carpeta raíz '/', exponiendo archivos delicados (.env, composer.json). En Laravel,
+  el servidor debe apuntar estrictamente al subdirectorio '/public'.
+* Cambio a realizar:
+  Crear 'docker/apache.conf' configurando el VirtualHost en el puerto 80 con 'AllowOverride All'.
+
+  [CONTENIDO DE docker/apache.conf]:
+  --------------------------------------------------------------------------------------
+  <VirtualHost *:80>
+      ServerAdmin webmaster@localhost
+      DocumentRoot /var/www/html/public
+
+      <Directory /var/www/html/public>
+          Options -Indexes +FollowSymLinks
+          AllowOverride All
+          Require all granted
+      </Directory>
+
+      ErrorLog ${APACHE_LOG_DIR}/error.log
+      CustomLog ${APACHE_LOG_DIR}/access.log combined
+  </VirtualHost>
+  --------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+2.5. Archivo: docker/run.sh (Archivo Nuevo)
+------------------------------------------------------------------------------------------------------------------------
+* Dónde: docker/run.sh
+* Por qué: Cada vez que el contenedor arranca en Railway, es necesario enlazar el almacenamiento público
+  ('storage:link'), limpiar y precachear configuraciones y arrancar Apache en primer plano.
+* Cambio a realizar:
+  Crear el script ejecutable 'docker/run.sh'.
+
+  [CONTENIDO DE docker/run.sh]:
+  --------------------------------------------------------------------------------------
+  #!/bin/bash
+  set -e
+
+  echo "==> Iniciando Cancha Sintética en Railway..."
+
+  # Enlace simbólico de storage
+  php artisan storage:link || true
+
+  # Optimización de caché para producción
+  php artisan config:cache
+  php artisan route:cache
+  php artisan view:cache
+
+  echo "==> Laravel optimizado correctamente. Arrancando Apache..."
+
+  # Iniciar servidor Apache en primer plano
+  exec apache2-foreground
+  --------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+2.6. Archivo: .dockerignore (Archivo Nuevo en la Raíz)
+------------------------------------------------------------------------------------------------------------------------
+* Dónde: ./.dockerignore
+* Por qué: Evita subir carpetas locales pesadas (vendor local de Windows, node_modules local, .git, .env local con
+  credenciales de XAMPP) al proceso de construcción de Railway, reduciendo el tiempo de build de 15 minutos a solo 2.
+* Cambio a realizar:
+  Crear el archivo '.dockerignore'.
+
+  [CONTENIDO DE .dockerignore]:
+  --------------------------------------------------------------------------------------
+  /vendor
+  /node_modules
+  /.git
+  .env
+  .env.*
+  !.env.example
+  /tests
+  npm-debug.log
+  yarn-error.log
+  .phpunit.result.cache
+  database/database.sqlite
+  --------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+2.7. Archivo: database/canchasintetica_backup.sql (Dump de la Base de Datos)
+------------------------------------------------------------------------------------------------------------------------
+* Dónde: database/canchasintetica_backup.sql
+* Por qué: En este proyecto la carpeta 'database/migrations' se encuentra vacía porque la estructura de tablas y datos
+  iniciales fueron cargados directamente en MySQL de XAMPP. Para que Railway disponga de todas las tablas (usuarios,
+  reservas, torneos, equipos, jugadores, partidos, instalaciones, tarifas, bloqueos, anuncios, etc.), se debe exportar
+  un volcado SQL completo e importarlo en la base de datos de Railway.
+* Cambio a realizar:
+  Generar el respaldo SQL desde la consola local usando el mysqldump de XAMPP:
+  c:\xampp\mysql\bin\mysqldump.exe -u root canchasintetica_db > database/canchasintetica_backup.sql
+
+------------------------------------------------------------------------------------------------------------------------
+2.8. Archivo: .env.production.example (Archivo de Referencia)
+------------------------------------------------------------------------------------------------------------------------
+* Dónde: .env.production.example
+* Por qué: Sirve como guía exacta de las variables que se deberán copiar y pegar en la sección "Variables" de Railway.
+
+
+========================================================================================================================
+3. PASO A PASO DETALLADO PARA SUBIR TODO A RAILWAY
+========================================================================================================================
+
+A continuación se detalla la secuencia ordenada para llevar a cabo el despliegue con éxito.
+
+------------------------------------------------------------------------------------------------------------------------
+3.1. Fase 1: Respaldo y Exportación de la Base de Datos Local
+------------------------------------------------------------------------------------------------------------------------
+1. Asegurarse de que el servicio MySQL de XAMPP esté encendido (running).
+2. Abrir una terminal de PowerShell en la carpeta raíz del proyecto ('c:\xampp\htdocs\cancha-sintetica').
+3. Ejecutar el siguiente comando para generar el volcado SQL con estructura y datos completos:
+   
+   c:\xampp\mysql\bin\mysqldump.exe -u root --default-character-set=utf8mb4 canchasintetica_db > database\canchasintetica_backup.sql
+
+4. Verificar que el archivo 'database\canchasintetica_backup.sql' se haya creado correctamente y no esté vacío.
+
+------------------------------------------------------------------------------------------------------------------------
+3.2. Fase 2: Creación del Proyecto y Servicio MySQL en Railway
+------------------------------------------------------------------------------------------------------------------------
+1. Ingresar a https://railway.app e iniciar sesión con su cuenta (o GitHub).
+2. En el panel principal (Dashboard), hacer clic en el botón "+ New Project".
+3. Seleccionar la opción "Provision MySQL".
+4. Railway creará de forma instantánea un servicio de base de datos MySQL 8.0.
+5. Hacer clic sobre la tarjeta del servicio MySQL recién creado:
+   - Ir a la pestaña "Variables": Aquí se observarán las credenciales generadas automáticamente:
+     * MYSQLHOST
+     * MYSQLPORT
+     * MYSQLUSER (habitualmente 'root')
+     * MYSQLPASSWORD
+     * MYSQLDATABASE (habitualmente 'railway')
+     * DATABASE_URL
+   - Ir a la pestaña "Settings":
+     * Bajar hasta la sección "Networking".
+     * En "Public Networking", hacer clic en "Generate Domain" o "Add TCP Proxy". Esto habilitará un host público
+       (por ejemplo: 'mysql.railway.internal' o 'roundhouse.proxy.rlwy.net') y un puerto público temporal (ejemplo: 45678).
+
+------------------------------------------------------------------------------------------------------------------------
+3.3. Fase 3: Importación de los Datos a la Base de Datos en Railway
+------------------------------------------------------------------------------------------------------------------------
+Con los datos de la red pública obtenidos en el paso anterior, importar el archivo SQL generado en la Fase 1.
+
+Opción A (Mediante Consola de Comandos CMD/PowerShell):
+Ejecutar el siguiente comando reemplazando los valores entre corchetes por los de su panel de Railway:
+
+c:\xampp\mysql\bin\mysql.exe -h [HOST_PÚBLICO] -P [PUERTO_PÚBLICO] -u [MYSQLUSER] -p[MYSQLPASSWORD] [MYSQLDATABASE] < database\canchasintetica_backup.sql
+
+(Nota: No debe haber espacio entre -p y la contraseña).
+
+Opción B (Mediante Gestor Gráfico: DBeaver, HeidiSQL o TablePlus - Recomendado):
+1. Abrir su gestor de bases de datos favorito.
+2. Crear una nueva conexión MySQL ingresando:
+   - Host: El host público proporcionado por Railway (ej. roundhouse.proxy.rlwy.net).
+   - Puerto: El puerto público asignado (ej. 45678).
+   - Usuario: root
+   - Contraseña: La contenida en MYSQLPASSWORD.
+   - Base de datos: railway
+3. Conectar a la base de datos.
+4. Hacer clic en "Ejecutar script SQL" o "Cargar archivo SQL", seleccionar 'database\canchasintetica_backup.sql' y ejecutar.
+5. Comprobar que todas las tablas aparezcan creadas con sus registros (usuarios, reservas, torneos, etc.).
+
+------------------------------------------------------------------------------------------------------------------------
+3.4. Fase 4: Preparación del Repositorio Git y Subida a GitHub
+------------------------------------------------------------------------------------------------------------------------
+1. Crear los archivos de despliegue detallados en la Sección 2 ('Dockerfile', 'docker/apache.conf', 'docker/run.sh', '.dockerignore').
+2. Aplicar los ajustes en 'bootstrap/app.php' y 'app/Providers/AppServiceProvider.php'.
+3. Añadir y confirmar todos los cambios en Git:
+   git add .
+   git commit -m "feat: configuracion y scripts de despliegue para Railway"
+4. Crear un repositorio en GitHub (público o privado) llamado 'cancha-sintetica' si aún no existe.
+5. Vincular y subir la rama principal:
+   git branch -M main
+   git remote add origin https://github.com/SU_USUARIO/cancha-sintetica.git
+   git push -u origin main
+
+------------------------------------------------------------------------------------------------------------------------
+3.5. Fase 5: Conexión de GitHub con Railway y Creación del Servicio Web
+------------------------------------------------------------------------------------------------------------------------
+1. Volver al proyecto en Railway donde ya reside el servicio MySQL.
+2. Hacer clic en "+ New" (en la esquina superior derecha del proyecto) para añadir un segundo servicio.
+3. Seleccionar "GitHub Repo".
+4. Elegir el repositorio que acaba de subir ('cancha-sintetica').
+5. Railway detectará inmediatamente el 'Dockerfile' y comenzará la preparación del servicio web.
+
+------------------------------------------------------------------------------------------------------------------------
+3.6. Fase 6: Configuración de Variables de Entorno en Railway
+------------------------------------------------------------------------------------------------------------------------
+1. Hacer clic sobre la tarjeta del servicio web Laravel en Railway.
+2. Ir a la pestaña "Variables".
+3. Hacer clic en "Raw Editor" (Editor masivo) o añadir una por una las siguientes variables:
+
+--------------------------------------------------------------------------------------
+APP_NAME="Cancha Sintetica Deportiva"
+APP_ENV=production
+APP_KEY=base64:xvu+aEMTRSwoynJG5Y1uXSd+Yt2CZlnWvE/sp9pv4j4=
+APP_DEBUG=false
+APP_URL=https://${{RAILWAY_PUBLIC_DOMAIN}}
+
+DB_CONNECTION=mysql
+DB_HOST=${{MySQL.MYSQLHOST}}
+DB_PORT=${{MySQL.MYSQLPORT}}
+DB_DATABASE=${{MySQL.MYSQLDATABASE}}
+DB_USERNAME=${{MySQL.MYSQLUSER}}
+DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}
+
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+SESSION_ENCRYPT=false
+
+CACHE_STORE=database
+QUEUE_CONNECTION=database
+FILESYSTEM_DISK=public
+
+LOG_CHANNEL=stderr
+LOG_LEVEL=info
+--------------------------------------------------------------------------------------
+
+IMPORTANTE SOBRE LAS VARIABLES:
+- '${{MySQL.MYSQLHOST}}', '${{MySQL.MYSQLPORT}}', etc. son variables dinámicas de Railway que se vinculan directamente
+  con el servicio de base de datos MySQL creado en la Fase 2, garantizando que si Railway reinicia o migra la BD,
+  la conexión nunca se perderá.
+- 'APP_KEY' puede ser la misma de su archivo local .env o una generada con 'php artisan key:generate --show'.
+- 'APP_URL=https://${{RAILWAY_PUBLIC_DOMAIN}}' toma automáticamente el dominio público generado por Railway.
+- 'LOG_CHANNEL=stderr' permite visualizar los errores y eventos de Laravel en tiempo real en la pestaña "Deploy Logs".
+
+------------------------------------------------------------------------------------------------------------------------
+3.7. Fase 7: Generación del Dominio Público y Verificación en Vivo
+------------------------------------------------------------------------------------------------------------------------
+1. En el servicio web de Laravel, ir a la pestaña "Settings".
+2. Bajar a la sección "Networking".
+3. En "Public Networking", hacer clic en "Generate Domain".
+   Railway creará un subdominio seguro gratuito (por ejemplo: 'cancha-sintetica-production.up.railway.app').
+4. Ir a la pestaña "Deployments" y hacer clic en el despliegue activo para ver los logs en tiempo real:
+   - Verá la compilación de Node.js con Vite ('npm run build').
+   - Verá la instalación de Composer ('composer install').
+   - Verá la ejecución de 'run.sh' aplicando 'php artisan config:cache', 'route:cache', 'storage:link'.
+   - Verá el inicio exitoso de Apache ('Apache/2.4... running').
+5. Abrir la URL generada en el navegador web:
+   - Probar la navegación pública (Inicio, Horarios, Torneos, Anuncios, Contacto).
+   - Probar el inicio de sesión con los tres roles:
+     * Administrador: admin@cancha.com / admin123
+     * Organizador  : carlos@org.com / org123
+     * Trabajador   : juan@cancha.com / trab123
+   - Probar la creación de una reserva y verificar que se refleje de inmediato en el calendario.
+
+
+========================================================================================================================
+4. RESOLUCIÓN DE PROBLEMAS FRECUENTES (TROUBLESHOOTING)
+========================================================================================================================
+
+[Problema 1: Error 500 al abrir la web]
+- Causa: Falta la clave 'APP_KEY' o las variables de base de datos están mal referenciadas.
+- Solución: Ir a la pestaña "Deploy Logs" en Railway. Si el error indica "No application encryption key has been specified",
+  verificar que 'APP_KEY' esté cargada en la pestaña Variables.
+
+[Problema 2: Error 403 Forbidden o pantalla en blanco]
+- Causa: El servidor Apache está intentando servir la raíz del proyecto en lugar de la carpeta 'public/'.
+- Solución: Confirmar que el archivo 'docker/apache.conf' tenga 'DocumentRoot /var/www/html/public' y que esté copiado
+  en '/etc/apache2/sites-available/000-default.conf' en el Dockerfile.
+
+[Problema 3: Las imágenes subidas (logos de equipos, galería, anuncios) devuelven error 404]
+- Causa: El enlace simbólico 'public/storage' no se ha creado o apunta a una ruta incorrecta.
+- Solución: En el script 'docker/run.sh' se incluye 'php artisan storage:link || true'. Adicionalmente, si desea que
+  las imágenes subidas por los usuarios persistan tras cada nuevo despliegue en Railway, se puede añadir un "Volume"
+  en la pestaña Settings del servicio web montado en '/var/www/html/storage/app/public'.
+
+[Problema 4: Error "Mixed Content" o estilos CSS/Vite rotos]
+- Causa: El navegador bloquea scripts y estilos que intentan cargar por 'http://' en lugar de 'https://'.
+- Solución: Asegurarse de tener 'URL::forceScheme("https");' en 'AppServiceProvider.php' y '$middleware->trustProxies(at: "*");'
+  en 'bootstrap/app.php'.
+
+========================================================================================================================
+FIN DE LA GUÍA DE DESPLIEGUE
+========================================================================================================================

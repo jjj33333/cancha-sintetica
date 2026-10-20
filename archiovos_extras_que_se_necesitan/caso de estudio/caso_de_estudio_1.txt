@@ -1,0 +1,84 @@
+// Caso de Estudio 1 - Rendimiento y Concurrencia en Reservas
+// Código en Graphviz (DOT)
+
+digraph CasoDeEstudio1 {
+    // Configuración general del gráfico
+    graph [
+        fontname="Arial",
+        fontsize=16,
+        rankdir="TB",
+        splines="ortho",
+        nodesep="0.3",
+        ranksep="0.3",
+        bgcolor="white",
+        margin="0"
+    ];
+
+    // Configuración general de los nodos
+    node [
+        shape=plaintext,
+        fontname="Arial",
+        margin="0"
+    ];
+
+    // Encabezado superior tipo banner
+    header [
+        label=<
+            <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="12" BGCOLOR="#0E3360" WIDTH="1000">
+                <TR>
+                    <TD ALIGN="LEFT"><FONT COLOR="white" POINT-SIZE="20"><B>Caso de estudio</B></FONT></TD>
+                </TR>
+            </TABLE>
+        >
+    ];
+
+    // Contenido principal: Situación y las 3 tarjetas
+    contenido [
+        label=<
+            <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="16" CELLPADDING="10" WIDTH="1000">
+                <!-- Fila de Situación -->
+                <TR>
+                    <TD COLSPAN="3" ALIGN="LEFT" CELLPADDING="10">
+                        <FONT COLOR="#0E3360" POINT-SIZE="15"><B>Situación: la consulta de disponibilidad de horarios se vuelve lenta durante el pico de 7:00 p. m.</B></FONT>
+                    </TD>
+                </TR>
+                <!-- Fila de las 3 Tarjetas -->
+                <TR>
+                    <!-- Tarjeta 1: Datos observados -->
+                    <TD BGCOLOR="#EDF6FD" BORDER="2" COLOR="#1976D2" CELLPADDING="18" WIDTH="300" VALIGN="TOP" ALIGN="LEFT">
+                        <FONT COLOR="#1976D2" POINT-SIZE="13"><B>Datos observados</B></FONT><BR/><BR/>
+                        <FONT COLOR="#333333" POINT-SIZE="11">
+                        CPU: 78%<BR/><BR/>
+                        Memoria: 88%<BR/><BR/>
+                        Latencia p95: 3.4 s<BR/><BR/>
+                        Errores 5xx: 6%
+                        </FONT>
+                    </TD>
+                    <!-- Tarjeta 2: Hipótesis -->
+                    <TD BGCOLOR="#FFF8F0" BORDER="2" COLOR="#F57C00" CELLPADDING="18" WIDTH="340" VALIGN="TOP" ALIGN="LEFT">
+                        <FONT COLOR="#E65100" POINT-SIZE="13"><B>Hipótesis</B></FONT><BR/><BR/>
+                        <FONT COLOR="#333333" POINT-SIZE="11">
+                        El alto número de consultas concurrentes<BR/>
+                        sobre las 3 semanas de horarios genera<BR/>
+                        sobrecarga en la base de datos por falta<BR/>
+                        de caché en la disponibilidad de slots.
+                        </FONT>
+                    </TD>
+                    <!-- Tarjeta 3: Acciones -->
+                    <TD BGCOLOR="#EDF9F2" BORDER="2" COLOR="#2E7D32" CELLPADDING="18" WIDTH="340" VALIGN="TOP" ALIGN="LEFT">
+                        <FONT COLOR="#2E7D32" POINT-SIZE="13"><B>Acciones</B></FONT><BR/><BR/>
+                        <FONT COLOR="#333333" POINT-SIZE="11">
+                        Implementar almacenamiento en caché<BR/>
+                        para los horarios semanales, optimizar<BR/>
+                        índices de reservas y monitorear la<BR/>
+                        reducción de latencia en horas pico.
+                        </FONT>
+                    </TD>
+                </TR>
+            </TABLE>
+        >
+    ];
+
+    // Conexión invisible para mantener el orden vertical
+    header -> contenido [style=invis];
+}

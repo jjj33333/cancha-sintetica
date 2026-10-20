@@ -1,0 +1,51 @@
+// este es un ejemplo hecho en grapiz.
+
+digraph CasosDePrueba {
+    // Configuración general del grafo
+    graph [
+        fontname="Arial",
+        fontsize=28,
+        label="Casos de Prueba",
+        labelloc="t",
+        labeljust="l",
+        rankdir="TB",
+        splines="ortho",
+        nodesep="0.2",
+        ranksep="0.2",
+        bgcolor="white"
+    ];
+
+    // Configuración general de los nodos (celdas de la tabla)
+    node [
+        shape=plaintext,
+        fontname="Arial",
+        fontsize=11,
+        margin="0"
+    ];
+
+    // Definición de la tabla usando HTML-like labels
+    tabla [
+        label=<
+            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#CCCCCC">
+                <!-- Fila de Encabezado (Fondo Azul Cian, Texto Blanco) -->
+                <TR>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>ID CASO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>DESCRPCIÓN/ ESCENARIO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>CONDICIÓN PREVIA</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>PASOS DE EJECUCIÓN</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>RESULTADO ESPERADO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>TIPOS DE PRUEBA</B></FONT></TD>
+                </TR>
+                <!-- Fila de Datos (Fondo Celeste Claro) -->
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-LOGIN-001</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Inicio de sesión exitoso con credenciales correctas.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">El usuario está registrado en la base de datos.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Ir a la página de login.<BR/>2. Ingresar correo válido.<BR/>3. Ingresar contraseña válida.<BR/>4. Hacer clic en "Entrar".</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">El sistema redirige al usuario a la pantalla de bienvenida / panel principal.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Positiva (Ruta ideal)</TD>
+                </TR>
+            </TABLE>
+        >
+    ];
+}

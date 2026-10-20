@@ -1,0 +1,79 @@
+// Planificación de Casos de Prueba - Módulo de Autenticación
+// Formato Graphviz DOT
+
+digraph CasosDePruebaAutenticacion {
+    graph [
+        fontname="Arial",
+        fontsize=24,
+        label="Planificación de Casos de Prueba - Módulo de Autenticación y Acceso",
+        labelloc="t",
+        labeljust="l",
+        rankdir="TB",
+        splines="ortho",
+        nodesep="0.2",
+        ranksep="0.2",
+        bgcolor="white"
+    ];
+
+    node [
+        shape=plaintext,
+        fontname="Arial",
+        fontsize=10,
+        margin="0"
+    ];
+
+    tabla [
+        label=<
+            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#CCCCCC">
+                <TR>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>ID CASO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>DESCRIPCIÓN / ESCENARIO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>CONDICIÓN PREVIA</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>PASOS DE EJECUCIÓN</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>RESULTADO ESPERADO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>TIPO DE PRUEBA</B></FONT></TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-AUTH-001</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Inicio de sesión exitoso como Administrador.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Usuario admin registrado (admin@cancha.com / admin123).</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Ir a página de inicio.<BR/>2. Abrir modal de login.<BR/>3. Ingresar email y password.<BR/>4. Hacer clic en "Iniciar Sesión".</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Redirección al panel de administración (/admin/dashboard).</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Positiva (Ruta ideal)</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">CP-AUTH-002</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Inicio de sesión exitoso como Organizador.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Usuario organizador registrado (carlos@org.com / org123).</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">1. Ir a página de inicio.<BR/>2. Abrir modal de login.<BR/>3. Ingresar email y password.<BR/>4. Hacer clic en "Iniciar Sesión".</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Redirección al panel de organizador (/organizador/dashboard).</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Positiva</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-AUTH-003</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Inicio de sesión exitoso como Trabajador.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Usuario trabajador registrado (maria@cancha.com / trab123).</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Ir a página de inicio.<BR/>2. Abrir modal de login.<BR/>3. Ingresar email y password.<BR/>4. Hacer clic en "Iniciar Sesión".</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Redirección al panel de trabajador (/trabajador/dashboard).</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Positiva</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">CP-AUTH-004</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Validación de error ante credenciales incorrectas.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Página web accesible.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">1. Abrir modal de login.<BR/>2. Ingresar correo no existente.<BR/>3. Ingresar clave errónea.<BR/>4. Enviar formulario.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Permanecer en la vista y mostrar mensaje de error de credenciales.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Negativa</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-AUTH-005</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Cierre de sesión seguro (Logout).</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Usuario autenticado en cualquier panel.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Hacer clic en el botón de "Cerrar Sesión".</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Sesión destruida y redirección a la página pública de inicio (/).</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Positiva</TD>
+                </TR>
+            </TABLE>
+        >
+    ];
+}

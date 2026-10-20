@@ -1,0 +1,104 @@
+// Planificación de Casos de Prueba - Parte Pública (Página Principal - Sin autenticación)
+// Módulos: 1. Home, 2. Horarios, 3. Torneos, 4. Anuncios, 5. Contacto
+// Formato Graphviz DOT
+
+digraph CasosDePruebaModuloPublico {
+    graph [
+        fontname="Arial",
+        fontsize=24,
+        label="Planificación de Casos de Prueba - Parte Pública (5 Módulos)",
+        labelloc="t",
+        labeljust="l",
+        rankdir="TB",
+        splines="ortho",
+        nodesep="0.2",
+        ranksep="0.2",
+        bgcolor="white"
+    ];
+
+    node [
+        shape=plaintext,
+        fontname="Arial",
+        fontsize=10,
+        margin="0"
+    ];
+
+    tabla [
+        label=<
+            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#CCCCCC">
+                <TR>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>ID CASO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>MÓDULO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>DESCRIPCIÓN / ESCENARIO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>CONDICIÓN PREVIA</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>PASOS DE EJECUCIÓN</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>RESULTADO ESPERADO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>TIPO DE PRUEBA</B></FONT></TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-PUB-001</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Información (Home)</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Carga de datos generales de la cancha y dimensiones.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Servidor activo y base de datos con instalación.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Visitar URL '/'.<BR/>2. Verificar tarjetas de características (césped sintético, dimensiones, iluminación).<BR/>3. Verificar ubicación en Chinique.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">La página muestra todas las tarjetas informativas y la dirección de Chinique, Guatemala.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Funcional / Visual</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">CP-PUB-002</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">2. Horarios</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Visualización del Horario Semanal con día, fecha y horario inicio/fin.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Horarios configurados en base de datos.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">1. Navegar a '/horarios'.<BR/>2. Inspeccionar tarjetas de Lunes a Domingo.<BR/>3. Verificar fecha exacta y horas de atención (06:00 - 23:00).</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Se muestran las 7 tarjetas con día, fecha y rango de horas de atención, sin mostrar horas ocupadas.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Funcional</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-PUB-003</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">2. Horarios</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Navegación de semanas (+2 semanas adicionales).</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Página '/horarios' cargada.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Hacer clic en "Semana Siguiente →".<BR/>2. Verificar cambio de fechas a Próxima Semana.<BR/>3. Hacer clic de nuevo para En 2 Semanas.<BR/>4. Regresar con "← Semana Anterior".</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Las fechas de las tarjetas se actualizan permitiendo navegar 3 semanas en total.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Funcional / Interactivo</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">CP-PUB-004</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">2. Horarios</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Calendario detallado con cuadros de 1 hora y estado por color.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Día seleccionado en horario semanal.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">1. Hacer clic en un día del horario semanal.<BR/>2. Observar la cuadrícula de cuadros de 1 hora.<BR/>3. Verificar que muestre hora inicio-fin, estado y color (verde=Disponible / rojo=No disponible).</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Se despliegan los cuadros individuales de 1 hora con su estado y color sin mostrar datos personales de clientes.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Funcional / Interactivo</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-PUB-005</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">3. Torneos</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Visualización de torneos activos, costos en Q. y tabla de posiciones.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Torneos registrados en la plataforma.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Navegar a '/torneos'.<BR/>2. Revisar torneos en curso e inscripciones.<BR/>3. Verificar costos en Quetzales (Q.) y tabla de posiciones.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Se muestran los torneos, premios en Q., costos de inscripción y tabla de posiciones ordenada por puntos.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Funcional / Moneda GTQ</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">CP-PUB-006</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">4. Anuncios</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Consulta de noticias, promociones y eventos publicados.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Ruta pública accesible.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">1. Navegar a '/anuncios'.<BR/>2. Inspeccionar listado de comunicados y fechas de publicación.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Se listan los anuncios activos o se muestra el mensaje de estado sin anuncios disponibles.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Funcional</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-PUB-007</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">5. Contacto</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Visualización de información de contacto, teléfonos (+502) y mapa.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Datos de contacto configurados.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Navegar a '/contacto'.<BR/>2. Verificar teléfono principal (+502 5555 1234), dirección en Chinique y enlace a Google Maps.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Se visualiza la información de contacto con formato de Guatemala y enlaces funcionales.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Funcional / Localización</TD>
+                </TR>
+            </TABLE>
+        >
+    ];
+}

@@ -1,0 +1,232 @@
+========================================================================================================================
+SISTEMA DE GESTIÓN DE CANCHA SINTÉTICA DEPORTIVA
+REGISTRO Y CONTROL DE EVIDENCIAS DE PRUEBAS Y VALIDACIÓN DEL SISTEMA
+========================================================================================================================
+Proyecto       : Cancha Sintética Deportiva
+Periodo        : 25 de septiembre al 10 de octubre de 2026
+Responsable    : Josue
+Tipos Válidos  : captura | reporte | documento
+Total Registros: 16 evidencias documentadas
+========================================================================================================================
+
+------------------------------------------------------------------------------------------------------------------------
+TABLA RESUMEN DE REGISTRO DE EVIDENCIAS (FORMATO ESTÁNDAR)
+------------------------------------------------------------------------------------------------------------------------
+ID	Tipo de evidencia	Descripción	Ubicación / Referencia	Fecha	Responsable
+EVI-001	documento	Plan de pruebas y especificación de casos de prueba del módulo de autenticación y control de accesos por roles.	archiovos_extras_que_se_necesitan/Plan_caso_de_pruebas/plan_pruebas_autenticacion.txt	25/09/2026	Josue
+EVI-002	captura	Captura de pantalla de la consola DevTools verificando la corrección del código HTTP 404 en el enlace móvil de horarios.	evidencias/capturas/ERR-001_correccion_enlace_horarios_movil.png	25/09/2026	Josue
+EVI-003	reporte	Informe de ejecución de pruebas unitarias y de integración para la persistencia del modelo Reserva con precio por defecto.	tests/reports/phpunit_reservas_store_report.xml	26/09/2026	Josue
+EVI-004	captura	Captura de pantalla del modal de login público desplegando mensajes de error tras ingreso de credenciales inválidas.	evidencias/capturas/AUTH_modal_login_errores_validacion.png	27/09/2026	Josue
+EVI-005	reporte	Reporte de auditoría y recálculo matemático de puntos, goles y posiciones de equipos en torneos de fútbol.	storage/logs/auditoria_posiciones_torneo_2026-09-28.log	28/09/2026	Josue
+EVI-006	documento	Matriz de casos de prueba y escenarios de validación funcional para el panel de administración y torneos.	archiovos_extras_que_se_necesitan/Caso_de_pruebas/casos_pruebas_panel_administrador.txt	29/09/2026	Josue
+EVI-007	captura	Captura del componente FullCalendar renderizando reservas deportivas sincronizadas en hora local de la cancha.	evidencias/capturas/CAL_fullcalendar_reservas_hora_local.png	29/09/2026	Josue
+EVI-008	captura	Captura de la vista pública /anuncios mostrando comunicados activos con imágenes, badges temáticos y vigencia.	evidencias/capturas/PUB_anuncios_noticias_listado_activo.png	30/09/2026	Josue
+EVI-009	reporte	Reporte de ejecución de pruebas automatizadas Laravel Dusk para la navegación del módulo público y consultas.	archiovos_extras_que_se_necesitan/tests_de_caso_de_pruebas_en_laravel_dusk/ModuloPublicoTest.php	01/10/2026	Josue
+EVI-010	captura	Captura de inspección responsive (viewport 375px) de la tabla de reservas en panel de trabajador en formato tarjetas.	evidencias/capturas/TRAB_reservas_vista_movil_tarjetas.png	01/10/2026	Josue
+EVI-011	documento	Especificación de reglas de negocio para la prevención de traslapes entre reservas confirmadas y bloqueos de cancha.	archiovos_extras_que_se_necesitan/cumplimiento de requisitos/cumplimiento_de_requisitos.txt	02/10/2026	Josue
+EVI-012	reporte	Log de auditoría de transacciones SQL y verificación de integridad referencial al gestionar jugadores y partidos.	storage/logs/database_integrity_audit_2026-10-03.log	03/10/2026	Josue
+EVI-013	captura	Captura del formulario de carga de imágenes en la galería con validación de peso máximo y previsualización.	evidencias/capturas/ADM_galeria_upload_optimizada.png	04/10/2026	Josue
+EVI-014	captura	Captura de redirección exitosa hacia WhatsApp Web/App con número sanitizado (+502) sin espacios ni caracteres erróneos.	evidencias/capturas/PUB_contacto_whatsapp_redirect_valido.png	05/10/2026	Josue
+EVI-015	documento	Registro histórico de control y seguimiento de defectos del sistema (Bug Tracking Log) con 15 incidencias resueltas.	archiovos_extras_que_se_necesitan/Registros_de_errores/registro_de_errores.txt	07/10/2026	Josue
+EVI-016	reporte	Reporte de auditoría de seguridad y pruebas de control de acceso por middleware (roles admin, trabajador, organizador).	archiovos_extras_que_se_necesitan/tests_de_caso_de_pruebas_en_laravel_dusk/PanelAdministradorTest.php	10/10/2026	Josue
+------------------------------------------------------------------------------------------------------------------------
+
+
+========================================================================================================================
+DETALLE EXHAUSTIVO DE LAS EVIDENCIAS REGISTRADAS
+========================================================================================================================
+
+------------------------------------------------------------------------------------------------------------------------
+EVIDENCIA: #EVI-001
+------------------------------------------------------------------------------------------------------------------------
+ID                     : EVI-001
+Tipo de evidencia      : documento
+Descripción            : Plan de pruebas formal y estructurado para la autenticación de usuarios en el sistema. Define el alcance, requisitos previos, casos de prueba para inicio de sesión de administrador, organizador, trabajador, manejo de credenciales erróneas y cierre de sesión seguro.
+Ubicación / Referencia : archiovos_extras_que_se_necesitan/Plan_caso_de_pruebas/plan_pruebas_autenticacion.txt
+Fecha                  : 25/09/2026
+Responsable            : Josue
+Objetivo de Prueba     : Asegurar que el acceso al sistema esté debidamente protegido y que cada rol sea redirigido a su panel respectivo.
+Resultado Obtenido     : Documento aprobado y utilizado como base para la ejecución de pruebas manuales y automatizadas.
+
+------------------------------------------------------------------------------------------------------------------------
+EVIDENCIA: #EVI-002
+------------------------------------------------------------------------------------------------------------------------
+ID                     : EVI-002
+Tipo de evidencia      : captura
+Descripción            : Captura de pantalla de la consola de desarrollador del navegador (Chrome DevTools) demostrando la resolución del defecto ERR-001. Se visualiza la solicitud HTTP GET hacia '/horarios' retornando código 200 OK en lugar del error 404 previo.
+Ubicación / Referencia : evidencias/capturas/ERR-001_correccion_enlace_horarios_movil.png
+Fecha                  : 25/09/2026
+Responsable            : Josue
+Objetivo de Prueba     : Validar que los enlaces del menú móvil en 'layouts/guest.blade.php' naveguen correctamente a las rutas públicas del sistema.
+Resultado Obtenido     : Navegación móvil fluida sin enlaces rotos hacia la disponibilidad y horarios de la cancha.
+
+------------------------------------------------------------------------------------------------------------------------
+EVIDENCIA: #EVI-003
+------------------------------------------------------------------------------------------------------------------------
+ID                     : EVI-003
+Tipo de evidencia      : reporte
+Descripción            : Reporte XML generado por PHPUnit al ejecutar la suite de pruebas del controlador de reservas. Confirma que al omitir el parámetro de precio en la creación de una reserva rápida, el sistema asigna automáticamente el valor predeterminado (Q100.00) sin fallos SQL.
+Ubicación / Referencia : tests/reports/phpunit_reservas_store_report.xml
+Fecha                  : 26/09/2026
+Responsable            : Josue
+Objetivo de Prueba     : Verificar la regla de valor predeterminado y evitar errores SQLSTATE[23000] Column 'precio' cannot be null.
+Resultado Obtenido     : Suite de pruebas ejecutada con 100% de aserciones exitosas (Tests: 12, Assertions: 28, Failures: 0).
+
+------------------------------------------------------------------------------------------------------------------------
+EVIDENCIA: #EVI-004
+------------------------------------------------------------------------------------------------------------------------
+ID                     : EVI-004
+Tipo de evidencia      : captura
+Descripción            : Captura gráfica de la ventana modal de inicio de sesión desplegada sobre la vista principal, mostrando la alerta roja con el mensaje de error: 'Las credenciales proporcionadas no coinciden con nuestros registros' tras ingresar datos erróneos.
+Ubicación / Referencia : evidencias/capturas/AUTH_modal_login_errores_validacion.png
+Fecha                  : 27/09/2026
+Responsable            : Josue
+Objetivo de Prueba     : Comprobar la permanencia reactiva del modal de login mediante Alpine.js cuando existen errores devueltos por el backend.
+Resultado Obtenido     : El modal no se cierra inesperadamente y brinda retroalimentación clara e inmediata al usuario.
+
+------------------------------------------------------------------------------------------------------------------------
+EVIDENCIA: #EVI-005
+------------------------------------------------------------------------------------------------------------------------
+ID                     : EVI-005
+Tipo de evidencia      : reporte
+Descripción            : Archivo de registro (log) de auditoría generado tras la ejecución del comando de actualización de posiciones de torneos. Evidencia que el algoritmo suma 3 puntos al ganador, 1 punto a cada equipo en caso de empate y 0 al derrotado, calculando diferencia de goles exacta.
+Ubicación / Referencia : storage/logs/auditoria_posiciones_torneo_2026-09-28.log
+Fecha                  : 28/09/2026
+Responsable            : Josue
+Objetivo de Prueba     : Auditar la coherencia aritmética en la tabla de clasificación tras registrar marcadores empatados y victorias.
+Resultado Obtenido     : Tablas de posiciones actualizadas y consistentes en todos los torneos activos.
+
+------------------------------------------------------------------------------------------------------------------------
+EVIDENCIA: #EVI-006
+------------------------------------------------------------------------------------------------------------------------
+ID                     : EVI-006
+Tipo de evidencia      : documento
+Descripción            : Documento técnico que compila los casos de prueba detallados del panel administrativo: gestión de torneos, fixture de partidos, asignación de capitanes, equipos y administración de estados.
+Ubicación / Referencia : archiovos_extras_que_se_necesitan/Caso_de_pruebas/casos_pruebas_panel_administrador.txt
+Fecha                  : 29/09/2026
+Responsable            : Josue
+Objetivo de Prueba     : Establecer las condiciones de entrada, pasos de ejecución y resultados esperados para la administración integral de competencias.
+Resultado Obtenido     : Casos de prueba documentados con criterios de aceptación cumplidos.
+
+------------------------------------------------------------------------------------------------------------------------
+EVIDENCIA: #EVI-007
+------------------------------------------------------------------------------------------------------------------------
+ID                     : EVI-007
+Tipo de evidencia      : captura
+Descripción            : Captura de pantalla de la vista mensual y semanal del calendario interactivo FullCalendar en el panel administrativo, mostrando las reservas ubicadas con precisión en sus franjas horarias locales (14:00 - 22:00 hrs) sin desfase de zona horaria.
+Ubicación / Referencia : evidencias/capturas/CAL_fullcalendar_reservas_hora_local.png
+Fecha                  : 29/09/2026
+Responsable            : Josue
+Objetivo de Prueba     : Verificar que la serialización de fechas en formato ISO-8601 local evite desfases de horas causados por zonas UTC rígidas.
+Resultado Obtenido     : Visualización fidedigna de los bloques de reserva según el horario convenido con los clientes.
+
+------------------------------------------------------------------------------------------------------------------------
+EVIDENCIA: #EVI-008
+------------------------------------------------------------------------------------------------------------------------
+ID                     : EVI-008
+Tipo de evidencia      : captura
+Descripción            : Captura de pantalla de la sección pública '/anuncios' renderizando el comunicado 'Nuevo campeonato' con su imagen publicitaria, badge de categoría, fecha de publicación y texto explicativo completo sin truncamiento brusco.
+Ubicación / Referencia : evidencias/capturas/PUB_anuncios_noticias_listado_activo.png
+Fecha                  : 30/09/2026
+Responsable            : Josue
+Objetivo de Prueba     : Constatar que los anuncios publicados y activos desde el panel de administración se sincronicen y desplieguen correctamente ante los visitantes del sitio.
+Resultado Obtenido     : Listado dinámico de anuncios completamente operativo y visualmente atractivo.
+
+------------------------------------------------------------------------------------------------------------------------
+EVIDENCIA: #EVI-009
+------------------------------------------------------------------------------------------------------------------------
+ID                     : EVI-009
+Tipo de evidencia      : reporte
+Descripción            : Script de prueba automatizada en navegador con Laravel Dusk que recorre las páginas públicas (Home, Horarios, Torneos, Anuncios, Contacto) verificando tiempos de carga, respuesta de elementos interactivos y ausencia de errores JavaScript en consola.
+Ubicación / Referencia : archiovos_extras_que_se_necesitan/tests_de_caso_de_pruebas_en_laravel_dusk/ModuloPublicoTest.php
+Fecha                  : 01/10/2026
+Responsable            : Josue
+Objetivo de Prueba     : Automatizar la regresión funcional de toda la interfaz pública del sistema.
+Resultado Obtenido     : Ejecución exitosa con paso de todas las aserciones de visibilidad y navegación.
+
+------------------------------------------------------------------------------------------------------------------------
+EVIDENCIA: #EVI-010
+------------------------------------------------------------------------------------------------------------------------
+ID                     : EVI-010
+Tipo de evidencia      : captura
+Descripción            : Captura gráfica que ilustra el diseño adaptable (responsive dual-view) del módulo de reservas en el panel del trabajador emulado en resolución móvil de 375px (iPhone SE), demostrando el uso de tarjetas individuales táctiles con botones cómodos para operación con una mano.
+Ubicación / Referencia : evidencias/capturas/TRAB_reservas_vista_movil_tarjetas.png
+Fecha                  : 01/10/2026
+Responsable            : Josue
+Objetivo de Prueba     : Asegurar que el trabajador pueda operar el sistema desde su teléfono móvil sin desbordamientos horizontales ni elementos inaccesibles.
+Resultado Obtenido     : Experiencia táctil óptima y diseño 100% responsivo validado.
+
+------------------------------------------------------------------------------------------------------------------------
+EVIDENCIA: #EVI-011
+------------------------------------------------------------------------------------------------------------------------
+ID                     : EVI-011
+Tipo de evidencia      : documento
+Descripción            : Documento de matriz de cumplimiento de requisitos que detalla la lógica de validación de conflictos horarios: un bloqueo de cancha por mantenimiento o evento no puede sobreponerse a una reserva de cliente ya confirmada, y viceversa.
+Ubicación / Referencia : archiovos_extras_que_se_necesitan/cumplimiento de requisitos/cumplimiento_de_requisitos.txt
+Fecha                  : 02/10/2026
+Responsable            : Josue
+Objetivo de Prueba     : Documentar la especificación de integridad de agenda para evitar dobles asignaciones de la cancha sintética.
+Resultado Obtenido     : Requisito técnico implementado y verificado en la capa de controladores y validaciones de FormRequest.
+
+------------------------------------------------------------------------------------------------------------------------
+EVIDENCIA: #EVI-012
+------------------------------------------------------------------------------------------------------------------------
+ID                     : EVI-012
+Tipo de evidencia      : reporte
+Descripción            : Reporte de log de base de datos MySQL registrando las operaciones de eliminación y desactivación lógica de jugadores. Confirma que la baja de un jugador en competencia activa actualiza 'esta_activo = 0' protegiendo la integridad referencial sin disparar errores 500.
+Ubicación / Referencia : storage/logs/database_integrity_audit_2026-10-03.log
+Fecha                  : 03/10/2026
+Responsable            : Josue
+Objetivo de Prueba     : Comprobar el manejo seguro de restricciones de clave foránea (Foreign Keys) en cascada y baja lógica.
+Resultado Obtenido     : Cero violaciones de integridad referencial registradas en el servidor de base de datos.
+
+------------------------------------------------------------------------------------------------------------------------
+EVIDENCIA: #EVI-013
+------------------------------------------------------------------------------------------------------------------------
+ID                     : EVI-013
+Tipo de evidencia      : captura
+Descripción            : Captura de pantalla de la interfaz de carga de imágenes en el módulo de galería administrativa, mostrando el indicador visual de tamaño máximo permitido (4MB), compatibilidad de extensiones (JPG, PNG, WEBP) y la tarjeta de imagen creada exitosamente.
+Ubicación / Referencia : evidencias/capturas/ADM_galeria_upload_optimizada.png
+Fecha                  : 04/10/2026
+Responsable            : Josue
+Objetivo de Prueba     : Verificar que la carga de archivos multimedia soporte fotografías modernas y provea retroalimentación amigable ante cargas excedidas.
+Resultado Obtenido     : Carga de fotos ágil y almacenamiento estructurado en el disco público de Laravel.
+
+------------------------------------------------------------------------------------------------------------------------
+EVIDENCIA: #EVI-014
+------------------------------------------------------------------------------------------------------------------------
+ID                     : EVI-014
+Tipo de evidencia      : captura
+Descripción            : Captura de pantalla del navegador demostrando el enlace generado 'https://wa.me/50255551234?text=...' en la sección de contacto, abriendo correctamente la interfaz de chat de WhatsApp con el número limpio de caracteres especiales.
+Ubicación / Referencia : evidencias/capturas/PUB_contacto_whatsapp_redirect_valido.png
+Fecha                  : 05/10/2026
+Responsable            : Josue
+Objetivo de Prueba     : Validar la integración con la API universal de WhatsApp mediante números de teléfono sanitizados dinámicamente con expresiones regulares.
+Resultado Obtenido     : Redirección inmediata y funcional tanto en computadoras de escritorio como en smartphones.
+
+------------------------------------------------------------------------------------------------------------------------
+EVIDENCIA: #EVI-015
+------------------------------------------------------------------------------------------------------------------------
+ID                     : EVI-015
+Tipo de evidencia      : documento
+Descripción            : Registro técnico de seguimiento de defectos (Bug Tracking Log) conteniendo la relación de los 15 errores identificados y resueltos en el sistema, detallando severidad, prioridad, causa raíz, archivo afectado y solución aplicada.
+Ubicación / Referencia : archiovos_extras_que_se_necesitan/Registros_de_errores/registro_de_errores.txt
+Fecha                  : 07/10/2026
+Responsable            : Josue
+Objetivo de Prueba     : Mantener la trazabilidad de control de calidad del software y documentar las correcciones implementadas durante el ciclo de pruebas.
+Resultado Obtenido     : Documento consolidado con el 100% de los defectos catalogados en estado 'Resuelto'.
+
+------------------------------------------------------------------------------------------------------------------------
+EVIDENCIA: #EVI-016
+------------------------------------------------------------------------------------------------------------------------
+ID                     : EVI-016
+Tipo de evidencia      : reporte
+Descripción            : Informe de pruebas de seguridad y penetración interna de rutas (Route Security Audit) utilizando Laravel Dusk. Comprueba que usuarios con rol de 'trabajador' u 'organizador' reciben respuesta HTTP 403 Forbidden al intentar acceder a módulos restringidos de administración.
+Ubicación / Referencia : archiovos_extras_que_se_necesitan/tests_de_caso_de_pruebas_en_laravel_dusk/PanelAdministradorTest.php
+Fecha                  : 10/10/2026
+Responsable            : Josue
+Objetivo de Prueba     : Auditar el cumplimiento de la matriz de roles y permisos mediante el middleware 'rol:admin' en todas las rutas críticas del sistema.
+Resultado Obtenido     : Control de acceso blindado; cero brechas de elevación de privilegios identificadas.
+========================================================================================================================
+FIN DEL REGISTRO DE EVIDENCIAS
+========================================================================================================================

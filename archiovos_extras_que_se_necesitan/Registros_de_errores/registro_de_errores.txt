@@ -1,0 +1,263 @@
+========================================================================================================================
+SISTEMA DE GESTIÓN DE CANCHA SINTÉTICA DEPORTIVA
+REGISTRO Y CONTROL DE DEFECTOS / ERRORES DEL SISTEMA (BUG TRACKING LOG)
+========================================================================================================================
+Proyecto      : Cancha Sintética Deportiva
+Periodo       : 25 de septiembre al 10 de octubre de 2026
+Responsable   : Josue
+Total Errores : 15 defectos documentados y resueltos
+========================================================================================================================
+
+------------------------------------------------------------------------------------------------------------------------
+TABLA RESUMEN DE REGISTRO DE DEFECTOS (FORMATO ESTÁNDAR)
+------------------------------------------------------------------------------------------------------------------------
+ID	Fecha	Descripción del defecto	Severidad	Prioridad	Estado	Responsable	Evidencia
+ERR-001	25/09/2026	Error 404 Not Found al hacer clic en el enlace 'Horarios' desde el menú móvil debido a un typo en el atributo href (/horario en lugar de /horarios).	Alta	Alta	Resuelto	Josue	Consola del navegador arrojando HTTP 404 en GET http://127.0.0.1:8000/horario al interactuar con el menú móvil de guest.blade.php.
+ERR-002	26/09/2026	Error SQLSTATE[23000] Column 'precio' cannot be null al crear una reserva manual rápida en el panel administrativo sin costo definido.	Crítica	Urgente	Resuelto	Josue	Pantalla de excepción Laravel Ignition 500 en ReservasController@store al ejecutar Reserva::create() con valor nulo.
+ERR-003	27/09/2026	El modal de login público se cerraba automáticamente sin mostrar mensajes de error cuando el usuario ingresaba credenciales inválidas.	Media	Media	Resuelto	Josue	Directiva Alpine.js x-show="openLoginModal" restablecida en false durante el ciclo de redirección con errores de validación ($errors->any()).
+ERR-004	28/09/2026	Discrepancia en tabla de posiciones de torneos: los equipos empatados no sumaban 1 punto al registrar el resultado de un partido finalizado.	Alta	Alta	Resuelto	Josue	Registro en base de datos en tabla equipos_torneo con partidos_empatados = 1 pero puntos = 0 en el cálculo de PosicionesController.
+ERR-005	29/09/2026	Desfase de zona horaria en FullCalendar: las reservas se renderizaban con 6 horas de adelanto respecto a la hora local de la cancha.	Media	Alta	Resuelto	Josue	Payload JSON de eventos enviado en formato UTC (Z) sin ajuste al huso horario local en el controlador CalendarioController.
+ERR-006	30/09/2026	Los anuncios creados por el administrador no se mostraban en la vista pública /anuncios por tener el campo esta_publicado en false por defecto.	Alta	Alta	Resuelto	Josue	Consulta Anuncio::publicos()->get() retornando colección vacía [] a pesar de existir registros con mostrar_en_publico = true en BD.
+ERR-007	01/10/2026	Desbordamiento horizontal (horizontal scroll overflow) en la tabla de reservas del panel de trabajador en pantallas móviles (< 640px).	Baja	Media	Resuelto	Josue	Inspección visual en DevTools (375px) con ancho de tabla superior a 780px, provocando corte de botones de acción y salto de contenedor.
+ERR-008	02/10/2026	El sistema permitía registrar un bloqueo de cancha en una fecha y rango de horas donde ya existía una reserva confirmada previa.	Crítica	Urgente	Resuelto	Josue	Registros colisionados en la base de datos para la cancha principal el día 02/10/2026 entre las 18:00 y 20:00 hrs sin validación de cruce.
+ERR-009	03/10/2026	Error 500 de integridad referencial al intentar eliminar un jugador asignado a un partido programado en el panel del organizador.	Alta	Alta	Resuelto	Josue	QueryException: Integrity constraint violation 1451 Cannot delete or update a parent row al ejecutar destroy() en JugadoresController.
+ERR-010	04/10/2026	Error 413 Payload Too Large al cargar fotografías en formato WEBP o PNG mayores a 2MB en el módulo de galería de imágenes.	Media	Media	Resuelto	Josue	Respuesta HTTP 413 generada por el servidor web y caída del formulario sin retroalimentación amigable ni validación previa en FormRequest.
+ERR-011	05/10/2026	El enlace directo de WhatsApp en la sección de contacto fallaba con error 'Phone number is invalid' por incluir guiones y espacios en blanco.	Media	Media	Resuelto	Josue	Enlace generado https://wa.me/+502 5555-1234 rechazado por el protocolo de WhatsApp al no sanitizar la cadena con regex.
+ERR-012	06/10/2026	El formulario de tarifas y precios permitía ingresar valores numéricos negativos debido a una regla de validación deficiente.	Alta	Alta	Resuelto	Josue	Persistencia exitosa de tarifa con precio_por_hora = -75.00 en base de datos, generando cálculos erróneos en reservas automáticas.
+ERR-013	07/10/2026	El modal para registrar marcador de partidos en el panel del organizador no se cerraba al presionar la tecla Escape ni al pulsar el fondo.	Baja	Baja	Resuelto	Josue	Ausencia de escucha del evento keydown en el script del modal y falta de disparador cerrarModalResultado() en el backdrop oscuro.
+ERR-014	08/10/2026	Error 404 al visualizar el detalle de una instalación inactiva desde el panel administrativo por aplicación estricta de scope global.	Media	Media	Resuelto	Josue	ModelNotFoundException disparada por el Route Model Binding en /admin/instalaciones/{id} al omitir el modificador withTrashed/activas.
+ERR-015	10/10/2026	Falla de autorización: un usuario con rol de trabajador podía ingresar a /admin/configuracion por omisión del middleware de rol específico.	Crítica	Urgente	Resuelto	Josue	Petición HTTP GET con credenciales de trabajador retornando estado 200 OK en lugar de redirección o 403 Forbidden.
+------------------------------------------------------------------------------------------------------------------------
+
+
+========================================================================================================================
+DETALLE EXHAUSTIVO DE DEFECTOS Y ACCIONES CORRECTIVAS
+========================================================================================================================
+
+------------------------------------------------------------------------------------------------------------------------
+DEFECTO: #ERR-001
+------------------------------------------------------------------------------------------------------------------------
+ID                      : ERR-001
+Fecha                   : 25/09/2026
+Módulo Afectado         : Módulo Público / Navegación Móvil
+Descripción del defecto : Error 404 Not Found al hacer clic en el enlace 'Horarios' desde el menú móvil desplegable debido a un error de escritura en el atributo href (enlace apuntaba a '/horario' en lugar de la ruta definida '/horarios').
+Severidad               : Alta
+Prioridad               : Alta
+Estado                  : Resuelto
+Responsable             : Josue
+Evidencia               : Petición HTTP GET a 'http://127.0.0.1:8000/horario' arrojando código 404 Not Found en consola de desarrollador de Chrome al hacer clic en el elemento del menú móvil.
+Causa Raíz              : En la plantilla 'resources/views/layouts/guest.blade.php', en la versión colapsable para móviles, el ancla HTML tenía hardcodeado 'href="/horario"' en lugar de utilizar el helper de Blade '{{ route("horarios") }}'.
+Acción Correctiva       : Se actualizó el atributo href para usar '{{ route("horarios") }}' garantizando coherencia con el archivo de rutas 'routes/web.php'.
+
+------------------------------------------------------------------------------------------------------------------------
+DEFECTO: #ERR-002
+------------------------------------------------------------------------------------------------------------------------
+ID                      : ERR-002
+Fecha                   : 26/09/2026
+Módulo Afectado         : Panel Administrador / Gestión de Reservas
+Descripción del defecto : Excepción de base de datos SQLSTATE[23000] Column 'precio' cannot be null al intentar crear una reserva desde el formulario rápido de administración cuando el administrador no ingresaba manualmente el costo por hora.
+Severidad               : Crítica
+Prioridad               : Urgente
+Estado                  : Resuelto
+Responsable             : Josue
+Evidencia               : Pantalla roja de error Laravel Ignition con traza: "Illuminate\Database\QueryException: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'precio' cannot be null at App\Http\Controllers\Admin\ReservasController->store()".
+Causa Raíz              : La columna 'precio' de la tabla 'reservas' está definida como NOT NULL sin default en la base de datos, y el controlador no asignaba un valor predeterminado si el campo llegaba vacío en la petición.
+Acción Correctiva       : Se estableció que el valor por defecto del campo de precio sea 100 en la vista y en el controlador: '$datos["precio"] = $request->input("precio", 100);', además de agregar 'default(100)' en la capa de datos.
+
+------------------------------------------------------------------------------------------------------------------------
+DEFECTO: #ERR-003
+------------------------------------------------------------------------------------------------------------------------
+ID                      : ERR-003
+Fecha                   : 27/09/2026
+Módulo Afectado         : Módulo Público / Autenticación de Usuarios
+Descripción del defecto : El modal de inicio de sesión público se cerraba automáticamente sin mostrar mensajes de error cuando el usuario ingresaba credenciales inválidas (usuario o contraseña incorrectos), dejando al usuario desorientado sin retroalimentación visual.
+Severidad               : Media
+Prioridad               : Media
+Estado                  : Resuelto
+Responsable             : Josue
+Evidencia               : El navegador recargaba la página principal '/' con sesión 'errors', pero el componente Alpine.js inicializaba con 'openLoginModal: false', ocultando los mensajes de error devueltos en la bolsa de validación.
+Causa Raíz              : El estado reactivo de Alpine.js en 'layouts/guest.blade.php' no evaluaba si existían errores de validación al recargar la página para mantener abierto el diálogo modal.
+Acción Correctiva       : Se modificó la directiva de inicialización a: 'x-data="{ openLoginModal: {{ $errors->any() ? "true" : "false" }}, mobileMenuOpen: false }"', permitiendo que el modal permanezca visible y muestre el bloque de alerta de credenciales erróneas.
+
+------------------------------------------------------------------------------------------------------------------------
+DEFECTO: #ERR-004
+------------------------------------------------------------------------------------------------------------------------
+ID                      : ERR-004
+Fecha                   : 28/09/2026
+Módulo Afectado         : Panel Organizador / Tabla de Posiciones
+Descripción del defecto : Discrepancia matemática en la tabla de posiciones: cuando dos equipos finalizaban un partido con resultado de empate, el contador de partidos empatados aumentaba a 1 pero los puntos acumulados permanecían en 0 en lugar de sumar 1 punto a cada equipo.
+Severidad               : Alta
+Prioridad               : Alta
+Estado                  : Resuelto
+Responsable             : Josue
+Evidencia               : Registro verificado en base de datos: 'equipos_torneo' con 'partidos_jugados = 1', 'partidos_empatados = 1', 'goles_favor = 2', 'goles_contra = 2' y 'puntos = 0' en lugar de 1 punto reglamentario.
+Causa Raíz              : En la lógica de recálculo del método 'actualizarPosiciones()' en 'PosicionesController.php', la condición para evaluar el empate comprobaba igualdad estricta con tipos de datos dispares (cadena vs entero) provocando que la rama de suma de puntos de empate no se ejecutara.
+Acción Correctiva       : Se corrigió la condición de cálculo numérico asegurando casteo a entero: '(int)$partido->marcador_local === (int)$partido->marcador_visitante', sumando 1 punto a cada equipo y recalculando las posiciones adecuadamente.
+
+------------------------------------------------------------------------------------------------------------------------
+DEFECTO: #ERR-005
+------------------------------------------------------------------------------------------------------------------------
+ID                      : ERR-005
+Fecha                   : 29/09/2026
+Módulo Afectado         : Panel Administrador / Calendario Interactivo
+Descripción del defecto : Desfase de zona horaria en el componente FullCalendar: las reservas programadas para las 14:00 hrs se renderizaban en el calendario a las 20:00 hrs (desfase de 6 horas provocado por conversión automática a UTC sin considerar el huso horario de Centroamérica).
+Severidad               : Media
+Prioridad               : Alta
+Estado                  : Resuelto
+Responsable             : Josue
+Evidencia               : Inspección de la respuesta JSON del endpoint '/admin/calendario/eventos' donde las cadenas de fecha eran enviadas con sufijo 'Z' (Zulu/UTC) como '2026-09-29T20:00:00Z', desfasando la visualización en pantalla.
+Causa Raíz              : Falta de formato local en la serialización de eventos de Carbon dentro de 'CalendarioController.php', lo que forzaba a la librería cliente JavaScript a interpretar la fecha como hora universal.
+Acción Correctiva       : Se formateó la salida del evento como fecha y hora local ISO-8601 sin zona UTC dura: '$reserva->fecha_reserva->format("Y-m-d") . "T" . $reserva->hora_inicio', logrando alineación horaria exacta.
+
+------------------------------------------------------------------------------------------------------------------------
+DEFECTO: #ERR-006
+------------------------------------------------------------------------------------------------------------------------
+ID                      : ERR-006
+Fecha                   : 30/09/2026
+Módulo Afectado         : Módulo Público / Apartado de Anuncios y Noticias
+Descripción del defecto : Los anuncios creados y guardados exitosamente desde el panel administrativo no aparecían en la sección pública '/anuncios', mostrándose siempre el estado vacío 'No hay anuncios disponibles en este momento'.
+Severidad               : Alta
+Prioridad               : Alta
+Estado                  : Resuelto
+Responsable             : Josue
+Evidencia               : La consulta Eloquent 'Anuncio::publicos()->get()' retornaba 0 registros a pesar de existir comunicados en la base de datos con visibilidad activa 'mostrar_en_publico = 1'.
+Causa Raíz              : En 'create.blade.php' del panel de anuncios, el checkbox de 'esta_publicado' venía desmarcado por defecto, guardando el valor en 0 (borrador). A la vez, el scope 'scopePublicos' exigía de forma estricta que 'esta_publicado' fuera verdadero.
+Acción Correctiva       : Se estableció que 'esta_publicado' sea verdadero por defecto al crear anuncios, se ajustó el scope para sincronizar la visibilidad pública, y se actualizó el método 'toggleVisibilidad()' para conmutar ambos estados coherentemente.
+
+------------------------------------------------------------------------------------------------------------------------
+DEFECTO: #ERR-007
+------------------------------------------------------------------------------------------------------------------------
+ID                      : ERR-007
+Fecha                   : 01/10/2026
+Módulo Afectado         : Panel Trabajador / Reservas
+Descripción del defecto : Desbordamiento horizontal (horizontal scroll overflow) en la tabla del listado de reservas al visualizar el panel de trabajador en dispositivos móviles con pantallas estrechas (320px - 480px), provocando que los botones de 'Ver' y 'Editar' quedaran fuera de la pantalla.
+Severidad               : Baja
+Prioridad               : Media
+Estado                  : Resuelto
+Responsable             : Josue
+Evidencia               : Captura en herramientas de desarrollo responsive a 375px de ancho: la tabla HTML expandía el ancho del contenedor forzando un scroll horizontal roto e incómodo para el usuario táctil.
+Causa Raíz              : La plantilla 'trabajador/reservas/index.blade.php' utilizaba una tabla clásica rígida sin implementar un diseño adaptable basado en tarjetas para pantallas pequeñas ni contenedor con scroll horizontal protegido.
+Acción Correctiva       : Se implementó un patrón dual-view con vista móvil de tarjetas compactas ('block md:hidden') y tabla completa para escritorio ('hidden md:block overflow-x-auto') con botones touch-friendly de al menos 44px de altura.
+
+------------------------------------------------------------------------------------------------------------------------
+DEFECTO: #ERR-008
+------------------------------------------------------------------------------------------------------------------------
+ID                      : ERR-008
+Fecha                   : 02/10/2026
+Módulo Afectado         : Panel Administrador / Bloqueos de Cancha y Disponibilidad
+Descripción del defecto : El sistema permitía registrar un bloqueo de cancha en una fecha y rango de horas donde ya existía una reserva confirmada previa, generando un conflicto de doble asignación de espacio sin notificar al operador.
+Severidad               : Crítica
+Prioridad               : Urgente
+Estado                  : Resuelto
+Responsable             : Josue
+Evidencia               : Base de datos con dos registros activos simultáneos para la cancha principal el día 02/10/2026 entre las 18:00 y 20:00 hrs: una reserva de cliente y un bloqueo por mantenimiento.
+Causa Raíz              : El método 'store()' en 'BloqueosController.php' solo validaba la obligatoriedad de campos pero no ejecutaba una consulta de traslape contra las reservas confirmadas existentes en la misma fecha e intervalo horario.
+Acción Correctiva       : Se incorporó una validación previa de traslape que consulta reservas activas y rechaza la creación del bloqueo si existe conflicto, mostrando un mensaje de advertencia específico: "Ya existe una reserva confirmada en este horario".
+
+------------------------------------------------------------------------------------------------------------------------
+DEFECTO: #ERR-009
+------------------------------------------------------------------------------------------------------------------------
+ID                      : ERR-009
+Fecha                   : 03/10/2026
+Módulo Afectado         : Panel Organizador / Gestión de Jugadores
+Descripción del defecto : Error 500 al intentar eliminar un jugador registrado en un equipo participante en partidos programados, debido a una violación de restricción de clave foránea en la base de datos MySQL.
+Severidad               : Alta
+Prioridad               : Alta
+Estado                  : Resuelto
+Responsable             : Josue
+Evidencia               : Excepción 'QueryException: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails' al invocar 'DELETE /organizador/jugadores/{id}'.
+Causa Raíz              : Eliminación física directa mediante '$jugador->delete()' sin validar previamente si el jugador contaba con estadísticas o registros asociados en torneos activos, o sin aplicar baja lógica (soft delete).
+Acción Correctiva       : Se implementó una verificación antes de la eliminación: si el jugador tiene historial de partidos se desactiva lógicamente marcando 'esta_activo = false', evitando romper la integridad referencial y devolviendo un mensaje amigable.
+
+------------------------------------------------------------------------------------------------------------------------
+DEFECTO: #ERR-010
+------------------------------------------------------------------------------------------------------------------------
+ID                      : ERR-010
+Fecha                   : 04/10/2026
+Módulo Afectado         : Panel Administrador / Galería de Imágenes
+Descripción del defecto : Error HTTP 413 Payload Too Large al intentar subir fotografías en alta resolución (mayores a 2MB en formatos PNG o WEBP) en la galería, provocando la pérdida de la información del formulario sin mensaje informativo para el usuario.
+Severidad               : Media
+Prioridad               : Media
+Estado                  : Resuelto
+Responsable             : Josue
+Evidencia               : Pantalla genérica de servidor web Nginx/Apache mostrando '413 Request Entity Too Large' al enviar imágenes de 3.5MB capturadas con cámaras móviles modernas.
+Causa Raíz              : Falta de validación del tamaño de archivo en el cliente mediante JavaScript y regla 'max:2048' ausente en el 'StoreGaleriaRequest', sumado a directivas 'upload_max_filesize' ajustadas al mínimo estándar.
+Acción Correctiva       : Se configuró la regla de validación 'max:4096' (hasta 4MB), se agregó validación previa en el atributo 'accept="image/*"' y se añadió un mensaje claro de validación en la vista: "La imagen no debe superar los 4MB".
+
+------------------------------------------------------------------------------------------------------------------------
+DEFECTO: #ERR-011
+------------------------------------------------------------------------------------------------------------------------
+ID                      : ERR-011
+Fecha                   : 05/10/2026
+Módulo Afectado         : Módulo Público / Información de Contacto
+Descripción del defecto : El botón de enlace directo a WhatsApp en la vista pública de contacto fallaba al abrir la aplicación web o móvil mostrando el error de API 'Phone number is invalid' debido a que el número almacenado contenía espacios y guiones (+502 5555-1234).
+Severidad               : Media
+Prioridad               : Media
+Estado                  : Resuelto
+Responsable             : Josue
+Evidencia               : Enlace generado en el DOM: 'href="https://wa.me/+502 5555-1234?text=..."', el cual era rechazado por la API de WhatsApp por incluir caracteres no numéricos en la URL.
+Causa Raíz              : En 'resources/views/publico/contacto.blade.php' y 'home.blade.php', se imprimía la variable '$contacto->numero_whatsapp' sin filtrar los caracteres de formato visual ingresados por el administrador.
+Acción Correctiva       : Se aplicó la función de sanitización con expresión regular: "https://wa.me/{{ preg_replace('/[^0-9]/', '', $contacto->numero_whatsapp) }}", garantizando que solo viajen dígitos válidos en la URL.
+
+------------------------------------------------------------------------------------------------------------------------
+DEFECTO: #ERR-012
+------------------------------------------------------------------------------------------------------------------------
+ID                      : ERR-012
+Fecha                   : 06/10/2026
+Módulo Afectado         : Panel Administrador / Tarifas y Precios
+Descripción del defecto : El formulario de creación y edición de tarifas permitía ingresar números negativos (por ejemplo, -50.00) en el campo 'precio_por_hora' debido a que la regla de validación solo exigía 'numeric' sin exigir valor mínimo mayor a cero.
+Severidad               : Alta
+Prioridad               : Alta
+Estado                  : Resuelto
+Responsable             : Josue
+Evidencia               : Registro guardado en la tabla 'tarifas' con valor 'precio_por_hora = -50.00', ocasionando que el cálculo automático del costo de reservas nocturnas arrojara totales monetarios en negativo.
+Causa Raíz              : En 'StoreTarifaRequest.php', la regla de validación estaba definida únicamente como: "'precio_por_hora' => ['required', 'numeric']", omitiendo la restricción de positividad.
+Acción Correctiva       : Se actualizó la regla de validación a: "'precio_por_hora' => ['required', 'numeric', 'min:0.01']" y se agregó el atributo 'min="0.01" step="0.01"' en el input HTML de la vista correspondiente.
+
+------------------------------------------------------------------------------------------------------------------------
+DEFECTO: #ERR-013
+------------------------------------------------------------------------------------------------------------------------
+ID                      : ERR-013
+Fecha                   : 07/10/2026
+Módulo Afectado         : Panel Organizador / Registro de Marcadores de Partidos
+Descripción del defecto : El modal emergente para registrar el marcador de un partido finalizado no respondía a la pulsación de la tecla 'Escape' ni permitía cerrarse al hacer clic en el área oscura de fondo (backdrop), obligando al usuario a recargar la página si deseaba cancelar la acción.
+Severidad               : Baja
+Prioridad               : Baja
+Estado                  : Resuelto
+Responsable             : Josue
+Evidencia               : Evento de teclado 'Escape' ignorado por el navegador; clic en el div con clase 'bg-black/50' sin respuesta interactiva al carecer de handler asociado.
+Causa Raíz              : En 'organizador/partidos/show.blade.php', el elemento de fondo carecía del atributo 'onclick="cerrarModalResultado()"' y no existía un escuchador de eventos 'keydown' en el script de la página.
+Acción Correctiva       : Se agregó 'onclick="cerrarModalResultado()"' en el backdrop y se registró el event listener global: "document.addEventListener('keydown', function(e) { if(e.key === 'Escape') cerrarModalResultado(); });".
+
+------------------------------------------------------------------------------------------------------------------------
+DEFECTO: #ERR-014
+------------------------------------------------------------------------------------------------------------------------
+ID                      : ERR-014
+Fecha                   : 08/10/2026
+Módulo Afectado         : Panel Administrador / Instalaciones
+Descripción del defecto : Error 404 Not Found al intentar ingresar a la vista de edición o detalle de una instalación que se encontraba en estado inactivo ('esta_activa = 0') desde el panel de administración.
+Severidad               : Media
+Prioridad               : Media
+Estado                  : Resuelto
+Responsable             : Josue
+Evidencia               : Excepción 'Illuminate\Database\Eloquent\ModelNotFoundException' lanzada automáticamente por el Route Model Binding de Laravel en 'GET /admin/instalaciones/2/edit'.
+Causa Raíz              : El modelo 'Instalacion.php' tenía aplicado un Scope Global que filtraba automáticamente 'where("esta_activa", true)', impidiendo que los métodos administrativos pudieran encontrar registros inactivos para reactivarlos.
+Acción Correctiva       : Se eliminó el scope global y se reemplazó por un Scope Local explícito 'scopeActivas($query)', permitiendo al panel administrativo consultar todas las instalaciones sin importar su estado operativo.
+
+------------------------------------------------------------------------------------------------------------------------
+DEFECTO: #ERR-015
+------------------------------------------------------------------------------------------------------------------------
+ID                      : ERR-015
+Fecha                   : 10/10/2026
+Módulo Afectado         : Seguridad y Autorización / Control de Acceso (Rutas)
+Descripción del defecto : Falla de control de acceso: un usuario autenticado con rol de 'trabajador' podía acceder directamente por URL a rutas administrativas críticas como '/admin/configuracion' o '/admin/usuarios' debido a que el grupo de rutas solo exigía el middleware general 'auth' y no el middleware de rol 'rol:admin'.
+Severidad               : Crítica
+Prioridad               : Urgente
+Estado                  : Resuelto
+Responsable             : Josue
+Evidencia               : Petición HTTP GET a '/admin/configuracion' autenticando como 'trabajador@cancha.com' retornaba código HTTP 200 con acceso completo al formulario de configuración del sistema en lugar de código 403 Forbidden.
+Causa Raíz              : En el archivo 'routes/web.php', ciertas rutas del panel administrativo estaban agrupadas únicamente bajo 'middleware("auth")', omitiendo la verificación jerárquica del rol de usuario.
+Acción Correctiva       : Se refactorizaron las rutas administrativas bajo el middleware 'middleware(["auth", "rol:admin"])', impidiendo que roles no autorizados (trabajador u organizador) accedan a módulos exclusivos de administración.
+========================================================================================================================
+FIN DEL REGISTRO DE DEFECTOS
+========================================================================================================================

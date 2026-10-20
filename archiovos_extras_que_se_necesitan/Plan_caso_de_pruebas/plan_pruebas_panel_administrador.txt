@@ -1,0 +1,178 @@
+// Planificación de Casos de Prueba - Panel del Administrador (15 Módulos)
+// Módulos: 6. Dashboard, 7. Reservas, 8. Calendario, 9. Torneos, 10. Equipos y Jugadores, 
+// 11. Anuncios, 12. Instalaciones, 13. Tarifas, 14. Bloqueos, 15. Galería, 
+// 16. Estadísticas, 17. Historial, 18. Usuarios, 19. Configuración, 20. Contacto
+// Formato Graphviz DOT
+
+digraph CasosDePruebaPanelAdministrador {
+    graph [
+        fontname="Arial",
+        fontsize=24,
+        label="Planificación de Casos de Prueba - Panel del Administrador (15 Módulos)",
+        labelloc="t",
+        labeljust="l",
+        rankdir="TB",
+        splines="ortho",
+        nodesep="0.2",
+        ranksep="0.2",
+        bgcolor="white"
+    ];
+
+    node [
+        shape=plaintext,
+        fontname="Arial",
+        fontsize=10,
+        margin="0"
+    ];
+
+    tabla [
+        label=<
+            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#CCCCCC">
+                <TR>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>ID CASO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>MÓDULO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>DESCRIPCIÓN / ESCENARIO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>CONDICIÓN PREVIA</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>PASOS DE EJECUCIÓN</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>RESULTADO ESPERADO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>TIPO DE PRUEBA</B></FONT></TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-ADM-001</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">6. Dashboard</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Visualización de métricas del día, tarjetas de resumen y accesos directos.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Admin autenticado en '/admin/dashboard'.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Acceder al dashboard.<BR/>2. Verificar tarjetas de reservas de hoy, canchas activas y torneos.<BR/>3. Comprobar accesos rápidos.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">El dashboard carga las estadísticas en tiempo real y permite navegación fluida.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Funcional / Visual</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">CP-ADM-002</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">7. Reservas</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Gestión completa de reservas (Creación con DPI, filtro, edición y detalle en Q.).</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Acceso a '/admin/reservas'.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">1. Crear reserva manual con DPI y teléfono +502.<BR/>2. Filtrar por estado.<BR/>3. Ver detalle con total en Q.<BR/>4. Actualizar estado de pago.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">La reserva se crea, calcula el total en Q. y actualiza su estado de pago correctamente.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Positiva (Ruta ideal)</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-ADM-003</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">8. Calendario</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Visualización general de ocupación de la cancha por calendario.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Reservas y bloqueos registrados.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Navegar a '/admin/calendario'.<BR/>2. Inspeccionar eventos en vista mensual y semanal.<BR/>3. Cambiar de mes.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">El calendario visualiza la ocupación de la cancha sintética con sus bloques de reservas y eventos.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Funcional / Visual</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">CP-ADM-004</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">9. Torneos</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Creación y administración de torneos con costos en Quetzales y asignación de organizador.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Usuario Organizador disponible.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">1. Ir a '/admin/torneos/create'.<BR/>2. Ingresar datos, costo en Q. y premios.<BR/>3. Asignar organizador y guardar.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Torneo registrado exitosamente con costo en Q. y vinculado al organizador.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Positiva</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-ADM-005</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">10. Equipos y Jugadores</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Gestión de equipos y registro de jugadores con DPI.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Torneo activo registrado.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Navegar a '/admin/equipos'.<BR/>2. Registrar equipo con capitán.<BR/>3. En la vista del equipo, agregar jugador con DPI y # camiseta.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">El equipo y sus jugadores con DPI quedan registrados y asociados al torneo.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Positiva / Localización</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">CP-ADM-006</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">11. Anuncios</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Creación, edición y toggle de visibilidad pública de anuncios.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Acceso a '/admin/anuncios'.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">1. Crear nuevo anuncio de prueba.<BR/>2. Cambiar estado de visibilidad pública.<BR/>3. Verificar actualización en listado.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">El anuncio se crea y su visibilidad se conmuta correctamente.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Funcional</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-ADM-007</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">12. Instalaciones</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Gestión y edición de características de la cancha sintética.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Instalación existente (ID: 1).</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Ir a '/admin/instalaciones'.<BR/>2. Editar dimensiones, superficie FIFA, capacidad e iluminación.<BR/>3. Guardar cambios.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Los datos de la cancha se actualizan y se reflejan en el portal público.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Funcional</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">CP-ADM-008</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">13. Tarifas</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Creación y configuración de planes tarifarios en moneda GTQ (Q.).</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Acceso a '/admin/tarifas'.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">1. Ir a crear tarifa.<BR/>2. Definir nombre (ej. Hora Prime), horario y precio en Q.<BR/>3. Guardar tarifa en GTQ.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">La tarifa se guarda en GTQ y se presenta con formato 'Q. XX.XX / hora'.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Positiva / Moneda GTQ</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-ADM-009</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">14. Bloqueos</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Registro de bloqueos de cancha por mantenimiento o feriados nacionales.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Acceso a '/admin/bloqueos'.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Crear bloqueo para fecha y horario determinado.<BR/>2. Asignar motivo (mantenimiento / feriado).<BR/>3. Guardar bloqueo.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">El bloqueo queda activo e inhabilita las horas en el calendario público y administrativo.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Funcional</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">CP-ADM-010</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">15. Galería</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Gestión de imágenes y recursos multimedia de la instalación.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Acceso a '/admin/galeria'.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">1. Acceder al módulo de galería.<BR/>2. Subir imagen con título y descripción.<BR/>3. Cambiar orden de visualización.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Las imágenes se administran y se despliegan en la galería multimedia.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Funcional</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-ADM-011</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">16. Estadísticas</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Consulta de métricas, reportes de ocupación e ingresos en Quetzales (Q.).</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Reservas registradas en el sistema.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Navegar a '/admin/estadisticas'.<BR/>2. Inspeccionar tarjetas de ingresos totales, del mes y promedio por reserva.<BR/>3. Verificar prefijo 'Q.'.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">El módulo calcula y presenta todos los ingresos monetarios en Quetzales (Q.).</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Funcional / Reportes</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">CP-ADM-012</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">17. Historial</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Auditoría y registro de actividades de usuarios y cambios en reservas.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Acciones ejecutadas en el sistema.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">1. Ingresar a '/admin/historial'.<BR/>2. Revisar la tabla de registros de actividad con IP, fecha y acción.<BR/>3. Consultar historial de una reserva específica.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Se listan los eventos de auditoría y la trazabilidad de cambios en reservas.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Funcional / Auditoría</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-ADM-013</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">18. Usuarios</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Creación, edición y control de acceso de usuarios del sistema.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Acceso a '/admin/usuarios'.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Ir a crear usuario.<BR/>2. Ingresar nombre, email único, rol (organizador/trabajador) y teléfono +502.<BR/>3. Guardar usuario.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">El usuario se registra con su contraseña cifrada y queda listo para autenticarse.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Positiva</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">CP-ADM-014</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">19. Configuración</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Parámetros del sistema (GTQ, America/Guatemala) y generación de respaldos.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Acceso a '/admin/configuracion'.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">1. Comprobar configuración de moneda 'GTQ' y zona horaria 'America/Guatemala'.<BR/>2. Presionar 'Generar Respaldo de Base de Datos'.<BR/>3. Descargar respaldo.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Los parámetros se conservan y el archivo de respaldo se genera y descarga con éxito.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Funcional / Sistema</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-ADM-015</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">20. Contacto</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Actualización de información de contacto pública, redes y teléfono +502.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Acceso a '/admin/contacto'.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Modificar teléfonos de contacto (+502), ciudad (Chinique), país (Guatemala).<BR/>2. Actualizar enlace de Google Maps y guardar.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">La información institucional se guarda y se refleja en el pie de página y página de contacto.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Funcional / Localización</TD>
+                </TR>
+            </TABLE>
+        >
+    ];
+}

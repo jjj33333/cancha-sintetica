@@ -1,0 +1,77 @@
+================================================================================
+CASO DE PRUEBA: #CP-TRAB-001
+================================================================================
+ID del caso de prueba : #CP-TRAB-001
+Módulo : 1. Dashboard (Trabajador)
+Escenario de prueba : Visualización del resumen de reservas del día y accesos rápidos de atención.
+Pasos de la prueba :
+1. El Trabajador inicia sesión (maria@cancha.com / trab123).
+2. El usuario accede automáticamente a '/trabajador/dashboard'.
+3. El usuario revisa las reservas programadas para la fecha de hoy y los accesos rápidos.
+
+Requisitos previos : Usuario con rol 'trabajador' autenticado.
+Navegador : Chrome en Windows.
+Datos de prueba : Usuario: maria@cancha.com.
+Resultados esperados : El trabajador visualiza el resumen operativo del día para atender a los clientes que llegan a la cancha.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-TRAB-002
+================================================================================
+ID del caso de prueba : #CP-TRAB-002
+Módulo : 2. Reservas (Trabajador)
+Escenario de prueba : Registro de reserva manual presencial con DPI y cobro en Quetzales.
+Pasos de la prueba :
+1. El Trabajador hace clic en 'Nueva Reserva' o accede a '/trabajador/reservas/crear'.
+2. El usuario llena los datos del cliente:
+   - Nombre: 'Fernando López Gómez'
+   - Teléfono: '+502 5555 6677'
+   - DPI / Documento: '2109 87654 0101'
+   - Fecha y hora: 2026-11-03 de 17:00 a 19:00 (2 horas)
+   - Precio total: Q. 140.00
+3. El usuario presiona 'Guardar Reserva'.
+
+Requisitos previos : Cancha sintética disponible en dicho bloque horario.
+Navegador : Chrome en Windows.
+Datos de prueba : Cliente: Fernando López Gómez | DPI: 2109 87654 0101 | Total: Q. 140.00.
+Resultados esperados : La reserva se guarda con código único asignado y se refleja en el listado de reservas del trabajador.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-TRAB-003
+================================================================================
+ID del caso de prueba : #CP-TRAB-003
+Módulo : 2. Reservas (Trabajador)
+Escenario de prueba : Actualización de estado de pago de una reserva al cobrar en efectivo.
+Pasos de la prueba :
+1. El usuario busca la reserva pendiente en '/trabajador/reservas'.
+2. El usuario abre el formulario de cambio de estado o edición.
+3. El usuario marca el estado de pago como 'pagado' e indica método 'efectivo'.
+4. El usuario confirma el cobro.
+
+Requisitos previos : Reserva con pago pendiente.
+Navegador : Chrome en Windows.
+Datos de prueba : Estado de pago: pagado | Método: efectivo.
+Resultados esperados : La reserva se actualiza a 'Pagado' con badge verde y queda confirmada sin pendientes.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-TRAB-004
+================================================================================
+ID del caso de prueba : #CP-TRAB-004
+Módulo : 3. Calendario (Trabajador)
+Escenario de prueba : Consulta del calendario de ocupación en modo de solo lectura.
+Pasos de la prueba :
+1. El Trabajador accede a '/trabajador/calendario'.
+2. El usuario consulta los bloques horarios ocupados y libres para responder a consultas de clientes.
+3. El usuario corrobora que no existan botones de configuración administrativa ni alteración de tarifas.
+
+Requisitos previos : Calendario del trabajador accesible.
+Navegador : Chrome en Windows.
+Datos de prueba : Ruta /trabajador/calendario.
+Resultados esperados : El calendario muestra la disponibilidad horaria sin permitir modificaciones de configuración reservadas al Administrador.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado

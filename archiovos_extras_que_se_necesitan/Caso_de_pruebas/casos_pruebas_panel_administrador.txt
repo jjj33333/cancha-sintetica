@@ -1,0 +1,281 @@
+================================================================================
+CASO DE PRUEBA: #CP-ADM-001
+================================================================================
+ID del caso de prueba : #CP-ADM-001
+Módulo : 6. Dashboard
+Escenario de prueba : Visualización del panel principal de administración y métricas generales.
+Pasos de la prueba :
+1. El Administrador inicia sesión e ingresa a '/admin/dashboard'.
+2. El usuario observa las tarjetas de resumen: Reservas del Día, Canchas Activas, Torneos en Curso y Accesos Rápidos.
+3. El usuario hace clic en un acceso rápido (ej. 'Nueva Reserva').
+
+Requisitos previos : Usuario Administrador autenticado.
+Navegador : Chrome en Windows.
+Datos de prueba : Ruta /admin/dashboard.
+Resultados esperados : El panel reporta las métricas actualizadas y redirige correctamente a las secciones correspondientes.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ADM-002
+================================================================================
+ID del caso de prueba : #CP-ADM-002
+Módulo : 7. Reservas
+Escenario de prueba : Gestión completa de reservas con DPI y moneda en Quetzales (Q.).
+Pasos de la prueba :
+1. El usuario navega a '/admin/reservas'.
+2. El usuario hace clic en 'Nueva Reserva' e ingresa:
+   - Nombre: 'Equipo Los Jaguares GT'
+   - Teléfono: '+502 5555 4321'
+   - DPI / Documento: '2847 19283 0101'
+   - Fecha y Horario: 2026-11-02 de 18:00 a 20:00
+   - Total: Q. 140.00
+3. El usuario guarda la reserva, filtra por estado y consulta su detalle.
+
+Requisitos previos : Cancha sintética disponible en dicho horario.
+Navegador : Chrome en Windows.
+Datos de prueba : Cliente: Equipo Los Jaguares GT | DPI: 2847 19283 0101 | Q. 140.00.
+Resultados esperados : La reserva se almacena con éxito, calcula el total en Quetzales y permite edición, cambio de estado de pago y cancelación.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ADM-003
+================================================================================
+ID del caso de prueba : #CP-ADM-003
+Módulo : 8. Calendario
+Escenario de prueba : Vista general de ocupación por calendario en panel administrativo.
+Pasos de la prueba :
+1. El Administrador ingresa a '/admin/calendario'.
+2. El usuario revisa los bloques de eventos en la vista de mes y semana.
+3. El usuario hace clic en un evento para ver la reserva asociada.
+
+Requisitos previos : Reservas registradas en el mes consultado.
+Navegador : Chrome en Windows.
+Datos de prueba : Ruta /admin/calendario.
+Resultados esperados : Se muestran los bloques de ocupación de la cancha claramente identificados por color y horario.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ADM-004
+================================================================================
+ID del caso de prueba : #CP-ADM-004
+Módulo : 9. Torneos
+Escenario de prueba : Creación de torneo con costos en Quetzales y asignación de organizador.
+Pasos de la prueba :
+1. El Administrador accede a '/admin/torneos/create'.
+2. El usuario llena el formulario con nombre, categoría libre, costo de inscripción Q. 200.00 y premios en Q.
+3. El usuario selecciona a Carlos Organizador como responsable y guarda.
+
+Requisitos previos : Usuario Organizador existente.
+Navegador : Chrome en Windows.
+Datos de prueba : Torneo: Torneo Clausura 2026 | Costo: Q. 200.00 | Premios: Q. 1,000.
+Resultados esperados : El torneo se crea con la moneda oficial de Guatemala (Q.) y se asigna al organizador seleccionado.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ADM-005
+================================================================================
+ID del caso de prueba : #CP-ADM-005
+Módulo : 10. Equipos y Jugadores
+Escenario de prueba : Registro de equipo y jugador con DPI.
+Pasos de la prueba :
+1. El usuario navega a '/admin/equipos' y crea un nuevo equipo.
+2. En la vista del equipo, el usuario presiona 'Agregar Jugador'.
+3. El usuario ingresa Nombre, DPI ('2458 19283 0101'), # Camiseta y Posición.
+4. El usuario guarda el jugador.
+
+Requisitos previos : Torneo activo registrado.
+Navegador : Chrome en Windows.
+Datos de prueba : Jugador: Juan Morales | DPI: 2458 19283 0101.
+Resultados esperados : El jugador queda registrado en la plantilla del equipo mostrando su DPI en la tabla.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ADM-006
+================================================================================
+ID del caso de prueba : #CP-ADM-006
+Módulo : 11. Anuncios
+Escenario de prueba : Creación y cambio de visibilidad pública de anuncios.
+Pasos de la prueba :
+1. El Administrador navega a '/admin/anuncios'.
+2. El usuario crea un nuevo anuncio con título 'Mantenimiento preventivo de luminarias'.
+3. El usuario alterna el botón de visibilidad (toggle-visibilidad).
+
+Requisitos previos : Acceso al módulo de anuncios.
+Navegador : Chrome en Windows.
+Datos de prueba : Título: Mantenimiento preventivo.
+Resultados esperados : El anuncio cambia su estado entre visible y oculto para los usuarios de la web pública.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ADM-007
+================================================================================
+ID del caso de prueba : #CP-ADM-007
+Módulo : 12. Instalaciones
+Escenario de prueba : Edición de características de la cancha sintética.
+Pasos de la prueba :
+1. El Administrador accede a '/admin/instalaciones'.
+2. El usuario edita la descripción, superficie FIFA Quality Pro, capacidad y activa la opción de iluminación LED.
+3. El usuario guarda los cambios.
+
+Requisitos previos : Instalación principal existente.
+Navegador : Chrome en Windows.
+Datos de prueba : Instalación ID: 1.
+Resultados esperados : Los datos técnicos de la cancha se actualizan inmediatamente y se reflejan en el portal público.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ADM-008
+================================================================================
+ID del caso de prueba : #CP-ADM-008
+Módulo : 13. Tarifas
+Escenario de prueba : Creación y actualización de planes tarifarios en moneda GTQ (Q.).
+Pasos de la prueba :
+1. El Administrador accede a '/admin/tarifas/create'.
+2. El usuario ingresa Nombre: 'Tarifa Feriado Especial', Horario: '08:00 - 22:00', Precio: 80.00, Moneda: GTQ.
+3. El usuario guarda la tarifa.
+
+Requisitos previos : Permisos de administrador.
+Navegador : Chrome en Windows.
+Datos de prueba : Tarifa: Tarifa Feriado Especial | Precio: 80.00 | Moneda: GTQ.
+Resultados esperados : La tarifa se almacena con la divisa GTQ y se muestra como 'Q. 80.00' en todo el sistema.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ADM-009
+================================================================================
+ID del caso de prueba : #CP-ADM-009
+Módulo : 14. Bloqueos
+Escenario de prueba : Registro de bloqueo de cancha por mantenimiento o feriado.
+Pasos de la prueba :
+1. El Administrador ingresa a '/admin/bloqueos/create'.
+2. El usuario selecciona la fecha '2026-11-10', horario de 08:00 a 12:00 y motivo 'mantenimiento'.
+3. El usuario guarda el bloqueo.
+
+Requisitos previos : Acceso a gestión de bloqueos.
+Navegador : Chrome en Windows.
+Datos de prueba : Fecha: 2026-11-10 08:00-12:00.
+Resultados esperados : El bloqueo inhabilita las horas seleccionadas en el calendario público y previene nuevas reservas.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ADM-010
+================================================================================
+ID del caso de prueba : #CP-ADM-010
+Módulo : 15. Galería
+Escenario de prueba : Administración de fotos e imágenes de la cancha.
+Pasos de la prueba :
+1. El Administrador accede a '/admin/galeria'.
+2. El usuario sube una nueva imagen y le asigna título y descripción.
+3. El usuario guarda el registro.
+
+Requisitos previos : Formulario de galería accesible.
+Navegador : Chrome en Windows.
+Datos de prueba : Imagen representativa de la cancha.
+Resultados esperados : La imagen queda almacenada y disponible en el catálogo de fotos de la cancha.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ADM-011
+================================================================================
+ID del caso de prueba : #CP-ADM-011
+Módulo : 16. Estadísticas
+Escenario de prueba : Reportes e indicadores de ingresos en Quetzales (Q.).
+Pasos de la prueba :
+1. El Administrador navega a '/admin/estadisticas'.
+2. El usuario revisa los cuadros de ingresos totales, del mes y promedio por reserva.
+3. El usuario verifica que todos los valores monetarios tengan el prefijo 'Q.'.
+
+Requisitos previos : Reservas pagadas registradas en el sistema.
+Navegador : Chrome en Windows.
+Datos de prueba : Ruta /admin/estadisticas.
+Resultados esperados : Las métricas financieras se computan con exactitud y se muestran con el formato 'Q. XX.XX'.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ADM-012
+================================================================================
+ID del caso de prueba : #CP-ADM-012
+Módulo : 17. Historial
+Escenario de prueba : Auditoría de actividades y trazabilidad de cambios en reservas.
+Pasos de la prueba :
+1. El usuario accede a '/admin/historial'.
+2. El usuario revisa las entradas de auditoría (usuario, acción, tabla, IP y fecha).
+3. El usuario hace clic en el historial específico de una reserva.
+
+Requisitos previos : Operaciones previas realizadas en la base de datos.
+Navegador : Chrome en Windows.
+Datos de prueba : Ruta /admin/historial.
+Resultados esperados : Se muestra la bitácora completa de eventos y cambios de estado con fecha y hora exacta.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ADM-013
+================================================================================
+ID del caso de prueba : #CP-ADM-013
+Módulo : 18. Usuarios
+Escenario de prueba : Registro de un nuevo usuario con rol de trabajador u organizador.
+Pasos de la prueba :
+1. El Administrador navega a '/admin/usuarios/create'.
+2. El usuario llena los campos requeridos:
+   - Nombre: 'Pedro Trabajador'
+   - Email: 'pedro.trabajador@cancha.com'
+   - Password: 'Password123!'
+   - Rol: 'trabajador'
+   - Teléfono: '+502 5555 8899'
+3. El usuario hace clic en 'Guardar Usuario'.
+
+Requisitos previos : Administrador autenticado.
+Navegador : Chrome en Windows.
+Datos de prueba : Email: pedro.trabajador@cancha.com | Rol: trabajador.
+Resultados esperados : El usuario se crea correctamente, cifra la contraseña y aparece activo en la lista de usuarios.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ADM-014
+================================================================================
+ID del caso de prueba : #CP-ADM-014
+Módulo : 19. Configuración
+Escenario de prueba : Parámetros globales de Guatemala y generación de respaldo.
+Pasos de la prueba :
+1. El Administrador navega a '/admin/configuracion'.
+2. El usuario confirma que la zona horaria sea 'America/Guatemala' y la moneda 'GTQ'.
+3. El usuario presiona el botón 'Generar Respaldo'.
+4. El usuario descarga el archivo generado.
+
+Requisitos previos : Acceso al módulo de configuración.
+Navegador : Chrome en Windows.
+Datos de prueba : Zona: America/Guatemala | Moneda: GTQ.
+Resultados esperados : Los parámetros se confirman y se genera el archivo de respaldo para su descarga.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ADM-015
+================================================================================
+ID del caso de prueba : #CP-ADM-015
+Módulo : 20. Contacto
+Escenario de prueba : Edición de información de contacto pública con datos de Guatemala.
+Pasos de la prueba :
+1. El Administrador ingresa a '/admin/contacto'.
+2. El usuario actualiza el teléfono principal a '+502 5555 1234', ciudad a 'Chinique' y país a 'Guatemala'.
+3. El usuario guarda los cambios.
+
+Requisitos previos : Módulo de contacto accesible.
+Navegador : Chrome en Windows.
+Datos de prueba : Teléfono: +502 5555 1234 | Ciudad: Chinique | País: Guatemala.
+Resultados esperados : Los datos se guardan y se sincronizan con las vistas públicas del portal web.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado

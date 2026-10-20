@@ -1,0 +1,97 @@
+================================================================================
+CASO DE PRUEBA: #CP-ORG-001
+================================================================================
+ID del caso de prueba : #CP-ORG-001
+Módulo : 21. Mis Torneos (Dashboard)
+Escenario de prueba : Visualización de torneos asignados y cambio de estado a 'en_curso'.
+Pasos de la prueba :
+1. El Organizador inicia sesión (carlos@org.com) y accede a '/organizador/torneos'.
+2. El usuario revisa la lista de torneos bajo su administración.
+3. El usuario abre el detalle de un torneo con inscripciones abiertas.
+4. El usuario actualiza el estado a 'en_curso' y guarda.
+
+Requisitos previos : Usuario Organizador con al menos un torneo asignado.
+Navegador : Chrome en Windows.
+Datos de prueba : Usuario: carlos@org.com | Estado: en_curso.
+Resultados esperados : El torneo cambia a estado 'En Curso' y habilita el botón de programar partidos.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ORG-002
+================================================================================
+ID del caso de prueba : #CP-ORG-002
+Módulo : 22. Equipos
+Escenario de prueba : Registro de un nuevo equipo y asignación de capitán.
+Pasos de la prueba :
+1. El Organizador navega a '/organizador/equipos/crear'.
+2. El usuario selecciona el torneo correspondiente.
+3. El usuario completa los datos:
+   - Nombre: 'Deportivo San Marcos FC'
+   - Capitán: 'Jorge Mario Estrada'
+   - Teléfono: '+502 5555 7711'
+   - Uniforme: 'Rojo y Negro'
+4. El usuario presiona 'Guardar Equipo'.
+
+Requisitos previos : Torneo asignado disponible.
+Navegador : Chrome en Windows.
+Datos de prueba : Equipo: Deportivo San Marcos FC | Tel: +502 5555 7711.
+Resultados esperados : El equipo queda registrado y visible en la lista de equipos del organizador.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ORG-003
+================================================================================
+ID del caso de prueba : #CP-ORG-003
+Módulo : 23. Jugadores
+Escenario de prueba : Inscripción de jugador con documento DPI en equipo del torneo.
+Pasos de la prueba :
+1. El usuario accede a '/organizador/jugadores/crear'.
+2. El usuario selecciona el equipo registrado.
+3. El usuario ingresa Nombre completo, DPI ('1982 74839 0101'), # Camiseta (7) y Posición (Mediocampista).
+4. El usuario hace clic en 'Guardar Jugador'.
+
+Requisitos previos : Equipo registrado previamente.
+Navegador : Chrome en Windows.
+Datos de prueba : Jugador: Andrés Morales | DPI: 1982 74839 0101 | Camiseta: 7.
+Resultados esperados : El jugador queda añadido a la plantilla del equipo y su DPI se visualiza en la tabla de jugadores.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ORG-004
+================================================================================
+ID del caso de prueba : #CP-ORG-004
+Módulo : 24. Partidos y Resultados
+Escenario de prueba : Programación de partido y registro de resultado final.
+Pasos de la prueba :
+1. El usuario navega a '/organizador/partidos/crear'.
+2. El usuario selecciona Equipo Local y Equipo Visitante (distintos).
+3. El usuario fija fecha y hora y guarda el partido programado.
+4. Tras jugarse el partido, el usuario ingresa el marcador (ej. 3 - 2) y guarda.
+
+Requisitos previos : Dos equipos confirmados en el torneo.
+Navegador : Chrome en Windows.
+Datos de prueba : Marcador: 3 - 2 | Estado: finalizado.
+Resultados esperados : El partido se programa y al registrar los goles pasa a estado 'finalizado', sumando los puntos correspondientes.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-ORG-005
+================================================================================
+ID del caso de prueba : #CP-ORG-005
+Módulo : 25. Tabla de Posiciones
+Escenario de prueba : Verificación del cómputo y ordenamiento de la Tabla de Posiciones.
+Pasos de la prueba :
+1. El Organizador accede a '/organizador/posiciones'.
+2. El usuario selecciona el torneo en curso.
+3. El usuario verifica los puntos de cada equipo, victorias, empates, goles a favor y contra.
+
+Requisitos previos : Partidos finalizados con resultados registrados.
+Navegador : Chrome en Windows.
+Datos de prueba : Ruta /organizador/posiciones.
+Resultados esperados : La tabla de posiciones se ordena de forma descendente por puntos y diferencia de goles.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado

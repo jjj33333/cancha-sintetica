@@ -1,0 +1,77 @@
+// Planificación de Casos de Prueba - Panel del Trabajador (3 Módulos)
+// Módulos: 1. Dashboard, 2. Reservas, 3. Calendario (solo lectura)
+// Formato Graphviz DOT
+
+digraph CasosDePruebaPanelTrabajador {
+    graph [
+        fontname="Arial",
+        fontsize=24,
+        label="Planificación de Casos de Prueba - Panel del Trabajador (3 Módulos)",
+        labelloc="t",
+        labeljust="l",
+        rankdir="TB",
+        splines="ortho",
+        nodesep="0.2",
+        ranksep="0.2",
+        bgcolor="white"
+    ];
+
+    node [
+        shape=plaintext,
+        fontname="Arial",
+        fontsize=10,
+        margin="0"
+    ];
+
+    tabla [
+        label=<
+            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#CCCCCC">
+                <TR>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>ID CASO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>MÓDULO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>DESCRIPCIÓN / ESCENARIO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>CONDICIÓN PREVIA</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>PASOS DE EJECUCIÓN</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>RESULTADO ESPERADO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>TIPO DE PRUEBA</B></FONT></TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-TRAB-001</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Dashboard</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Visualización del resumen diario y reservas programadas del día de hoy.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Trabajador autenticado en '/trabajador/dashboard'.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Acceder al dashboard del trabajador.<BR/>2. Comprobar lista de reservas del día.<BR/>3. Verificar acceso rápido para crear reserva.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">El trabajador observa las reservas del día actual y accesos directos operativos.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Funcional / Visual</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">CP-TRAB-002</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Reservas</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Registro de reserva manual para cliente presencial/telefónico con DPI y Quetzales.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Acceso a '/trabajador/reservas/crear'.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">1. Ir a crear reserva.<BR/>2. Ingresar nombre, teléfono (+502), DPI.<BR/>3. Seleccionar fecha y hora disponible.<BR/>4. Ingresar precio total en Q. y guardar.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">La reserva se registra exitosamente con código único y el trabajador puede imprimir/ver el comprobante.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Positiva (Ruta ideal)</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-TRAB-003</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Reservas</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Recepción de pago y cambio de estado de reserva a 'pagado'.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Reserva existente con pago pendiente.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Buscar la reserva en '/trabajador/reservas'.<BR/>2. Abrir detalle o presionar 'Cambiar Estado/Pago'.<BR/>3. Registrar cobro en efectivo.<BR/>4. Guardar.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">El estado de pago cambia a 'pagado' con badge verde y se actualiza el balance.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Positiva</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">CP-TRAB-004</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Calendario</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Consulta de disponibilidad general en el calendario de ocupación (solo lectura).</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Acceso a '/trabajador/calendario'.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">1. Navegar a '/trabajador/calendario'.<BR/>2. Consultar horarios ocupados y libres.<BR/>3. Verificar que no permita modificar configuraciones del sistema.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">El calendario permite consultar rápidamente la ocupación sin exponer opciones de configuración administrativa.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Funcional / Seguridad</TD>
+                </TR>
+            </TABLE>
+        >
+    ];
+}

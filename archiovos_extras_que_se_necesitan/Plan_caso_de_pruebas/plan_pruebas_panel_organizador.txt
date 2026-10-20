@@ -1,0 +1,86 @@
+// Planificación de Casos de Prueba - Panel del Organizador (5 Módulos)
+// Módulos: 21. Mis Torneos, 22. Equipos, 23. Jugadores, 24. Partidos y Resultados, 25. Tabla de Posiciones
+// Formato Graphviz DOT
+
+digraph CasosDePruebaPanelOrganizador {
+    graph [
+        fontname="Arial",
+        fontsize=24,
+        label="Planificación de Casos de Prueba - Panel del Organizador (5 Módulos)",
+        labelloc="t",
+        labeljust="l",
+        rankdir="TB",
+        splines="ortho",
+        nodesep="0.2",
+        ranksep="0.2",
+        bgcolor="white"
+    ];
+
+    node [
+        shape=plaintext,
+        fontname="Arial",
+        fontsize=10,
+        margin="0"
+    ];
+
+    tabla [
+        label=<
+            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#CCCCCC">
+                <TR>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>ID CASO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>MÓDULO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>DESCRIPCIÓN / ESCENARIO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>CONDICIÓN PREVIA</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>PASOS DE EJECUCIÓN</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>RESULTADO ESPERADO</B></FONT></TD>
+                    <TD BGCOLOR="#00A2E8" ALIGN="LEFT"><FONT COLOR="white"><B>TIPO DE PRUEBA</B></FONT></TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-ORG-001</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">21. Mis Torneos</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Visualización de torneos asignados y cambio de estado del torneo.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Organizador autenticado en '/organizador/torneos'.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Acceder a Mis Torneos.<BR/>2. Seleccionar torneo asignado.<BR/>3. Cambiar estado a 'en_curso'.<BR/>4. Confirmar cambio.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Se muestran solo los torneos asignados y se actualiza el estado del torneo.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Funcional / Seguridad</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">CP-ORG-002</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">22. Equipos</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Gestión y registro de equipos vinculados a torneos del organizador.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Torneo con inscripciones abiertas.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">1. Ir a '/organizador/equipos/crear'.<BR/>2. Ingresar nombre del equipo y color de uniforme.<BR/>3. Ingresar nombre y teléfono (+502) del capitán.<BR/>4. Guardar equipo.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Equipo creado exitosamente y listado en la tabla de equipos del torneo.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Positiva (Ruta ideal)</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-ORG-003</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">23. Jugadores</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Inscripción y gestión de jugadores por equipo con DPI.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Equipo activo registrado.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Ir a '/organizador/jugadores/crear'.<BR/>2. Seleccionar equipo.<BR/>3. Ingresar nombre, DPI, número de camiseta y posición.<BR/>4. Guardar jugador.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">El jugador se registra en la plantilla del equipo mostrando su DPI en el listado.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Positiva / Localización</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">CP-ORG-004</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">24. Partidos y Resultados</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Programación de partidos y registro de resultados y marcadores.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Al menos 2 equipos confirmados en el torneo.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">1. Programar partido entre dos equipos.<BR/>2. Al finalizar, registrar marcador (ej. 2 - 1).<BR/>3. Guardar resultado.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">El partido se programa y al registrar el resultado actualiza su estado a 'finalizado'.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Positiva</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">CP-ORG-005</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">25. Tabla de Posiciones</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Cálculo y visualización de la tabla de posiciones (Standings).</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Resultados de partidos ingresados.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">1. Navegar a '/organizador/posiciones'.<BR/>2. Seleccionar el torneo.<BR/>3. Verificar cálculo de puntos (3 por victoria, 1 por empate), GF, GC y DG.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">La tabla de posiciones se ordena automáticamente según el puntaje y diferencia de goles.</TD>
+                    <TD BGCOLOR="#D6EAF8" ALIGN="LEFT">Funcional / Cálculo</TD>
+                </TR>
+            </TABLE>
+        >
+    ];
+}

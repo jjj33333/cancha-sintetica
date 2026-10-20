@@ -1,0 +1,91 @@
+================================================================================
+CASO DE PRUEBA: #CP-AUTH-001
+================================================================================
+ID del caso de prueba : #CP-AUTH-001
+Escenario de prueba : Inicio de sesión exitoso con rol de Administrador.
+Pasos de la prueba :
+1. El usuario navega a la página principal del sistema (/).
+2. El usuario hace clic en el botón 'Iniciar Sesión' del encabezado.
+3. El usuario ingresa el correo electrónico 'admin@cancha.com' en el campo 'Email'.
+4. El usuario ingresa la contraseña 'admin123' en el campo 'Contraseña'.
+5. El usuario hace clic en el botón 'Ingresar' / 'Iniciar Sesión'.
+
+Requisitos previos : Usuario con rol 'admin' registrado y activo en la base de datos.
+Navegador : Chrome en Windows.
+Datos de prueba : Correo: admin@cancha.com | Clave: admin123
+Resultados esperados : El sistema autentica las credenciales y redirige exitosamente a la vista '/admin/dashboard' mostrando las opciones del panel de administración.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-AUTH-002
+================================================================================
+ID del caso de prueba : #CP-AUTH-002
+Escenario de prueba : Inicio de sesión exitoso con rol de Organizador.
+Pasos de la prueba :
+1. El usuario navega a la página principal del sistema (/).
+2. El usuario hace clic en el botón 'Iniciar Sesión'.
+3. El usuario ingresa 'carlos@org.com' en el campo 'Email'.
+4. El usuario ingresa 'org123' en el campo 'Contraseña'.
+5. El usuario hace clic en el botón 'Iniciar Sesión'.
+
+Requisitos previos : Usuario con rol 'organizador' registrado y activo en el sistema.
+Navegador : Chrome en Windows.
+Datos de prueba : Correo: carlos@org.com | Clave: org123
+Resultados esperados : El sistema autentica al usuario y lo redirige automáticamente a '/organizador/dashboard'.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-AUTH-003
+================================================================================
+ID del caso de prueba : #CP-AUTH-003
+Escenario de prueba : Inicio de sesión exitoso con rol de Trabajador.
+Pasos de la prueba :
+1. El usuario navega a la página principal del sistema (/).
+2. El usuario abre el modal de autenticación haciendo clic en 'Iniciar Sesión'.
+3. El usuario ingresa 'maria@cancha.com' en el campo 'Email'.
+4. El usuario ingresa 'trab123' en el campo 'Contraseña'.
+5. El usuario hace clic en el botón 'Iniciar Sesión'.
+
+Requisitos previos : Usuario con rol 'trabajador' registrado y activo.
+Navegador : Chrome en Windows.
+Datos de prueba : Correo: maria@cancha.com | Clave: trab123
+Resultados esperados : El sistema autentica las credenciales y redirige a '/trabajador/dashboard'.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-AUTH-004
+================================================================================
+ID del caso de prueba : #CP-AUTH-004
+Escenario de prueba : Intento de inicio de sesión con credenciales inválidas.
+Pasos de la prueba :
+1. El usuario navega a la página principal (/).
+2. El usuario abre el modal de inicio de sesión.
+3. El usuario ingresa 'usuario_invalido@test.com' en el campo 'Email'.
+4. El usuario ingresa 'clave_incorrecta123' en el campo 'Contraseña'.
+5. El usuario presiona el botón 'Iniciar Sesión'.
+
+Requisitos previos : Página web accesible.
+Navegador : Chrome en Windows.
+Datos de prueba : Correo: usuario_invalido@test.com | Clave: clave_incorrecta123
+Resultados esperados : El sistema no permite el ingreso, permanece en la página y muestra un mensaje de alerta indicando que las credenciales son incorrectas.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado
+
+================================================================================
+CASO DE PRUEBA: #CP-AUTH-005
+================================================================================
+ID del caso de prueba : #CP-AUTH-005
+Escenario de prueba : Cierre de sesión de usuario autenticado.
+Pasos de la prueba :
+1. El usuario se encuentra autenticado en cualquier panel del sistema (ej. /admin/dashboard).
+2. El usuario localiza y hace clic en el botón 'Cerrar Sesión' / 'Logout' en la barra de navegación o sidebar.
+
+Requisitos previos : Sesión de usuario activa.
+Navegador : Chrome en Windows.
+Datos de prueba : Sesión iniciada con usuario admin@cancha.com.
+Resultados esperados : El sistema destruye la sesión del usuario y lo redirige a la página pública principal (/), impidiendo el acceso posterior a rutas protegidas sin reautenticarse.
+Resultados reales : Como se esperaba.
+Estado de la prueba: Aprobado/Reprobado : Aprobado

@@ -1,0 +1,238 @@
+// Matriz de Cumplimiento de Requisitos del Sistema
+// Basado en alcances_y_requerimientos.txt y pruebas Dusk
+// Código en Graphviz (DOT)
+
+digraph MatrizCumplimientoRequisitos {
+    // Configuración general del grafo
+    graph [
+        fontname="Arial",
+        fontsize=22,
+        label="Matriz de Cumplimiento de Requisitos del Sistema",
+        labelloc="t",
+        labeljust="c",
+        rankdir="TB",
+        splines="ortho",
+        nodesep="0.2",
+        ranksep="0.2",
+        bgcolor="white",
+        margin="0"
+    ];
+
+    // Configuración general de los nodos
+    node [
+        shape=plaintext,
+        fontname="Arial",
+        fontsize=9,
+        margin="0"
+    ];
+
+    tabla [
+        label=<
+            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#CCCCCC">
+                <!-- Fila de Encabezado (Azul oscuro / Navy) -->
+                <TR>
+                    <TD BGCOLOR="#1F4E79" ALIGN="CENTER"><FONT COLOR="white"><B>ID</B></FONT></TD>
+                    <TD BGCOLOR="#1F4E79" ALIGN="CENTER"><FONT COLOR="white"><B>Requisito</B></FONT></TD>
+                    <TD BGCOLOR="#1F4E79" ALIGN="CENTER"><FONT COLOR="white"><B>Tipo</B></FONT></TD>
+                    <TD BGCOLOR="#1F4E79" ALIGN="CENTER"><FONT COLOR="white"><B>Prioridad</B></FONT></TD>
+                    <TD BGCOLOR="#1F4E79" ALIGN="CENTER"><FONT COLOR="white"><B>Caso de prueba</B></FONT></TD>
+                    <TD BGCOLOR="#1F4E79" ALIGN="CENTER"><FONT COLOR="white"><B>Resultado</B></FONT></TD>
+                    <TD BGCOLOR="#1F4E79" ALIGN="CENTER"><FONT COLOR="white"><B>Evidencia</B></FONT></TD>
+                    <TD BGCOLOR="#1F4E79" ALIGN="CENTER"><FONT COLOR="white"><B>Cumple</B></FONT></TD>
+                    <TD BGCOLOR="#1F4E79" ALIGN="CENTER"><FONT COLOR="white"><B>Observaciones</B></FONT></TD>
+                </TR>
+
+                <!-- Requisitos Funcionales -->
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">RF-01</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Mostrar calendario público con disponibilidad y horarios por bloques de 1 hora.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Funcional</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Alta</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">CP-PUB-002</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">ModuloPublicoTest</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Muestra tarjetas semanales y cuadros de 1 hora (verde/rojo) con navegación de 3 semanas.</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">RF-02</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="LEFT">Autenticación segura de usuarios y redirección según rol (Admin, Org, Trab).</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Funcional</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Alta</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">CP-AUTH-001</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">AutenticacionTest</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="LEFT">Inicio de sesión por roles y protección de rutas mediante middleware.</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">RF-03</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Gestión completa de reservas (agregar, editar, eliminar, validar traslapes y DPI).</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Funcional</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Alta</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">CP-ADM-002</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">PanelAdministradorTest</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Cálculo de horas, validación de conflicto de horarios y precios en Quetzales (Q.).</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">RF-04</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="LEFT">Gestión de torneos y campeonatos con costos en Q. y asignación de organizador.</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Funcional</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Alta</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">CP-ADM-004</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">PanelAdministradorTest</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="LEFT">Creación y configuración de torneos, categorías y premios en Quetzales.</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">RF-05</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Sección pública de torneos, tabla de posiciones, anuncios e información de contacto.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Funcional</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Media</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">CP-PUB-005</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">ModuloPublicoTest</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Páginas públicas con formato para Guatemala (Chinique, +502 y Q.).</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">RF-06</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="LEFT">Registro y visualización del historial de auditoría y cambios en reservas.</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Funcional</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Media</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">CP-ADM-012</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">PanelAdministradorTest</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="LEFT">Trazabilidad de cambios de estado, IP del usuario y fecha de modificación.</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">RF-07</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Panel administrativo con métricas, estadísticas e ingresos monetarios en Q.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Funcional</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Media</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">CP-ADM-011</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">PanelAdministradorTest</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Reportes de ingresos mensuales, totales y promedios expresados en Quetzales.</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">RF-08</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="LEFT">Gestión de equipos y registro de jugadores con documento de identificación DPI.</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Funcional</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Alta</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">CP-ORG-003</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">PanelOrganizadorTest</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="LEFT">Registro de plantillas con número de camiseta, posición y DPI de Guatemala.</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">RF-09</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Programación de partidos y cómputo automático de la tabla de posiciones.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Funcional</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Alta</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">CP-ORG-004</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">PanelOrganizadorTest</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Cálculo de puntos (3 victoria, 1 empate), goles a favor/contra y diferencia de goles.</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">RF-10</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="LEFT">Configuración general de parámetros (GTQ, America/Guatemala) y respaldos de BD.</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Funcional</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Media</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">CP-ADM-014</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">PanelAdministradorTest</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="LEFT">Mantenimiento de parámetros y generación/descarga de copias de seguridad.</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">RF-11</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Administración de planes tarifarios en GTQ y bloqueos de cancha por mantenimiento.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Funcional</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Media</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">CP-ADM-008</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">PanelAdministradorTest</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Tarifas por tipo de día (normal, prime, feriado) y bloqueos que inhabilitan horarios.</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">RF-12</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="LEFT">Gestión de datos técnicos de la cancha sintética y catálogo de galería.</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Funcional</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Media</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">CP-ADM-007</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">PanelAdministradorTest</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="LEFT">Superficie FIFA Quality Pro, iluminación LED y carga de fotos de la instalación.</TD>
+                </TR>
+
+                <!-- Requisitos No Funcionales -->
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">RNF-01</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Diseño responsivo y adaptabilidad a dispositivos móviles y de escritorio.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Usabilidad</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Alta</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">CP-PUB-001</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">ModuloPublicoTest</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Interfaz adaptable con Tailwind CSS y navegación fluida en resoluciones móviles y desktop.</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">RNF-02</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="LEFT">Seguridad y cifrado de contraseñas de usuarios con algoritmo Hash Bcrypt.</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Seguridad</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Alta</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">CP-AUTH-004</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">AutenticacionTest</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="LEFT">Contraseñas encriptadas en base de datos y protección contra ataques CSRF.</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">RNF-03</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Tiempos de respuesta óptimos y rendimiento ágil en consultas (menor a 2s).</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Rendimiento</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Media</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">CP-PUB-004</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">ModuloPublicoTest</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Carga ágil del calendario interactivo en Alpine.js y consultas optimizadas.</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">RNF-04</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="LEFT">Interfaz intuitiva, amigable y coherente con la identidad visual del negocio.</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Usabilidad</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Alta</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">CP-PUB-003</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">ModuloPublicoTest</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#F9FAFB" ALIGN="LEFT">Paleta de colores armónica (verde esmeralda / blanco), tipografía Inter e insignias de estado.</TD>
+                </TR>
+                <TR>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">RNF-05</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Mantenibilidad, código estructurado con Laravel y separación MVC.</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Arquitectura</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Alta</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">CP-ADM-013</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Correcto</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">PanelAdministradorTest</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="CENTER">Sí</TD>
+                    <TD BGCOLOR="#FFFFFF" ALIGN="LEFT">Estructura limpia siguiendo el patrón MVC, seeders idempotentes y tests automatizados Dusk.</TD>
+                </TR>
+            </TABLE>
+        >
+    ];
+}
