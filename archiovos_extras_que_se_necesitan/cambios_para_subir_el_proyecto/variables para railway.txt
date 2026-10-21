@@ -1,0 +1,49 @@
+# ==============================================================================
+# VARIABLES OPTIMIZADAS Y CORREGIDAS PARA RAILWAY (RAW EDITOR)
+# Proyecto: Cancha Sintética Deportiva
+# ==============================================================================
+# Copia y pega TODO este bloque de texto directamente en la pestaña:
+# Servicio de Git (cancha-sintetica) -> Variables -> Raw Editor -> Save Changes
+# ==============================================================================
+
+APP_NAME="Cancha Sintética Deportiva"
+APP_ENV=production
+APP_KEY=base64:xvu+aEMTRSwoynJG5Y1uXSd+Yt2CZlnWvE/sp9pv4j4=
+APP_DEBUG=false
+APP_TIMEZONE=America/Guatemala
+APP_URL=https://cancha-sintetica-production.up.railway.app
+APP_LOCALE=es
+APP_FALLBACK_LOCALE=es
+
+# --- Base de Datos MySQL en Railway ---
+DB_CONNECTION=mysql
+DB_HOST=shinkansen.proxy.rlwy.net
+DB_PORT=22945
+DB_DATABASE=canchasintetica_db
+DB_USERNAME=root
+DB_PASSWORD=MYvPyKJOAIVQUdeQyKGUMQXYUkstJjJS
+
+# --- Almacenamiento, Sesiones y Caché ---
+# Se utiliza 'file' porque tu base de datos no tiene creadas las tablas 'sessions' ni 'cache'.
+# Esto evita errores 500 al navegar o iniciar sesión.
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+CACHE_STORE=file
+QUEUE_CONNECTION=sync
+FILESYSTEM_DISK=public
+
+# --- Logs del Sistema ---
+# stderr permite ver todos los errores y mensajes directamente en la pestaña Deployments de Railway
+LOG_CHANNEL=stderr
+LOG_LEVEL=error
+
+# --- Correo (en modo log) ---
+MAIL_MAILER=log
+MAIL_FROM_ADDRESS=notificaciones@canchasintetica.com
+MAIL_FROM_NAME="${APP_NAME}"
+
+# --- Configuración del Despliegue en Railway (Nixpacks) ---
+# CRÍTICO: Corrige el error del crash anterior (tenía 'cofig:cache' y 'npm install -- production').
+# Nixpacks se encarga de instalar Composer automáticamente; este comando compila Vite y Tailwind CSS.
+NIXPACKS_BUILD_CMD="npm install && npm run build"
+NIXPACKS_PHP_ROOT_DIR="public"
