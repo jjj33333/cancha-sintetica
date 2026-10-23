@@ -1,0 +1,162 @@
+// ==============================================================================
+// PANEL DE ADMINISTRACIÓN - GESTIÓN DE TORNEOS
+// Módulo: Creación, Configuración y Seguimiento de Campeonatos
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph AdminGestionTorneos {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel de Administración - Gestión de Torneos\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_torneos [
+        label="INICIO:\nAdministrador ingresa al módulo\nde Gestión de Torneos"
+    ];
+
+    cargar_tabla_torneos [
+        label="El sistema muestra el listado de torneos:\nNombre, categoría, estado del campeonato,\nequipos participantes y organizador asignado"
+    ];
+
+    decision_accion_torneo [
+        label="¿Qué acción desea realizar\nel administrador con los torneos?"
+    ];
+
+    // Crear Torneo
+    clic_crear_torneo [
+        label="Operación: Nuevo Torneo\nPresiona botón '+ Crear Torneo'"
+    ];
+
+    mostrar_formulario_torneo [
+        label="El sistema despliega el formulario:\n- Nombre del campeonato\n- Categoría (Libre, Sub-20, Femenino)\n- Fechas estimadas de inicio y fin\n- Cupo máximo de equipos\n- Asignación de Organizador responsable\n- Cuota de inscripción y premios"
+    ];
+
+    ingresar_datos_torneo [
+        label="Administrador completa los campos\ny presiona 'Crear Torneo'"
+    ];
+
+    validar_fechas_y_cupos [
+        label="¿Las fechas son coherentes\ny los datos obligatorios válidos?"
+    ];
+
+    error_datos_torneo [
+        label="El sistema señala errores:\n'La fecha de finalización debe ser posterior\na la fecha de inicio'"
+    ];
+
+    guardar_torneo_exito [
+        label="Torneo creado satisfactoriamente:\nEl campeonato queda registrado\ncon estado 'Inscripciones Abiertas'"
+    ];
+
+    // Consultar Torneo
+    clic_ver_torneo [
+        label="Operación: Ver Torneo\nPresiona botón 'Ver Detalles'"
+    ];
+
+    mostrar_panel_torneo [
+        label="El sistema despliega el centro de mando del torneo:\n- Equipos inscritos y plantilla de jugadores\n- Calendario y programación de jornadas\n- Tabla de posiciones actualizada"
+    ];
+
+    // Editar Torneo
+    clic_editar_torneo [
+        label="Operación: Editar Torneo\nPresiona botón 'Editar'"
+    ];
+
+    mostrar_edicion_torneo [
+        label="El sistema carga el formulario de edición:\nPermite actualizar fechas, premios o cambiar\nel estado (Inscripciones, En curso, Finalizado)"
+    ];
+
+    guardar_edicion_torneo [
+        label="Administrador confirma cambios\ny el sistema actualiza la información"
+    ];
+
+    // Eliminar Torneo
+    clic_eliminar_torneo [
+        label="Operación: Eliminar Torneo\nPresiona botón 'Eliminar'"
+    ];
+
+    confirmar_eliminacion_torneo [
+        label="¿El administrador confirma la eliminación?"
+    ];
+
+    eliminar_torneo_exito [
+        label="El sistema elimina el torneo del registro\ny libera los horarios que tenía reservados"
+    ];
+
+    fin_gestion_torneos [
+        label="FIN:\nOperación en torneos completada exitosamente"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_torneos -> cargar_tabla_torneos;
+    cargar_tabla_torneos -> decision_accion_torneo;
+
+    // Crear
+    decision_accion_torneo -> clic_crear_torneo [label="Crear nuevo"];
+    clic_crear_torneo -> mostrar_formulario_torneo;
+    mostrar_formulario_torneo -> ingresar_datos_torneo;
+    ingresar_datos_torneo -> validar_fechas_y_cupos;
+
+    validar_fechas_y_cupos -> error_datos_torneo [label="Fechas inválidas"];
+    error_datos_torneo -> mostrar_formulario_torneo [label="Corrige datos"];
+
+    validar_fechas_y_cupos -> guardar_torneo_exito [label="Datos correctos"];
+    guardar_torneo_exito -> fin_gestion_torneos;
+
+    // Ver
+    decision_accion_torneo -> clic_ver_torneo [label="Ver detalle"];
+    clic_ver_torneo -> mostrar_panel_torneo;
+    mostrar_panel_torneo -> fin_gestion_torneos;
+
+    // Editar
+    decision_accion_torneo -> clic_editar_torneo [label="Modificar"];
+    clic_editar_torneo -> mostrar_edicion_torneo;
+    mostrar_edicion_torneo -> guardar_edicion_torneo;
+    guardar_edicion_torneo -> fin_gestion_torneos;
+
+    // Eliminar
+    decision_accion_torneo -> clic_eliminar_torneo [label="Eliminar"];
+    clic_eliminar_torneo -> confirmar_eliminacion_torneo;
+    confirmar_eliminacion_torneo -> cargar_tabla_torneos [label="Cancela"];
+    confirmar_eliminacion_torneo -> eliminar_torneo_exito [label="Confirma"];
+    eliminar_torneo_exito -> fin_gestion_torneos;
+}

@@ -1,0 +1,106 @@
+// ==============================================================================
+// PANEL DE ADMINISTRACIÓN - INFORMACIÓN DE CONTACTO
+// Módulo: Configuración de Canales Oficiales, Redes Sociales y Logotipo
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph AdminInformacionContacto {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel de Administración - Información de Contacto\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_contacto_admin [
+        label="INICIO:\nAdministrador ingresa al módulo\nde Información de Contacto"
+    ];
+
+    mostrar_formulario_canales [
+        label="El sistema despliega los canales oficiales:\n- Nombre comercial del complejo\n- Teléfono principal y secundario\n- Número de WhatsApp directo\n- Correo electrónico de atención\n- Enlaces a páginas de Facebook e Instagram\n- Dirección física y enlace de Google Maps\n- Logotipo institucional y favicon"
+    ];
+
+    decision_operacion_contacto [
+        label="¿Qué modificación desea realizar\nel administrador?"
+    ];
+
+    // Modificar datos de contacto
+    editar_datos_canales [
+        label="Operación: Actualizar Canales y Dirección\nModifica teléfonos, WhatsApp, redes o ubicación"
+    ];
+
+    // Cambiar Logotipo
+    cambiar_logotipo [
+        label="Operación: Actualizar Identidad Visual\nSube un nuevo archivo de logo o favicon"
+    ];
+
+    // Eliminar Logo existente
+    eliminar_logotipo [
+        label="Operación: Restablecer Logotipo\nPresiona botón 'Eliminar Logo' para usar el predeterminado"
+    ];
+
+    guardar_cambios_contacto [
+        label="Administrador presiona el botón\n'Guardar Información de Contacto'"
+    ];
+
+    actualizacion_contacto_exitosa [
+        label="El sistema actualiza los registros:\nLos nuevos teléfonos, enlaces y logotipo\nse reflejan de inmediato en todo el portal público"
+    ];
+
+    fin_gestion_contacto [
+        label="FIN:\nCanales de atención al cliente actualizados con éxito"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_contacto_admin -> mostrar_formulario_canales;
+    mostrar_formulario_canales -> decision_operacion_contacto;
+
+    decision_operacion_contacto -> editar_datos_canales [label="Modificar datos"];
+    decision_operacion_contacto -> cambiar_logotipo [label="Cambiar logo"];
+    decision_operacion_contacto -> eliminar_logotipo [label="Quitar logo"];
+
+    editar_datos_canales -> guardar_cambios_contacto;
+    cambiar_logotipo -> guardar_cambios_contacto;
+    eliminar_logotipo -> guardar_cambios_contacto;
+
+    guardar_cambios_contacto -> actualizacion_contacto_exitosa;
+    actualizacion_contacto_exitosa -> fin_gestion_contacto;
+}

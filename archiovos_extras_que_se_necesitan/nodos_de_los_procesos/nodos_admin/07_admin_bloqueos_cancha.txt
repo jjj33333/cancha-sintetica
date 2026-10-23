@@ -1,0 +1,129 @@
+// ==============================================================================
+// PANEL DE ADMINISTRACIÓN - BLOQUEOS DE CANCHA
+// Módulo: Inhabilitación de Horarios por Mantenimiento o Eventos Especiales
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph AdminBloqueosCancha {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel de Administración - Bloqueos de Cancha\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_bloqueos [
+        label="INICIO:\nAdministrador ingresa al módulo\nde Bloqueos de Cancha"
+    ];
+
+    cargar_tabla_bloqueos [
+        label="El sistema muestra los bloqueos registrados:\nMotivo, fecha de inicio y fin,\nrango de horas inhabilitadas y estado actual"
+    ];
+
+    decision_operacion_bloqueo [
+        label="¿Qué acción desea realizar\nel administrador con los bloqueos?"
+    ];
+
+    // Operación 1: Registrar Nuevo Bloqueo
+    clic_nuevo_bloqueo [
+        label="Operación: Nuevo Bloqueo\nPresiona botón '+ Inhabilitar Horario'"
+    ];
+
+    mostrar_formulario_bloqueo [
+        label="El sistema presenta el formulario:\n- Motivo (Mantenimiento de césped, Luminarias, Clima, Evento cívico)\n- Fecha de inicio y fecha de finalización\n- Rango de horas o día completo\n- Observaciones adicionales"
+    ];
+
+    ingresar_datos_bloqueo [
+        label="Administrador completa la información\ny presiona 'Guardar Bloqueo'"
+    ];
+
+    verificar_reservas_afectadas [
+        label="¿Existen reservas ya confirmadas\nque coincidan con el horario a bloquear?"
+    ];
+
+    aviso_reservas_existentes [
+        label="Advertencia de conflicto:\nEl sistema notifica que existen clientes agendados\npara que sean avisados o reprogramados"
+    ];
+
+    aplicar_bloqueo_cancha [
+        label="Bloqueo registrado con éxito:\nLas horas quedan inhabilitadas en el calendario\ny no podrán ser reservadas por ningún usuario"
+    ];
+
+    // Operación 2: Levantar Bloqueo
+    clic_eliminar_bloqueo [
+        label="Operación: Levantar Bloqueo\nPresiona botón 'Liberar / Eliminar'"
+    ];
+
+    confirmar_liberacion [
+        label="¿El administrador confirma levantar el bloqueo?"
+    ];
+
+    bloqueo_retirado_exito [
+        label="El sistema elimina el bloqueo:\nLos horarios vuelven a quedar disponibles\npara juego y reservas en el calendario"
+    ];
+
+    fin_gestion_bloqueos [
+        label="FIN:\nControl de inhabilitación de cancha completado"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_bloqueos -> cargar_tabla_bloqueos;
+    cargar_tabla_bloqueos -> decision_operacion_bloqueo;
+
+    // Crear bloqueo
+    decision_operacion_bloqueo -> clic_nuevo_bloqueo [label="Nuevo Bloqueo"];
+    clic_nuevo_bloqueo -> mostrar_formulario_bloqueo;
+    mostrar_formulario_bloqueo -> ingresar_datos_bloqueo;
+    ingresar_datos_bloqueo -> verificar_reservas_afectadas;
+
+    verificar_reservas_afectadas -> aviso_reservas_existentes [label="Hay reservas agendadas"];
+    aviso_reservas_existentes -> aplicar_bloqueo_cancha [label="Confirma bloqueo"];
+
+    verificar_reservas_afectadas -> aplicar_bloqueo_cancha [label="Horario completamente libre"];
+    aplicar_bloqueo_cancha -> fin_gestion_bloqueos;
+
+    // Levantar bloqueo
+    decision_operacion_bloqueo -> clic_eliminar_bloqueo [label="Levantar Bloqueo"];
+    clic_eliminar_bloqueo -> confirmar_liberacion;
+    confirmar_liberacion -> cargar_tabla_bloqueos [label="Cancela acción"];
+    confirmar_liberacion -> bloqueo_retirado_exito [label="Confirma liberación"];
+    bloqueo_retirado_exito -> fin_gestion_bloqueos;
+}

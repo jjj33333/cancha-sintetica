@@ -1,0 +1,169 @@
+// ==============================================================================
+// DIAGRAMA DE NODOS DE PROCESO: PÁGINA DE INICIO (PORTAL PÚBLICO)
+// Módulo: Información de Instalaciones, Servicios y Accesos Principales
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph ProcesoModuloInicio {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Portal Público - Página de Inicio\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_home [
+        label="INICIO:\nUsuario ingresa al portal web\ndesde su computadora o celular"
+    ];
+
+    cargar_pagina_inicio [
+        label="El sistema carga y presenta\nla página de inicio con la información\nactualizada del complejo deportivo"
+    ];
+
+    ver_portada_principal [
+        label="El usuario visualiza la portada principal:\n- Mensaje de bienvenida del complejo\n- Píldora de estado de instalaciones\n- Accesos directos a servicios destacados"
+    ];
+
+    decision_accion_usuario [
+        label="¿Qué acción desea realizar\nel usuario en la página de inicio?"
+    ];
+
+    // Opciones del usuario
+    clic_ver_horarios [
+        label="Opción 1:\nUsuario presiona botón\n'Ver Horarios y Disponibilidad'"
+    ];
+
+    ir_a_horarios [
+        label="El sistema lo traslada a la sección\nde consulta de horarios y disponibilidad"
+    ];
+
+    clic_contactar_whatsapp [
+        label="Opción 2:\nUsuario presiona botón\n'Contactar por WhatsApp'"
+    ];
+
+    abrir_whatsapp [
+        label="Se abre la aplicación de WhatsApp\ncon un mensaje automático para\nsolicitar información sobre la cancha"
+    ];
+
+    clic_ver_torneos [
+        label="Opción 3:\nUsuario presiona botón\n'Ver Torneos'"
+    ];
+
+    ir_a_torneos [
+        label="El sistema lo traslada a la sección\nde campeonatos y partidos programados"
+    ];
+
+    desplazar_hacia_abajo [
+        label="Opción 4:\nUsuario se desplaza hacia abajo (scroll)\npara conocer las instalaciones a detalle"
+    ];
+
+    // Secciones de información
+    ver_servicios_cancha [
+        label="Sección 'Sobre Nuestra Cancha':\nEl usuario consulta las comodidades:\n- Césped sintético de alta calidad\n- Iluminación LED nocturna\n- Estacionamiento para vehículos\n- Préstamo de balones y chalecos\n- Graderías y tienda de bebidas"
+    ];
+
+    ver_tarifas_horarios [
+        label="Sección 'Horarios de Atención y Precios':\nEl usuario revisa los días de apertura,\nlos turnos disponibles y las tarifas por hora"
+    ];
+
+    ver_galeria_fotos [
+        label="Sección 'Galería de Fotos':\nEl usuario observa imágenes reales\nde la cancha y sus alrededores"
+    ];
+
+    ver_llamado_accion [
+        label="Sección de Invitación a Reservar:\nEl usuario encuentra el llamado final\npara comunicarse y agendar su partido"
+    ];
+
+    ver_pie_pagina [
+        label="Pie de Página (Footer):\nEl usuario visualiza la dirección física,\nel horario de atención y los canales oficiales"
+    ];
+
+    decision_pie_pagina [
+        label="¿Desea comunicarse desde el pie de página?"
+    ];
+
+    realizar_llamada [
+        label="Usuario presiona el número de teléfono\ny su dispositivo inicia la llamada directa"
+    ];
+
+    abrir_redes_sociales [
+        label="Usuario presiona los enlaces de\nFacebook o Instagram de la cancha"
+    ];
+
+    fin_proceso_inicio [
+        label="FIN:\nUsuario completamente informado sobre\nlas instalaciones, servicios y formas de contacto"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_home -> cargar_pagina_inicio;
+    cargar_pagina_inicio -> ver_portada_principal;
+    ver_portada_principal -> decision_accion_usuario;
+
+    // Conexiones de las opciones
+    decision_accion_usuario -> clic_ver_horarios [label="Consulta horarios"];
+    clic_ver_horarios -> ir_a_horarios;
+    ir_a_horarios -> fin_proceso_inicio;
+
+    decision_accion_usuario -> clic_contactar_whatsapp [label="Escribe al WhatsApp"];
+    clic_contactar_whatsapp -> abrir_whatsapp;
+    abrir_whatsapp -> fin_proceso_inicio;
+
+    decision_accion_usuario -> clic_ver_torneos [label="Consulta torneos"];
+    clic_ver_torneos -> ir_a_torneos;
+    ir_a_torneos -> fin_proceso_inicio;
+
+    decision_accion_usuario -> desplazar_hacia_abajo [label="Explora contenido"];
+
+    // Flujo de lectura de la página
+    desplazar_hacia_abajo -> ver_servicios_cancha;
+    ver_servicios_cancha -> ver_tarifas_horarios;
+    ver_tarifas_horarios -> ver_galeria_fotos;
+    ver_galeria_fotos -> ver_llamado_accion;
+    ver_llamado_accion -> ver_pie_pagina;
+
+    ver_pie_pagina -> decision_pie_pagina;
+    decision_pie_pagina -> realizar_llamada [label="Llama por teléfono"];
+    decision_pie_pagina -> abrir_redes_sociales [label="Visita redes sociales"];
+    decision_pie_pagina -> fin_proceso_inicio [label="Concluye visita"];
+
+    realizar_llamada -> fin_proceso_inicio;
+    abrir_redes_sociales -> fin_proceso_inicio;
+}

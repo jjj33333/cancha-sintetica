@@ -1,0 +1,142 @@
+// ==============================================================================
+// PANEL DEL ORGANIZADOR - GESTIÓN DE MIS TORNEOS
+// Módulo: Creación, Configuración y Seguimiento de Campeonatos Asignados
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph OrganizadorMisTorneos {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel del Organizador - Mis Torneos\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_mis_torneos [
+        label="INICIO:\nOrganizador ingresa a la sección\nde Mis Torneos"
+    ];
+
+    cargar_tabla_mis_torneos [
+        label="El sistema muestra los torneos a cargo del organizador:\nNombre, categoría, estado actual,\nequipos inscritos vs cupos máximos y fechas"
+    ];
+
+    decision_operacion_torneo [
+        label="¿Qué acción desea realizar\nel organizador en sus torneos?"
+    ];
+
+    // Crear Torneo
+    clic_crear_torneo_org [
+        label="Operación: Nuevo Campeonato\nPresiona botón '+ Crear Torneo'"
+    ];
+
+    mostrar_formulario_org [
+        label="El sistema presenta el formulario:\n- Nombre del campeonato\n- Categoría (Libre, Sub-20, Femenino)\n- Fechas de inicio y conclusión\n- Cantidad máxima de equipos\n- Cuota de inscripción y premios a repartir"
+    ];
+
+    ingresar_datos_torneo_org [
+        label="Organizador ingresa las especificaciones\ny presiona 'Crear Torneo'"
+    ];
+
+    validar_fechas_org [
+        label="¿Las fechas son válidas y coherentes?"
+    ];
+
+    error_fechas_org [
+        label="El sistema advierte error en fechas:\nLa fecha final debe ser posterior a la fecha de inicio"
+    ];
+
+    torneo_creado_exito_org [
+        label="Torneo creado satisfactoriamente:\nQueda en estado 'Inscripciones Abiertas'\ny listo para recibir inscripciones"
+    ];
+
+    // Ver Torneo
+    clic_ver_torneo_org [
+        label="Operación: Centro de Mando del Torneo\nPresiona botón 'Gestionar Torneo'"
+    ];
+
+    mostrar_detalle_torneo_org [
+        label="El sistema abre el panel operativo del torneo:\nVisualiza pestañas de equipos, rol de partidos y tabla"
+    ];
+
+    // Editar Torneo
+    clic_editar_torneo_org [
+        label="Operación: Editar Campeonato\nPresiona botón 'Editar'"
+    ];
+
+    mostrar_edicion_torneo_org [
+        label="El sistema carga el formulario de edición:\nPermite actualizar premios o cambiar el estado\n(abrir inscripciones, pasar a 'En curso' o 'Finalizado')"
+    ];
+
+    guardar_edicion_torneo_org [
+        label="Organizador confirma los cambios\ny el sistema actualiza el estado del torneo"
+    ];
+
+    fin_mis_torneos [
+        label="FIN:\nGestión de campeonatos completada"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_mis_torneos -> cargar_tabla_mis_torneos;
+    cargar_tabla_mis_torneos -> decision_operacion_torneo;
+
+    // Crear
+    decision_operacion_torneo -> clic_crear_torneo_org [label="Nuevo torneo"];
+    clic_crear_torneo_org -> mostrar_formulario_org;
+    mostrar_formulario_org -> ingresar_datos_torneo_org;
+    ingresar_datos_torneo_org -> validar_fechas_org;
+
+    validar_fechas_org -> error_fechas_org [label="Fechas erróneas"];
+    error_fechas_org -> mostrar_formulario_org [label="Corrige fechas"];
+
+    validar_fechas_org -> torneo_creado_exito_org [label="Fechas correctas"];
+    torneo_creado_exito_org -> fin_mis_torneos;
+
+    // Ver
+    decision_operacion_torneo -> clic_ver_torneo_org [label="Gestionar"];
+    clic_ver_torneo_org -> mostrar_detalle_torneo_org;
+    mostrar_detalle_torneo_org -> fin_mis_torneos;
+
+    // Editar
+    decision_operacion_torneo -> clic_editar_torneo_org [label="Editar / Cambiar estado"];
+    clic_editar_torneo_org -> mostrar_edicion_torneo_org;
+    mostrar_edicion_torneo_org -> guardar_edicion_torneo_org;
+    guardar_edicion_torneo_org -> fin_mis_torneos;
+}

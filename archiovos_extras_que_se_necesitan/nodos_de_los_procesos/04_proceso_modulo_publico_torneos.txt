@@ -1,0 +1,142 @@
+// ==============================================================================
+// DIAGRAMA DE NODOS DE PROCESO: MÓDULO DE TORNEOS DEPORTIVOS
+// Módulo: Torneos Activos, Calendario de Partidos y Tabla de Posiciones
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph ProcesoModuloTorneos {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Portal Público - Torneos Deportivos\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_torneos [
+        label="INICIO:\nUsuario ingresa a la sección\nde Torneos Deportivos"
+    ];
+
+    cargar_modulo_torneos [
+        label="El sistema organiza la información\ndel campeonato en tres pestañas de navegación:\n1. Torneos Activos\n2. Calendario de Partidos\n3. Tabla de Posiciones"
+    ];
+
+    decision_pestaña [
+        label="¿Qué información desea\nconsultar el usuario?"
+    ];
+
+    // Pestaña 1: Torneos Activos
+    elegir_torneos_activos [
+        label="Pestaña 'Torneos Activos'\n(Opción predeterminada)"
+    ];
+
+    verificar_existencia_torneos [
+        label="¿Existen torneos registrados\ny vigentes actualmente?"
+    ];
+
+    aviso_sin_torneos [
+        label="El sistema muestra un mensaje amigable:\n'No hay torneos activos en este momento'"
+    ];
+
+    mostrar_tarjetas_torneos [
+        label="El sistema presenta las tarjetas de campeonatos:\n- Nombre del torneo y categoría (Libre, Sub-20, Femenino)\n- Estado (En curso / Inscripciones abiertas)\n- Fechas de inicio y finalización\n- Equipos inscritos y cupos disponibles\n- Nombre del organizador del torneo"
+    ];
+
+    clic_ver_partidos_torneo [
+        label="Usuario presiona el botón\n'Ver partidos' en la tarjeta del torneo"
+    ];
+
+    // Pestaña 2: Calendario de Partidos
+    elegir_calendario_partidos [
+        label="Pestaña 'Calendario de Partidos'"
+    ];
+
+    mostrar_rol_partidos [
+        label="El sistema presenta la lista de partidos:\n- Equipos que se enfrentan (Local vs Visitante)\n- Fecha y hora exacta de cada encuentro\n- Jornada o fase del campeonato\n- Estado del partido (Programado, En juego o Finalizado)\n- Marcador final de goles si ya concluyó"
+    ];
+
+    jugadores_consultan_partido [
+        label="Jugadores y capitanes conocen con exactitud\ncuándo les toca jugar y contra quién"
+    ];
+
+    // Pestaña 3: Tabla de Posiciones
+    elegir_tabla_posiciones [
+        label="Pestaña 'Tabla de Posiciones'"
+    ];
+
+    mostrar_tabla_clasificacion [
+        label="El sistema despliega la tabla de clasificación:\n- Posición en la tabla (1°, 2°, 3°, ...)\n- Nombre del equipo participante\n- Partidos jugados, ganados, empatados y perdidos\n- Goles a favor, goles en contra y diferencia de goles\n- Puntos totales acumulados en el torneo"
+    ];
+
+    identificar_clasificados [
+        label="Los aficionados y equipos visualizan\nquiénes van en los primeros lugares\ny clasifican a las fases finales"
+    ];
+
+    fin_proceso_torneos [
+        label="FIN:\nUsuario y participantes informados\nsobre todo lo que ocurre en el torneo"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_torneos -> cargar_modulo_torneos;
+    cargar_modulo_torneos -> decision_pestaña;
+
+    // Camino 1: Torneos Activos
+    decision_pestaña -> elegir_torneos_activos [label="Ver Torneos"];
+    elegir_torneos_activos -> verificar_existencia_torneos;
+
+    verificar_existencia_torneos -> aviso_sin_torneos [label="Sin torneos"];
+    aviso_sin_torneos -> fin_proceso_torneos;
+
+    verificar_existencia_torneos -> mostrar_tarjetas_torneos [label="Torneos activos"];
+    mostrar_tarjetas_torneos -> clic_ver_partidos_torneo [label="Consulta partidos"];
+    clic_ver_partidos_torneo -> elegir_calendario_partidos;
+
+    // Camino 2: Calendario
+    decision_pestaña -> elegir_calendario_partidos [label="Ver Calendario"];
+    elegir_calendario_partidos -> mostrar_rol_partidos;
+    mostrar_rol_partidos -> jugadores_consultan_partido;
+    jugadores_consultan_partido -> fin_proceso_torneos;
+
+    // Camino 3: Tabla de Posiciones
+    decision_pestaña -> elegir_tabla_posiciones [label="Ver Posiciones"];
+    elegir_tabla_posiciones -> mostrar_tabla_clasificacion;
+    mostrar_tabla_clasificacion -> identificar_clasificados;
+    identificar_clasificados -> fin_proceso_torneos;
+}

@@ -1,0 +1,129 @@
+// ==============================================================================
+// PANEL DE ADMINISTRACIÓN - GESTIÓN DE TARIFAS
+// Módulo: Configuración de Precios de Alquiler y Horarios Especiales
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph AdminGestionTarifas {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel de Administración - Gestión de Tarifas\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_tarifas [
+        label="INICIO:\nAdministrador ingresa al módulo\nde Gestión de Tarifas"
+    ];
+
+    cargar_tabla_tarifas [
+        label="El sistema muestra el esquema de precios vigente:\nNombre de tarifa, precio por hora, días aplicables,\nhorario diurno/nocturno y estado activo"
+    ];
+
+    decision_operacion_tarifa [
+        label="¿Qué ajuste o cambio de precios\ndesea realizar el administrador?"
+    ];
+
+    // Crear Nueva Tarifa
+    clic_nueva_tarifa [
+        label="Operación: Nueva Tarifa\nPresiona botón '+ Agregar Tarifa'"
+    ];
+
+    mostrar_formulario_tarifa [
+        label="El sistema muestra el formulario de precios:\n- Nombre identificador (ej. Horario Nocturno LED)\n- Precio por hora en Quetzales\n- Rango de horas aplicables (ej. 18:00 a 23:00)\n- Días de la semana (Lunes a Viernes, Fin de semana)\n- Estado activa / inactiva"
+    ];
+
+    guardar_tarifa [
+        label="Administrador ingresa los valores\ny presiona 'Guardar Tarifa'"
+    ];
+
+    tarifa_guardada_exito [
+        label="Tarifa registrada exitosamente:\nSe aplicará como precio sugerido al crear\nnuevas reservas en esos horarios"
+    ];
+
+    // Modificar Tarifa
+    clic_editar_tarifa [
+        label="Operación: Modificar Tarifa\nPresiona botón 'Editar' en la tarifa deseada"
+    ];
+
+    mostrar_formulario_edicion_tarifa [
+        label="El sistema carga los valores actuales\npara actualizar montos o ajustar franjas horarias"
+    ];
+
+    guardar_edicion_tarifa [
+        label="Administrador confirma nuevo precio\ny el sistema actualiza la tarifa"
+    ];
+
+    // Activar o Desactivar
+    clic_estado_tarifa [
+        label="Operación: Habilitar / Deshabilitar\nCambia el estado de vigencia de la tarifa"
+    ];
+
+    actualizar_estado_tarifa [
+        label="El sistema activa o desactiva la tarifa\npara los cálculos automáticos del sistema"
+    ];
+
+    fin_gestion_tarifas [
+        label="FIN:\nEsquema de precios y tarifas actualizado"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_tarifas -> cargar_tabla_tarifas;
+    cargar_tabla_tarifas -> decision_operacion_tarifa;
+
+    // Crear
+    decision_operacion_tarifa -> clic_nueva_tarifa [label="Nueva tarifa"];
+    clic_nueva_tarifa -> mostrar_formulario_tarifa;
+    mostrar_formulario_tarifa -> guardar_tarifa;
+    guardar_tarifa -> tarifa_guardada_exito;
+    tarifa_guardada_exito -> fin_gestion_tarifas;
+
+    // Editar
+    decision_operacion_tarifa -> clic_editar_tarifa [label="Modificar precio"];
+    clic_editar_tarifa -> mostrar_formulario_edicion_tarifa;
+    mostrar_formulario_edicion_tarifa -> guardar_edicion_tarifa;
+    guardar_edicion_tarifa -> fin_gestion_tarifas;
+
+    // Cambiar estado
+    decision_operacion_tarifa -> clic_estado_tarifa [label="Habilitar/Deshabilitar"];
+    clic_estado_tarifa -> actualizar_estado_tarifa;
+    actualizar_estado_tarifa -> fin_gestion_tarifas;
+}

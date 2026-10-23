@@ -1,0 +1,208 @@
+// ==============================================================================
+// INICIO DE SESIÓN Y CONTROL DE ROLES
+// Módulo: Autenticación de Usuarios y Redirección a Paneles de Trabajo
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph ProcesoInicioSesion {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Inicio de Sesión y Control de Roles\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio [
+        label="INICIO:\nUsuario se encuentra en cualquier\npágina pública del portal web"
+    ];
+
+    clic_boton_login [
+        label="Usuario presiona el botón\n'Iniciar Sesión' en la barra de navegación"
+    ];
+
+    mostrar_modal [
+        label="El sistema despliega la ventana\nflotante de inicio de sesión"
+    ];
+
+    opcion_cerrar [
+        label="¿El usuario decide continuar\no prefiere cerrar la ventana?"
+    ];
+
+    cerrar_modal [
+        label="Usuario presiona botón de cerrar (X)\no hace clic fuera de la ventana"
+    ];
+
+    retorno_portal [
+        label="La ventana se cierra y el usuario\npermanece en la página pública"
+    ];
+
+    ingresar_datos [
+        label="Usuario escribe sus datos de acceso:\n- Correo electrónico\n- Contraseña"
+    ];
+
+    presionar_entrar [
+        label="Usuario presiona el botón\n'Entrar al Sistema'"
+    ];
+
+    enviar_datos [
+        label="El sistema recibe y procesa\nlos datos ingresados"
+    ];
+
+    validar_campos [
+        label="¿Los campos están completos\ny con el formato correcto?"
+    ];
+
+    error_campos [
+        label="Datos incompletos o formato inválido:\nEl sistema muestra mensaje de advertencia\nindicando los campos requeridos"
+    ];
+
+    comprobar_credenciales [
+        label="El sistema consulta la base de datos\npara verificar si el correo y la\ncontraseña son correctos y el usuario está activo"
+    ];
+
+    credenciales_correctas [
+        label="¿Los datos coinciden exactamente\ncon un usuario registrado?"
+    ];
+
+    error_credenciales [
+        label="Credenciales incorrectas:\nEl sistema muestra mensaje de error:\n'Las credenciales no coinciden con nuestros registros'"
+    ];
+
+    iniciar_sesion [
+        label="Autenticación exitosa:\nEl sistema autoriza el ingreso\ny genera la sesión de trabajo segura"
+    ];
+
+    identificar_rol [
+        label="El sistema identifica el rol\nasignado al usuario"
+    ];
+
+    evaluar_tipo_rol [
+        label="¿Qué rol tiene asignado el usuario?"
+    ];
+
+    // Redirecciones por rol
+    rol_administrador [
+        label="Rol Administrador:\nEl sistema redirige hacia\nel Panel de Administración"
+    ];
+
+    dashboard_admin [
+        label="FIN INGRESO ADMIN:\nAdministrador accede a su panel\ncon permisos totales del sistema"
+    ];
+
+    rol_trabajador [
+        label="Rol Trabajador:\nEl sistema redirige hacia\nel Panel del Trabajador"
+    ];
+
+    dashboard_trabajador [
+        label="FIN INGRESO TRABAJADOR:\nTrabajador accede a su panel\npara gestionar reservas y clientes"
+    ];
+
+    rol_organizador [
+        label="Rol Organizador:\nEl sistema redirige hacia\nel Panel del Organizador"
+    ];
+
+    dashboard_organizador [
+        label="FIN INGRESO ORGANIZADOR:\nOrganizador accede a su panel\npara gestionar torneos, equipos y partidos"
+    ];
+
+    // Proceso de Cierre de Sesión (Logout)
+    clic_cerrar_sesion [
+        label="Usuario autenticado presiona el botón\n'Cerrar Sesión' dentro de su panel"
+    ];
+
+    destruir_sesion [
+        label="El sistema finaliza la sesión activa,\nlimpia los permisos de acceso de la memoria\ny garantiza la seguridad de la cuenta"
+    ];
+
+    fin_logout [
+        label="FIN CIERRE DE SESIÓN:\nEl usuario es redirigido a la\npágina principal pública del sistema"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio -> clic_boton_login;
+    clic_boton_login -> mostrar_modal;
+    mostrar_modal -> opcion_cerrar;
+
+    // Camino si cancela
+    opcion_cerrar -> cerrar_modal [label="Cancela"];
+    cerrar_modal -> retorno_portal;
+    retorno_portal -> inicio;
+
+    // Camino si continúa
+    opcion_cerrar -> ingresar_datos [label="Continúa"];
+    ingresar_datos -> presionar_entrar;
+    presionar_entrar -> enviar_datos;
+    enviar_datos -> validar_campos;
+
+    // Validación de campos
+    validar_campos -> error_campos [label="Campos vacíos"];
+    error_campos -> ingresar_datos [label="Corrige datos"];
+
+    validar_campos -> comprobar_credenciales [label="Campos válidos"];
+    comprobar_credenciales -> credenciales_correctas;
+
+    // Verificación de credenciales
+    credenciales_correctas -> error_credenciales [label="No coinciden"];
+    error_credenciales -> ingresar_datos [label="Reintenta ingresar"];
+
+    credenciales_correctas -> iniciar_sesion [label="Coinciden correctamente"];
+    iniciar_sesion -> identificar_rol;
+    identificar_rol -> evaluar_tipo_rol;
+
+    // Bifurcación por rol
+    evaluar_tipo_rol -> rol_administrador [label="Es Administrador"];
+    rol_administrador -> dashboard_admin;
+
+    evaluar_tipo_rol -> rol_trabajador [label="Es Trabajador"];
+    rol_trabajador -> dashboard_trabajador;
+
+    evaluar_tipo_rol -> rol_organizador [label="Es Organizador"];
+    rol_organizador -> dashboard_organizador;
+
+    // Cierre de sesión
+    dashboard_admin -> clic_cerrar_sesion [style=dashed, label="Cierra sesión"];
+    dashboard_trabajador -> clic_cerrar_sesion [style=dashed, label="Cierra sesión"];
+    dashboard_organizador -> clic_cerrar_sesion [style=dashed, label="Cierra sesión"];
+
+    clic_cerrar_sesion -> destruir_sesion;
+    destruir_sesion -> fin_logout;
+    fin_logout -> inicio;
+}

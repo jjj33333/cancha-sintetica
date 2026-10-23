@@ -1,0 +1,135 @@
+// ==============================================================================
+// PANEL DEL TRABAJADOR - CALENDARIO GENERAL
+// Módulo: Consulta Rápida de Ocupación y Agendamiento en Cuadrícula
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph TrabajadorCalendarioGeneral {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel del Trabajador - Calendario General\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_calendario_trabajador [
+        label="INICIO:\nTrabajador ingresa al módulo\nde Calendario General"
+    ];
+
+    cargar_cuadricula_trabajador [
+        label="El sistema recopila las reservas del mes,\npartidos de campeonatos y horarios bloqueados\npara dibujarlos en el calendario"
+    ];
+
+    mostrar_mes_trabajador [
+        label="El trabajador visualiza la cuadrícula mensual:\n- Indicadores visuales de horas libres y ocupadas\n- Flechas para avanzar o retroceder de mes"
+    ];
+
+    decision_accion_calendario [
+        label="¿Qué acción desea realizar\nel colaborador en el calendario?"
+    ];
+
+    // Cambiar de mes
+    clic_navegar_mes [
+        label="Navegar entre meses:\nPresiona botón de mes anterior o siguiente"
+    ];
+
+    actualizar_mes_trabajador [
+        label="El sistema recarga la disponibilidad\ndel nuevo mes elegido"
+    ];
+
+    // Seleccionar día
+    clic_dia_calendario [
+        label="Seleccionar día:\nPresiona sobre una fecha específica"
+    ];
+
+    mostrar_horas_dia_trabajador [
+        label="El sistema despliega el horario por bloques de 1 hora:\n(de 07:00 a 23:00 con estado disponible u ocupado)"
+    ];
+
+    decision_bloque_hora [
+        label="¿Qué bloque de hora presiona el trabajador?"
+    ];
+
+    // Hora libre
+    clic_hora_libre [
+        label="Presiona hora disponible"
+    ];
+
+    formulario_reserva_precargado [
+        label="El sistema abre la ventana de nueva reserva\ncon la fecha y hora seleccionada pre-llenadas"
+    ];
+
+    // Hora ocupada
+    clic_hora_ocupada [
+        label="Presiona hora ocupada"
+    ];
+
+    mostrar_datos_reserva_ocupada [
+        label="El sistema muestra el nombre del cliente que juega\ny si el pago se encuentra liquidado o pendiente"
+    ];
+
+    fin_calendario_trabajador [
+        label="FIN:\nDisponibilidad verificada o reserva canalizada"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_calendario_trabajador -> cargar_cuadricula_trabajador;
+    cargar_cuadricula_trabajador -> mostrar_mes_trabajador;
+    mostrar_mes_trabajador -> decision_accion_calendario;
+
+    decision_accion_calendario -> clic_navegar_mes [label="Cambiar mes"];
+    clic_navegar_mes -> actualizar_mes_trabajador;
+    actualizar_mes_trabajador -> mostrar_mes_trabajador;
+
+    decision_accion_calendario -> clic_dia_calendario [label="Revisar día"];
+    clic_dia_calendario -> mostrar_horas_dia_trabajador;
+    mostrar_horas_dia_trabajador -> decision_bloque_hora;
+
+    decision_bloque_hora -> clic_hora_libre [label="Hora libre"];
+    clic_hora_libre -> formulario_reserva_precargado;
+    formulario_reserva_precargado -> fin_calendario_trabajador;
+
+    decision_bloque_hora -> clic_hora_ocupada [label="Hora ocupada"];
+    clic_hora_ocupada -> mostrar_datos_reserva_ocupada;
+    mostrar_datos_reserva_ocupada -> fin_calendario_trabajador;
+
+    decision_bloque_hora -> fin_calendario_trabajador [label="Concluye consulta"];
+}

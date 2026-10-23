@@ -1,0 +1,119 @@
+// ==============================================================================
+// PANEL DEL TRABAJADOR - DASHBOARD PRINCIPAL
+// Módulo: Panel de Control del Turno de Trabajo y Accesos Rápidos
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph TrabajadorDashboardPrincipal {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel del Trabajador - Dashboard Principal\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_dashboard_trabajador [
+        label="INICIO:\nTrabajador inicia sesión en el sistema\ny accede al Dashboard Operativo"
+    ];
+
+    cargar_resumen_operativo [
+        label="El sistema recopila las reservas del día,\nlos horarios agendados y la disponibilidad\ninmediata de la cancha principal"
+    ];
+
+    mostrar_vista_trabajador [
+        label="El sistema presenta la pantalla de trabajo:\n- Saludo de bienvenida con el nombre del colaborador\n- Tarjetas de acceso rápido a reservas y calendario\n- Menú lateral con las opciones autorizadas"
+    ];
+
+    decision_accion_trabajador [
+        label="¿Qué tarea operativa desea\nrealizar el trabajador?"
+    ];
+
+    // Acceso Rápido a Reservas
+    clic_acceso_reservas [
+        label="Acceso Rápido a Reservas:\nPresiona tarjeta 'Gestión de Reservas'"
+    ];
+
+    ir_modulo_reservas_trabajador [
+        label="El sistema lo traslada al módulo de reservas\npara registrar clientes, consultar horas o cobrar"
+    ];
+
+    // Acceso Rápido a Calendario
+    clic_acceso_calendario [
+        label="Acceso Rápido a Calendario:\nPresiona tarjeta 'Calendario General'"
+    ];
+
+    ir_modulo_calendario_trabajador [
+        label="El sistema lo traslada al calendario interactivo\npara verificar la ocupación de toda la semana o mes"
+    ];
+
+    // Cierre de sesión
+    clic_cerrar_sesion_trabajador [
+        label="Finalización de turno:\nPresiona botón 'Cerrar Sesión' en el menú"
+    ];
+
+    cerrar_sesion_segura [
+        label="El sistema cierra la sesión activa de forma segura\ny regresa al portal público de inicio"
+    ];
+
+    fin_dashboard_trabajador [
+        label="FIN:\nOperación completada o navegación\nen curso hacia el módulo de atención"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_dashboard_trabajador -> cargar_resumen_operativo;
+    cargar_resumen_operativo -> mostrar_vista_trabajador;
+    mostrar_vista_trabajador -> decision_accion_trabajador;
+
+    // Camino Reservas
+    decision_accion_trabajador -> clic_acceso_reservas [label="Atender Reservas"];
+    clic_acceso_reservas -> ir_modulo_reservas_trabajador;
+    ir_modulo_reservas_trabajador -> fin_dashboard_trabajador;
+
+    // Camino Calendario
+    decision_accion_trabajador -> clic_acceso_calendario [label="Revisar Calendario"];
+    clic_acceso_calendario -> ir_modulo_calendario_trabajador;
+    ir_modulo_calendario_trabajador -> fin_dashboard_trabajador;
+
+    // Camino Logout
+    decision_accion_trabajador -> clic_cerrar_sesion_trabajador [label="Terminar Turno"];
+    clic_cerrar_sesion_trabajador -> cerrar_sesion_segura;
+    cerrar_sesion_segura -> fin_dashboard_trabajador;
+}

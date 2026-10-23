@@ -1,0 +1,129 @@
+// ==============================================================================
+// PANEL DE ADMINISTRACIÓN - GALERÍA DE IMÁGENES
+// Módulo: Administración del Banco Multimedia y Fotografías del Complejo
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph AdminGaleriaImagenes {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel de Administración - Galería de Imágenes\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_galeria [
+        label="INICIO:\nAdministrador ingresa al módulo\nde Galería de Imágenes"
+    ];
+
+    cargar_cuadricula_fotos [
+        label="El sistema despliega el catálogo de fotografías:\nVista en cuadrícula con miniaturas de fotos,\ntítulos y categorías asignadas"
+    ];
+
+    decision_operacion_galeria [
+        label="¿Qué acción desea realizar\nel administrador con la galería?"
+    ];
+
+    // Subir Foto
+    clic_subir_foto [
+        label="Operación: Subir Imagen\nPresiona botón '+ Añadir Fotografía'"
+    ];
+
+    mostrar_formulario_foto [
+        label="El sistema presenta el formulario de carga:\n- Selector de archivo de imagen desde el equipo\n- Título o descripción de la fotografía\n- Categoría (Cancha, Torneos, Premiaciones, Instalaciones)"
+    ];
+
+    cargar_archivo_foto [
+        label="Administrador selecciona el archivo\ny presiona 'Subir Imagen'"
+    ];
+
+    validar_formato_imagen [
+        label="¿El archivo tiene formato válido de imagen\ny tamaño adecuado?"
+    ];
+
+    error_formato_imagen [
+        label="El sistema indica error:\n'Archivo no válido o tamaño excedido'"
+    ];
+
+    guardar_foto_exito [
+        label="Fotografía almacenada exitosamente:\nSe incorpora a la galería y se publica\nen la página de inicio para los visitantes"
+    ];
+
+    // Eliminar Foto
+    clic_eliminar_foto [
+        label="Operación: Eliminar Imagen\nPresiona icono de papelera en la fotografía"
+    ];
+
+    confirmar_eliminar_foto [
+        label="¿El administrador confirma eliminar la foto?"
+    ];
+
+    foto_eliminada_exito [
+        label="El sistema elimina la imagen del catálogo\ny la retira del portal público"
+    ];
+
+    fin_gestion_galeria [
+        label="FIN:\nGestión de banco multimedia finalizada"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_galeria -> cargar_cuadricula_fotos;
+    cargar_cuadricula_fotos -> decision_operacion_galeria;
+
+    // Subir
+    decision_operacion_galeria -> clic_subir_foto [label="Subir foto"];
+    clic_subir_foto -> mostrar_formulario_foto;
+    mostrar_formulario_foto -> cargar_archivo_foto;
+    cargar_archivo_foto -> validar_formato_imagen;
+
+    validar_formato_imagen -> error_formato_imagen [label="Formato inválido"];
+    error_formato_imagen -> mostrar_formulario_foto [label="Elige otra imagen"];
+
+    validar_formato_imagen -> guardar_foto_exito [label="Imagen correcta"];
+    guardar_foto_exito -> fin_gestion_galeria;
+
+    // Eliminar
+    decision_operacion_galeria -> clic_eliminar_foto [label="Eliminar foto"];
+    clic_eliminar_foto -> confirmar_eliminar_foto;
+    confirmar_eliminar_foto -> cargar_cuadricula_fotos [label="Cancela"];
+    confirmar_eliminar_foto -> foto_eliminada_exito [label="Confirma"];
+    foto_eliminada_exito -> fin_gestion_galeria;
+}

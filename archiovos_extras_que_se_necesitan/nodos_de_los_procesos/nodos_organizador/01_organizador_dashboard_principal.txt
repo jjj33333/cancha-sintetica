@@ -1,0 +1,139 @@
+// ==============================================================================
+// PANEL DEL ORGANIZADOR - DASHBOARD PRINCIPAL
+// Módulo: Centro de Control de Campeonatos y Accesos Directos
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph OrganizadorDashboardPrincipal {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel del Organizador - Dashboard Principal\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_dashboard_organizador [
+        label="INICIO:\nOrganizador inicia sesión en el sistema\ny accede al Dashboard del Campeonato"
+    ];
+
+    cargar_resumen_torneos [
+        label="El sistema recopila las estadísticas de los torneos a su cargo:\n- Torneos activos y en proceso de inscripción\n- Total de equipos registrados\n- Partidos pendientes por jugar en la semana\n- Estado general de la tabla de posiciones"
+    ];
+
+    mostrar_vista_organizador [
+        label="El sistema despliega el centro de control deportivo:\n- Saludo de bienvenida con el nombre del organizador\n- Tarjetas de resumen con métricas de campeonatos\n- Accesos rápidos a Torneos, Equipos, Partidos y Posiciones\n- Menú lateral de navegación deportiva"
+    ];
+
+    decision_accion_organizador [
+        label="¿Qué tarea de organización deportiva\ndesea realizar el usuario?"
+    ];
+
+    // Accesos rápidos
+    clic_modulo_torneos [
+        label="Acceso a Torneos:\nPresiona tarjeta 'Mis Torneos'"
+    ];
+
+    ir_a_torneos [
+        label="El sistema traslada a la administración de torneos\npara crear, editar fechas o cambiar estados"
+    ];
+
+    clic_modulo_equipos [
+        label="Acceso a Equipos:\nPresiona tarjeta 'Equipos Participantes'"
+    ];
+
+    ir_a_equipos [
+        label="El sistema traslada a la gestión de clubes\npara inscribir equipos y revisar pagos de inscripción"
+    ];
+
+    clic_modulo_partidos [
+        label="Acceso a Partidos:\nPresiona tarjeta 'Partidos y Resultados'"
+    ];
+
+    ir_a_partidos [
+        label="El sistema traslada a la programación de jornadas\ny registro de goles y resultados"
+    ];
+
+    clic_modulo_posiciones [
+        label="Acceso a Posiciones:\nPresiona tarjeta 'Tabla de Posiciones'"
+    ];
+
+    ir_a_posiciones [
+        label="El sistema traslada a la tabla clasificatoria\npara consultar puntos y líderes"
+    ];
+
+    // Cerrar sesión
+    clic_logout_organizador [
+        label="Presiona botón 'Cerrar Sesión'\nen la parte inferior del menú lateral"
+    ];
+
+    cerrar_sesion_organizador [
+        label="El sistema finaliza la sesión activa\ny redirige a la página principal pública"
+    ];
+
+    fin_dashboard_organizador [
+        label="FIN:\nOperación completada o navegación\nen curso hacia el módulo del torneo"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_dashboard_organizador -> cargar_resumen_torneos;
+    cargar_resumen_torneos -> mostrar_vista_organizador;
+    mostrar_vista_organizador -> decision_accion_organizador;
+
+    decision_accion_organizador -> clic_modulo_torneos [label="Administrar Torneos"];
+    clic_modulo_torneos -> ir_a_torneos;
+    ir_a_torneos -> fin_dashboard_organizador;
+
+    decision_accion_organizador -> clic_modulo_equipos [label="Controlar Equipos"];
+    clic_modulo_equipos -> ir_a_equipos;
+    ir_a_equipos -> fin_dashboard_organizador;
+
+    decision_accion_organizador -> clic_modulo_partidos [label="Programar Partidos"];
+    clic_modulo_partidos -> ir_a_partidos;
+    ir_a_partidos -> fin_dashboard_organizador;
+
+    decision_accion_organizador -> clic_modulo_posiciones [label="Revisar Posiciones"];
+    clic_modulo_posiciones -> ir_a_posiciones;
+    ir_a_posiciones -> fin_dashboard_organizador;
+
+    decision_accion_organizador -> clic_logout_organizador [label="Cerrar Sesión"];
+    clic_logout_organizador -> cerrar_sesion_organizador;
+    cerrar_sesion_organizador -> fin_dashboard_organizador;
+}

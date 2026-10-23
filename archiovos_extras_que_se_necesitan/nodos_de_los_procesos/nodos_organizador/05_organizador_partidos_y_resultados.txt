@@ -1,0 +1,133 @@
+// ==============================================================================
+// PANEL DEL ORGANIZADOR - PARTIDOS Y RESULTADOS
+// Módulo: Programación de Jornadas, Horarios en Cancha y Marcadores
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph OrganizadorPartidosResultados {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel del Organizador - Partidos y Resultados\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_partidos_org [
+        label="INICIO:\nOrganizador ingresa al módulo\nde Partidos y Resultados"
+    ];
+
+    cargar_rol_partidos_org [
+        label="El sistema muestra el calendario de encuentros:\nTorneo, jornada, equipos que se enfrentan,\nfecha y hora en cancha, y estado (Programado/Finalizado)"
+    ];
+
+    decision_operacion_partido [
+        label="¿Qué acción desea realizar\nel organizador?"
+    ];
+
+    // Programar Partido
+    clic_programar_partido [
+        label="Operación: Programar Partido\nPresiona botón '+ Agendar Encuentro'"
+    ];
+
+    mostrar_formulario_partido [
+        label="El sistema presenta el formulario:\n- Selección del Torneo y Jornada\n- Selección de Equipo Local y Equipo Visitante\n- Fecha y hora programada en la cancha principal\n- Árbitro asignado (opcional)"
+    ];
+
+    ingresar_datos_partido [
+        label="Organizador selecciona los equipos y el horario\ny presiona 'Guardar Partido'"
+    ];
+
+    validar_cancha_disponible [
+        label="¿La cancha está libre en ese horario\nsin reservas de clientes ni otros partidos?"
+    ];
+
+    error_cancha_ocupada [
+        label="Horario en conflicto:\nEl sistema notifica que la cancha ya está apartada\nen esa hora y solicita elegir otro horario"
+    ];
+
+    partido_programado_exito [
+        label="Partido programado exitosamente:\nSe agenda en el calendario oficial,\nse notifica en el portal público y se bloquea la hora"
+    ];
+
+    // Registrar Marcador / Resultado
+    clic_registrar_marcador [
+        label="Operación: Cargar Marcador\nPresiona botón 'Registrar Resultado'"
+    ];
+
+    mostrar_formulario_marcador [
+        label="El sistema presenta la ventana de marcador:\n- Ingreso de goles del Equipo Local\n- Ingreso de goles del Equipo Visitante\n- Opción para marcar partido como 'Finalizado'"
+    ];
+
+    guardar_resultado_partido [
+        label="Organizador ingresa los goles del juego\ny presiona 'Confirmar Resultado'"
+    ];
+
+    actualizar_tabla_automatica [
+        label="Actualización automática:\nEl sistema asigna los puntos (3 al ganador, 1 por empate),\ncalcula goles a favor/contra y refresca la tabla de posiciones"
+    ];
+
+    fin_partidos_org [
+        label="FIN:\nProgramación o resultado registrado satisfactoriamente"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_partidos_org -> cargar_rol_partidos_org;
+    cargar_rol_partidos_org -> decision_operacion_partido;
+
+    // Programar
+    decision_operacion_partido -> clic_programar_partido [label="Programar juego"];
+    clic_programar_partido -> mostrar_formulario_partido;
+    mostrar_formulario_partido -> ingresar_datos_partido;
+    ingresar_datos_partido -> validar_cancha_disponible;
+
+    validar_cancha_disponible -> error_cancha_ocupada [label="Hora ocupada"];
+    error_cancha_ocupada -> mostrar_formulario_partido [label="Cambia hora"];
+
+    validar_cancha_disponible -> partido_programado_exito [label="Hora libre"];
+    partido_programado_exito -> fin_partidos_org;
+
+    // Registrar Marcador
+    decision_operacion_partido -> clic_registrar_marcador [label="Cargar marcador"];
+    clic_registrar_marcador -> mostrar_formulario_marcador;
+    mostrar_formulario_marcador -> guardar_resultado_partido;
+    guardar_resultado_partido -> actualizar_tabla_automatica;
+    actualizar_tabla_automatica -> fin_partidos_org;
+}

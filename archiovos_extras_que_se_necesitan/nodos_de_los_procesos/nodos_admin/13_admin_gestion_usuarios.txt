@@ -1,0 +1,142 @@
+// ==============================================================================
+// PANEL DE ADMINISTRACIÓN - GESTIÓN DE USUARIOS
+// Módulo: Control de Cuentas, Asignación de Roles y Permisos de Acceso
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph AdminGestionUsuarios {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel de Administración - Gestión de Usuarios\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_usuarios [
+        label="INICIO:\nAdministrador ingresa al módulo\nde Gestión de Usuarios"
+    ];
+
+    cargar_tabla_usuarios [
+        label="El sistema muestra las cuentas registradas:\nNombre, correo electrónico, rol asignado\n(Administrador, Trabajador, Organizador) y estado"
+    ];
+
+    decision_operacion_usuario [
+        label="¿Qué acción desea realizar\nel administrador con los usuarios?"
+    ];
+
+    // Crear Usuario
+    clic_nuevo_usuario [
+        label="Operación: Nuevo Usuario\nPresiona botón '+ Registrar Usuario'"
+    ];
+
+    mostrar_formulario_usuario [
+        label="El sistema presenta el formulario de alta:\n- Nombre y apellido completo\n- Correo electrónico institucional\n- Rol a asignar (Administrador, Trabajador, Organizador)\n- Teléfono de contacto\n- Contraseña y confirmación"
+    ];
+
+    guardar_usuario [
+        label="Administrador completa los campos\ny presiona 'Crear Usuario'"
+    ];
+
+    validar_correo_unico [
+        label="¿El correo electrónico ya existe\nen otra cuenta del sistema?"
+    ];
+
+    error_correo_duplicado [
+        label="El sistema avisa error:\n'El correo ya se encuentra registrado por otro usuario'"
+    ];
+
+    usuario_creado_exito [
+        label="Usuario creado exitosamente:\nLa cuenta queda habilitada para iniciar sesión\ny acceder a las funciones de su rol"
+    ];
+
+    // Modificar Usuario
+    clic_editar_usuario [
+        label="Operación: Editar Usuario\nPresiona botón 'Editar' en la cuenta deseada"
+    ];
+
+    mostrar_edicion_usuario [
+        label="El sistema carga el formulario de edición:\nPermite actualizar datos de contacto, reasignar rol\no restablecer una nueva contraseña"
+    ];
+
+    guardar_edicion_usuario [
+        label="Administrador confirma cambios\ny el sistema actualiza la cuenta"
+    ];
+
+    // Activar o Suspender
+    clic_cambiar_estado [
+        label="Operación: Activar / Desactivar\nCambia el estado de acceso de la cuenta"
+    ];
+
+    actualizar_estado_cuenta [
+        label="El sistema suspende o reactiva la cuenta:\nUn usuario suspendido no podrá ingresar al sistema"
+    ];
+
+    fin_gestion_usuarios [
+        label="FIN:\nAdministración de usuarios y accesos completada"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_usuarios -> cargar_tabla_usuarios;
+    cargar_tabla_usuarios -> decision_operacion_usuario;
+
+    // Crear
+    decision_operacion_usuario -> clic_nuevo_usuario [label="Nuevo usuario"];
+    clic_nuevo_usuario -> mostrar_formulario_usuario;
+    mostrar_formulario_usuario -> guardar_usuario;
+    guardar_usuario -> validar_correo_unico;
+
+    validar_correo_unico -> error_correo_duplicado [label="Correo repetido"];
+    error_correo_duplicado -> mostrar_formulario_usuario [label="Corrige correo"];
+
+    validar_correo_unico -> usuario_creado_exito [label="Correo disponible"];
+    usuario_creado_exito -> fin_gestion_usuarios;
+
+    // Editar
+    decision_operacion_usuario -> clic_editar_usuario [label="Modificar datos"];
+    clic_editar_usuario -> mostrar_edicion_usuario;
+    mostrar_edicion_usuario -> guardar_edicion_usuario;
+    guardar_edicion_usuario -> fin_gestion_usuarios;
+
+    // Cambiar estado
+    decision_operacion_usuario -> clic_cambiar_estado [label="Suspender/Reactivar"];
+    clic_cambiar_estado -> actualizar_estado_cuenta;
+    actualizar_estado_cuenta -> fin_gestion_usuarios;
+}

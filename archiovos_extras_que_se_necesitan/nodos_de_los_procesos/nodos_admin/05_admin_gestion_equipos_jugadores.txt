@@ -1,0 +1,157 @@
+// ==============================================================================
+// PANEL DE ADMINISTRACIÓN - EQUIPOS Y JUGADORES
+// Módulo: Registro de Clubes, Plantillas de Jugadores y Asignaciones
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph AdminEquiposJugadores {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel de Administración - Equipos y Jugadores\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_equipos [
+        label="INICIO:\nAdministrador ingresa al módulo\nde Equipos y Jugadores"
+    ];
+
+    cargar_lista_equipos [
+        label="El sistema presenta la lista de equipos:\nNombre, representante/capitán,\ncolor de uniforme y total de jugadores inscritos"
+    ];
+
+    decision_operacion_equipo [
+        label="¿Qué tarea desea realizar\nel administrador en este módulo?"
+    ];
+
+    // Operación 1: Registrar Nuevo Equipo
+    clic_nuevo_equipo [
+        label="Operación: Nuevo Equipo\nPresiona botón '+ Registrar Equipo'"
+    ];
+
+    mostrar_formulario_equipo [
+        label="El sistema muestra el formulario de registro:\n- Nombre del equipo\n- Nombre del representante / delegado\n- Teléfono de contacto\n- Color principal de uniforme\n- Escudo o logo del equipo (opcional)"
+    ];
+
+    guardar_equipo [
+        label="Administrador completa los datos\ny presiona 'Guardar Equipo'"
+    ];
+
+    equipo_guardado_exito [
+        label="Equipo creado exitosamente:\nSe agrega a la lista general y queda disponible\npara ser inscrito en los torneos"
+    ];
+
+    // Operación 2: Gestionar Plantilla de Jugadores
+    clic_gestionar_jugadores [
+        label="Operación: Plantilla de Jugadores\nPresiona botón 'Ver Jugadores' en un equipo"
+    ];
+
+    mostrar_nomina_jugadores [
+        label="El sistema despliega la nómina del equipo:\nListado de jugadores con su número de dorsal,\nposición de juego y datos de contacto"
+    ];
+
+    decision_accion_jugador [
+        label="¿Qué acción desea realizar en la plantilla?"
+    ];
+
+    clic_agregar_jugador [
+        label="Presiona botón '+ Agregar Jugador'"
+    ];
+
+    mostrar_formulario_jugador [
+        label="El sistema muestra formulario de jugador:\n- Nombre y apellido\n- Número de camiseta (dorsal)\n- Posición (Portero, Defensa, Medio, Delantero)\n- Teléfono del jugador"
+    ];
+
+    validar_dorsal_unico [
+        label="¿El número de camiseta ya está ocupado\npor otro jugador del mismo equipo?"
+    ];
+
+    error_dorsal_repetido [
+        label="El sistema avisa error:\n'El número de dorsal ya está en uso en este equipo'"
+    ];
+
+    jugador_registrado_exito [
+        label="Jugador registrado con éxito:\nSe incorpora a la nómina oficial del equipo"
+    ];
+
+    // Operación 3: Modificar o Dar de Baja
+    clic_modificar_jugador [
+        label="Editar / Eliminar Jugador:\nPresiona botón correspondiente en la fila"
+    ];
+
+    actualizar_o_eliminar_jugador [
+        label="El sistema actualiza los datos del jugador\no lo retira de la plantilla del equipo"
+    ];
+
+    fin_equipos_jugadores [
+        label="FIN:\nGestión de clubes y jugadores completada"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_equipos -> cargar_lista_equipos;
+    cargar_lista_equipos -> decision_operacion_equipo;
+
+    // Crear Equipo
+    decision_operacion_equipo -> clic_nuevo_equipo [label="Crear Equipo"];
+    clic_nuevo_equipo -> mostrar_formulario_equipo;
+    mostrar_formulario_equipo -> guardar_equipo;
+    guardar_equipo -> equipo_guardado_exito;
+    equipo_guardado_exito -> fin_equipos_jugadores;
+
+    // Gestionar Jugadores
+    decision_operacion_equipo -> clic_gestionar_jugadores [label="Ver Jugadores"];
+    clic_gestionar_jugadores -> mostrar_nomina_jugadores;
+    mostrar_nomina_jugadores -> decision_accion_jugador;
+
+    decision_accion_jugador -> clic_agregar_jugador [label="Inscribir jugador"];
+    clic_agregar_jugador -> mostrar_formulario_jugador;
+    mostrar_formulario_jugador -> validar_dorsal_unico;
+
+    validar_dorsal_unico -> error_dorsal_repetido [label="Dorsal repetido"];
+    error_dorsal_repetido -> mostrar_formulario_jugador [label="Cambia dorsal"];
+
+    validar_dorsal_unico -> jugador_registrado_exito [label="Dorsal válido"];
+    jugador_registrado_exito -> fin_equipos_jugadores;
+
+    decision_accion_jugador -> clic_modificar_jugador [label="Modificar/Eliminar"];
+    clic_modificar_jugador -> actualizar_o_eliminar_jugador;
+    actualizar_o_eliminar_jugador -> fin_equipos_jugadores;
+}

@@ -1,0 +1,88 @@
+// ==============================================================================
+// PANEL DEL ORGANIZADOR - TABLA DE POSICIONES
+// Módulo: Clasificación General, Estadísticas de Clubes y Definición de Fases
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph OrganizadorTablaPosiciones {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel del Organizador - Tabla de Posiciones\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_posiciones_org [
+        label="INICIO:\nOrganizador ingresa al módulo\nde Tabla de Posiciones"
+    ];
+
+    seleccionar_torneo_consulta [
+        label="El organizador selecciona el torneo\nque desea inspeccionar en el menú desplegable"
+    ];
+
+    calcular_puntos_equipos [
+        label="El sistema computa los marcadores registrados:\n- 3 puntos por victoria\n- 1 punto por empate\n- 0 puntos por derrota\n- Sumatoria de goles y cálculo de diferencia de gol"
+    ];
+
+    mostrar_tabla_posiciones_org [
+        label="El sistema despliega la tabla oficial:\n- Posición en ranking (1°, 2°, 3°, ...)\n- Nombre del Club y escudo\n- PJ: Jugados, PG: Ganados, PE: Empatados, PP: Perdidos\n- GF: Goles a favor, GC: Goles en contra, DG: Diferencia\n- PTS: Puntos totales acumulados"
+    ];
+
+    identificar_clasificados_liguilla [
+        label="El organizador identifica los equipos en zona de clasificación\npara definir los cruces de semifinales o finales"
+    ];
+
+    imprimir_o_compartir_tabla [
+        label="Organizador consulta o imprime la tabla oficial\npara compartirla con los delegados y en el portal público"
+    ];
+
+    fin_posiciones_org [
+        label="FIN:\nControl y seguimiento de la tabla de posiciones completado"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_posiciones_org -> seleccionar_torneo_consulta;
+    seleccionar_torneo_consulta -> calcular_puntos_equipos;
+    calcular_puntos_equipos -> mostrar_tabla_posiciones_org;
+    mostrar_tabla_posiciones_org -> identificar_clasificados_liguilla;
+    identificar_clasificados_liguilla -> imprimir_o_compartir_tabla;
+    imprimir_o_compartir_tabla -> fin_posiciones_org;
+}

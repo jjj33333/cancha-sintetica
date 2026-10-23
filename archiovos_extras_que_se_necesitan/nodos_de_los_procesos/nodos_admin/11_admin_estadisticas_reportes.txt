@@ -1,0 +1,96 @@
+// ==============================================================================
+// PANEL DE ADMINISTRACIÓN - ESTADÍSTICAS Y REPORTES
+// Módulo: Métricas de Rendimiento, Ocupación y Análisis Financiero
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph AdminEstadisticasReportes {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel de Administración - Estadísticas y Reportes\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_estadisticas [
+        label="INICIO:\nAdministrador ingresa al módulo\nde Estadísticas y Reportes"
+    ];
+
+    cargar_panel_metricas [
+        label="El sistema calcula los indicadores clave:\n- Total de ingresos acumulados por alquiler\n- Porcentaje de ocupación de la cancha\n- Horas pico de mayor demanda\n- Proporción de métodos de pago (Efectivo vs Transferencia)"
+    ];
+
+    mostrar_graficos_resumen [
+        label="El sistema despliega el panel analítico:\nTarjetas de totales financieros, gráficas de tendencia\ny comparativa de reservas por día de la semana"
+    ];
+
+    decision_filtro_periodo [
+        label="¿El administrador desea filtrar\npor un período específico?"
+    ];
+
+    clic_seleccionar_filtro [
+        label="Selecciona rango temporal:\nMes actual, mes anterior o rango personalizado"
+    ];
+
+    recalcular_estadisticas [
+        label="El sistema actualiza instantáneamente los cálculos\ny refresca las gráficas con las fechas indicadas"
+    ];
+
+    consultar_reporte_detallado [
+        label="El administrador analiza los resultados\npara tomar decisiones sobre horarios,\npromociones y tarifas del negocio"
+    ];
+
+    fin_gestion_estadisticas [
+        label="FIN:\nAnálisis de métricas e informes completado"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_estadisticas -> cargar_panel_metricas;
+    cargar_panel_metricas -> mostrar_graficos_resumen;
+    mostrar_graficos_resumen -> decision_filtro_periodo;
+
+    decision_filtro_periodo -> clic_seleccionar_filtro [label="Aplicar filtro"];
+    clic_seleccionar_filtro -> recalcular_estadisticas;
+    recalcular_estadisticas -> consultar_reporte_detallado;
+
+    decision_filtro_periodo -> consultar_reporte_detallado [label="Ver período actual"];
+    consultar_reporte_detallado -> fin_gestion_estadisticas;
+}

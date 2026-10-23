@@ -1,0 +1,137 @@
+// ==============================================================================
+// PANEL DEL ORGANIZADOR - EQUIPOS PARTICIPANTES
+// Módulo: Inscripción, Registro de Clubes y Validación de Cupos
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph OrganizadorEquiposParticipantes {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel del Organizador - Equipos Participantes\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_equipos_org [
+        label="INICIO:\nOrganizador ingresa al módulo\nde Equipos Participantes"
+    ];
+
+    cargar_tabla_equipos_org [
+        label="El sistema muestra los equipos inscritos:\nNombre del equipo, torneo en que participa,\ncapitán/delegado, contacto y cantidad de jugadores"
+    ];
+
+    decision_accion_equipo_org [
+        label="¿Qué acción desea realizar\nel organizador en equipos?"
+    ];
+
+    // Inscribir Equipo
+    clic_inscribir_equipo [
+        label="Operación: Inscribir Equipo\nPresiona botón '+ Inscribir Equipo'"
+    ];
+
+    mostrar_formulario_inscripcion [
+        label="El sistema presenta el formulario:\n- Selección del torneo correspondiente\n- Nombre oficial del equipo\n- Nombre del representante o capitán\n- Teléfono de contacto\n- Color principal del uniforme"
+    ];
+
+    ingresar_datos_inscripcion [
+        label="Organizador llena los datos del equipo\ny presiona 'Registrar Inscripción'"
+    ];
+
+    verificar_cupo_torneo [
+        label="¿El torneo aún tiene cupos disponibles\nsegún su límite de equipos?"
+    ];
+
+    error_cupo_lleno [
+        label="Cupo completo:\nEl sistema advierte que el campeonato\nya alcanzó el número máximo de equipos permitidos"
+    ];
+
+    equipo_inscrito_exito [
+        label="Inscripción exitosa:\nEl equipo se incorpora al torneo,\nse habilita su nómina y se añade a la tabla de posiciones"
+    ];
+
+    // Ver Jugadores
+    clic_ver_nomina_org [
+        label="Operación: Ver Jugadores\nPresiona botón 'Jugadores' en la fila del equipo"
+    ];
+
+    ir_a_jugadores_equipo [
+        label="El sistema traslada a la gestión de jugadores\npara revisar las fichas y dorsales de ese equipo"
+    ];
+
+    // Editar Equipo
+    clic_editar_equipo_org [
+        label="Operación: Modificar Equipo\nPresiona botón 'Editar'"
+    ];
+
+    actualizar_datos_equipo [
+        label="Organizador modifica datos de contacto o uniforme\ny el sistema guarda los cambios"
+    ];
+
+    fin_equipos_org [
+        label="FIN:\nControl e inscripción de equipos completada"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_equipos_org -> cargar_tabla_equipos_org;
+    cargar_tabla_equipos_org -> decision_accion_equipo_org;
+
+    // Inscripción
+    decision_accion_equipo_org -> clic_inscribir_equipo [label="Inscribir equipo"];
+    clic_inscribir_equipo -> mostrar_formulario_inscripcion;
+    mostrar_formulario_inscripcion -> ingresar_datos_inscripcion;
+    ingresar_datos_inscripcion -> verificar_cupo_torneo;
+
+    verificar_cupo_torneo -> error_cupo_lleno [label="Cupo lleno"];
+    error_cupo_lleno -> fin_equipos_org;
+
+    verificar_cupo_torneo -> equipo_inscrito_exito [label="Cupo disponible"];
+    equipo_inscrito_exito -> fin_equipos_org;
+
+    // Ver nómina
+    decision_accion_equipo_org -> clic_ver_nomina_org [label="Revisar plantilla"];
+    clic_ver_nomina_org -> ir_a_jugadores_equipo;
+    ir_a_jugadores_equipo -> fin_equipos_org;
+
+    // Editar
+    decision_accion_equipo_org -> clic_editar_equipo_org [label="Editar datos"];
+    clic_editar_equipo_org -> actualizar_datos_equipo;
+    actualizar_datos_equipo -> fin_equipos_org;
+}

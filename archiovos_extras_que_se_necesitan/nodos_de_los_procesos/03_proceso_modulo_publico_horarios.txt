@@ -1,0 +1,195 @@
+// ==============================================================================
+// DIAGRAMA DE NODOS DE PROCESO: MÓDULO DE HORARIOS Y DISPONIBILIDAD
+// Módulo: Consulta de Disponibilidad Semanal por Bloques de 1 Hora
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph ProcesoModuloHorarios {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Portal Público - Horarios y Disponibilidad\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_horarios [
+        label="INICIO:\nUsuario ingresa a la sección\nde Horarios y Disponibilidad"
+    ];
+
+    cargar_calendario [
+        label="El sistema organiza y presenta\nel calendario de semanas y días\ncon sus horarios correspondientes"
+    ];
+
+    ver_semana_activa [
+        label="El usuario visualiza la semana activa\ncon las fechas y los botones de navegación"
+    ];
+
+    decision_cambio_semana [
+        label="¿El usuario desea revisar\nuna fecha de otra semana?"
+    ];
+
+    clic_semana_previa [
+        label="Presiona el botón de navegación:\n'Semana Anterior'"
+    ];
+
+    mostrar_semana_previa [
+        label="El sistema actualiza el calendario\ny muestra los días de la semana anterior"
+    ];
+
+    clic_semana_siguiente [
+        label="Presiona el botón de navegación:\n'Siguiente Semana'"
+    ];
+
+    mostrar_semana_siguiente [
+        label="El sistema actualiza el calendario\ny muestra los días de la semana siguiente"
+    ];
+
+    ver_dias_semana [
+        label="El usuario visualiza las tarjetas\nde los días de la semana\n(de Lunes a Domingo)"
+    ];
+
+    seleccionar_dia [
+        label="El usuario presiona sobre el día\nespecífico que le interesa consultar"
+    ];
+
+    mostrar_bloques_horas [
+        label="El sistema despliega los bloques\nde horarios de 1 hora para ese día\n(desde las 07:00 hasta las 23:00)"
+    ];
+
+    identificar_estado_hora [
+        label="El sistema clasifica visualmente\ncada bloque según su estado"
+    ];
+
+    // Estados de horario
+    hora_disponible [
+        label="Estado Disponible (Verde):\nLa cancha está libre en esa hora\npara jugar y ser reservada"
+    ];
+
+    hora_ocupada [
+        label="Estado Ocupado (Rojo):\nLa cancha ya tiene una reserva confirmada\no un partido de torneo agendado"
+    ];
+
+    hora_pasada [
+        label="Estado Pasado (Gris):\nHorario que ya transcurrió en el día"
+    ];
+
+    decision_eleccion_hora [
+        label="¿El usuario encuentra un horario\ndisponible que le convenga?"
+    ];
+
+    buscar_otra_fecha [
+        label="Horario no se acomoda:\nEl usuario selecciona otro día\no cambia de semana en el calendario"
+    ];
+
+    hora_elegida [
+        label="Horario ideal encontrado:\nEl usuario identifica la fecha y la hora\nen la que desea jugar su partido"
+    ];
+
+    ver_tarjeta_reserva [
+        label="El sistema muestra las opciones\nde contacto directo para solicitar la reserva"
+    ];
+
+    decision_medio_reserva [
+        label="¿Por qué medio decide comunicarse?"
+    ];
+
+    contactar_por_whatsapp [
+        label="Opción WhatsApp:\nPresiona botón de WhatsApp con mensaje listo:\n'Hola, deseo reservar el día [fecha] a las [hora]'"
+    ];
+
+    contactar_por_telefono [
+        label="Opción Llamada:\nPresiona el número telefónico para marcar\ndirectamente al encargado de la cancha"
+    ];
+
+    atencion_y_registro [
+        label="El encargado de la cancha atiende la solicitud,\nconfirma los datos del cliente y registra\nla reserva formalmente en el sistema"
+    ];
+
+    fin_proceso_horarios [
+        label="FIN:\nDisponibilidad consultada exitosamente\ny partido programado en la cancha"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_horarios -> cargar_calendario;
+    cargar_calendario -> ver_semana_activa;
+    ver_semana_activa -> decision_cambio_semana;
+
+    // Navegación de semanas
+    decision_cambio_semana -> clic_semana_previa [label="Semana previa"];
+    clic_semana_previa -> mostrar_semana_previa;
+    mostrar_semana_previa -> ver_dias_semana;
+
+    decision_cambio_semana -> clic_semana_siguiente [label="Semana siguiente"];
+    clic_semana_siguiente -> mostrar_semana_siguiente;
+    mostrar_semana_siguiente -> ver_dias_semana;
+
+    decision_cambio_semana -> ver_dias_semana [label="Semana actual"];
+
+    // Selección de día y despliegue de horas
+    ver_dias_semana -> seleccionar_dia;
+    seleccionar_dia -> mostrar_bloques_horas;
+    mostrar_bloques_horas -> identificar_estado_hora;
+
+    // Clasificación de estados
+    identificar_estado_hora -> hora_disponible [label="Libre"];
+    identificar_estado_hora -> hora_ocupada [label="Ocupada"];
+    identificar_estado_hora -> hora_pasada [label="Ya pasada"];
+
+    hora_disponible -> decision_eleccion_hora;
+    hora_ocupada -> decision_eleccion_hora;
+    hora_pasada -> decision_eleccion_hora;
+
+    // Decisión de horario
+    decision_eleccion_hora -> buscar_otra_fecha [label="No disponible / Ocupado"];
+    buscar_otra_fecha -> ver_dias_semana [label="Elige otro día"];
+
+    decision_eleccion_hora -> hora_elegida [label="Horario disponible elegido"];
+    hora_elegida -> ver_tarjeta_reserva;
+    ver_tarjeta_reserva -> decision_medio_reserva;
+
+    // Canales de reserva
+    decision_medio_reserva -> contactar_por_whatsapp [label="Por WhatsApp"];
+    decision_medio_reserva -> contactar_por_telefono [label="Por Llamada"];
+
+    contactar_por_whatsapp -> atencion_y_registro;
+    contactar_por_telefono -> atencion_y_registro;
+    atencion_y_registro -> fin_proceso_horarios;
+}

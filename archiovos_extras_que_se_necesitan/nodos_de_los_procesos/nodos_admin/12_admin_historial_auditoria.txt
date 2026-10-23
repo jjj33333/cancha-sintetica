@@ -1,0 +1,105 @@
+// ==============================================================================
+// PANEL DE ADMINISTRACIÓN - HISTORIAL Y AUDITORÍA
+// Módulo: Bitácora de Acciones, Trazabilidad y Seguridad del Sistema
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph AdminHistorialAuditoria {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel de Administración - Historial y Auditoría\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_historial [
+        label="INICIO:\nAdministrador ingresa al módulo\nde Historial y Auditoría"
+    ];
+
+    cargar_bitacora [
+        label="El sistema recopila el registro cronológico\nde todas las actividades realizadas en el sistema"
+    ];
+
+    mostrar_tabla_auditoria [
+        label="El sistema presenta la tabla de auditoría:\n- Usuario responsable de la acción\n- Tipo de evento (Creación, Modificación, Anulación, Cobro)\n- Módulo afectado (Reservas, Torneos, Usuarios, Tarifas)\n- Fecha y hora exacta del suceso"
+    ];
+
+    decision_consulta_historial [
+        label="¿El administrador desea filtrar\no consultar un registro a detalle?"
+    ];
+
+    // Filtros
+    clic_filtrar_actividad [
+        label="Operación: Filtrar Actividad\nAplica filtros por usuario, fecha o módulo"
+    ];
+
+    actualizar_lista_filtrada [
+        label="El sistema despliega los eventos que coinciden\ncon los parámetros de búsqueda"
+    ];
+
+    // Ver detalle
+    clic_ver_registro [
+        label="Operación: Ver Detalle del Evento\nPresiona botón de inspección en la fila"
+    ];
+
+    mostrar_detalle_evento [
+        label="El sistema muestra los datos antes y después del cambio:\nValores modificados, dirección IP de origen\ny descripción completa de la operación"
+    ];
+
+    fin_gestion_historial [
+        label="FIN:\nAuditoría y control de seguridad completado"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_historial -> cargar_bitacora;
+    cargar_bitacora -> mostrar_tabla_auditoria;
+    mostrar_tabla_auditoria -> decision_consulta_historial;
+
+    decision_consulta_historial -> clic_filtrar_actividad [label="Filtrar eventos"];
+    clic_filtrar_actividad -> actualizar_lista_filtrada;
+    actualizar_lista_filtrada -> decision_consulta_historial;
+
+    decision_consulta_historial -> clic_ver_registro [label="Inspeccionar cambio"];
+    clic_ver_registro -> mostrar_detalle_evento;
+    mostrar_detalle_evento -> fin_gestion_historial;
+
+    decision_consulta_historial -> fin_gestion_historial [label="Concluye revisión"];
+}

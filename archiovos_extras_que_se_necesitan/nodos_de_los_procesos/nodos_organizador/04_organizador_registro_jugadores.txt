@@ -1,0 +1,123 @@
+// ==============================================================================
+// PANEL DEL ORGANIZADOR - REGISTRO DE JUGADORES
+// Módulo: Control de Plantillas, Fichas Deportivas y Dorsales
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph OrganizadorRegistroJugadores {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel del Organizador - Registro de Jugadores\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_jugadores_org [
+        label="INICIO:\nOrganizador ingresa al módulo\nde Registro de Jugadores"
+    ];
+
+    cargar_tabla_jugadores_org [
+        label="El sistema muestra el listado general de futbolistas:\nNombre, equipo al que pertenece,\nnúmero de dorsal, posición de juego y teléfono"
+    ];
+
+    decision_accion_jugador_org [
+        label="¿Qué acción desea realizar\nel organizador en jugadores?"
+    ];
+
+    // Registrar Jugador
+    clic_inscribir_jugador [
+        label="Operación: Inscribir Jugador\nPresiona botón '+ Registrar Jugador'"
+    ];
+
+    mostrar_formulario_jugador_org [
+        label="El sistema despliega el formulario:\n- Selección del equipo participante\n- Nombre y apellido del jugador\n- Número de dorsal (camiseta)\n- Posición (Portero, Defensa, Medio, Delantero)\n- Teléfono de contacto"
+    ];
+
+    ingresar_datos_jugador_org [
+        label="Organizador ingresa los datos de la ficha\ny presiona 'Guardar Jugador'"
+    ];
+
+    validar_dorsal_org [
+        label="¿El dorsal está disponible en ese equipo?"
+    ];
+
+    error_dorsal_org [
+        label="Dorsal ocupado:\nEl sistema notifica que otro jugador del equipo\nya tiene asignado ese número de camiseta"
+    ];
+
+    jugador_registrado_exito_org [
+        label="Jugador registrado con éxito:\nQueda habilitado oficialmente en la nómina\npara disputar los partidos del torneo"
+    ];
+
+    // Modificar o retirar jugador
+    clic_editar_jugador_org [
+        label="Operación: Modificar / Dar de Baja\nPresiona botón de editar o retirar en la fila"
+    ];
+
+    actualizar_datos_jugador_org [
+        label="El sistema actualiza el dorsal o posición,\no retira al jugador de la nómina del equipo"
+    ];
+
+    fin_jugadores_org [
+        label="FIN:\nControl de plantillas y jugadores completado"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_jugadores_org -> cargar_tabla_jugadores_org;
+    cargar_tabla_jugadores_org -> decision_accion_jugador_org;
+
+    // Registrar
+    decision_accion_jugador_org -> clic_inscribir_jugador [label="Inscribir jugador"];
+    clic_inscribir_jugador -> mostrar_formulario_jugador_org;
+    mostrar_formulario_jugador_org -> ingresar_datos_jugador_org;
+    ingresar_datos_jugador_org -> validar_dorsal_org;
+
+    validar_dorsal_org -> error_dorsal_org [label="Dorsal repetido"];
+    error_dorsal_org -> mostrar_formulario_jugador_org [label="Cambia dorsal"];
+
+    validar_dorsal_org -> jugador_registrado_exito_org [label="Dorsal libre"];
+    jugador_registrado_exito_org -> fin_jugadores_org;
+
+    // Modificar
+    decision_accion_jugador_org -> clic_editar_jugador_org [label="Modificar ficha"];
+    clic_editar_jugador_org -> actualizar_datos_jugador_org;
+    actualizar_datos_jugador_org -> fin_jugadores_org;
+}

@@ -1,0 +1,143 @@
+// ==============================================================================
+// DIAGRAMA DE NODOS DE PROCESO: MÓDULO DE CONTACTO Y UBICACIÓN
+// Módulo: Canales de Atención, Redes Sociales y Geolocalización
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph ProcesoModuloContacto {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Portal Público - Contacto y Ubicación\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_contacto [
+        label="INICIO:\nUsuario ingresa a la sección\nde Contacto y Ubicación"
+    ];
+
+    mostrar_canales_atencion [
+        label="El sistema presenta las opciones de comunicación:\n1. Llamada Telefónica\n2. Mensajería por WhatsApp\n3. Correo Electrónico\n4. Redes Sociales (Facebook e Instagram)\n5. Dirección física y mapa de ubicación"
+    ];
+
+    decision_canal [
+        label="¿Qué medio prefiere utilizar\nel usuario para comunicarse?"
+    ];
+
+    // Canal 1: Teléfono
+    elegir_telefono [
+        label="Canal Telefónico:\nUsuario presiona el número de teléfono"
+    ];
+
+    iniciar_llamada [
+        label="El dispositivo del usuario inicia la llamada\npara dialogar directamente con la administración"
+    ];
+
+    // Canal 2: WhatsApp
+    elegir_whatsapp [
+        label="Canal WhatsApp:\nUsuario presiona el botón de WhatsApp"
+    ];
+
+    abrir_chat_whatsapp [
+        label="Se abre la aplicación de WhatsApp para chatear\nen tiempo real y resolver consultas o agendar"
+    ];
+
+    // Canal 3: Correo
+    elegir_correo [
+        label="Canal Correo Electrónico:\nUsuario presiona la dirección de email"
+    ];
+
+    abrir_correo [
+        label="Se abre el gestor de correo electrónico\npara redactar consultas o enviar solicitudes formales"
+    ];
+
+    // Canal 4: Redes Sociales
+    elegir_redes [
+        label="Canal Redes Sociales:\nUsuario presiona el icono de Facebook o Instagram"
+    ];
+
+    abrir_perfil_social [
+        label="Se abre la página oficial del complejo deportivo\npara consultar fotos, videos y seguir novedades"
+    ];
+
+    // Canal 5: Dirección y Google Maps
+    elegir_ubicacion [
+        label="Canal Ubicación Física:\nUsuario consulta la dirección exacta,\nreferencias del lugar y horarios de atención"
+    ];
+
+    clic_abrir_mapa [
+        label="Usuario presiona el botón:\n'Ver en Google Maps'"
+    ];
+
+    abrir_google_maps [
+        label="Se abre el mapa satelital de Google Maps\ncon la ubicación marcada para trazar la ruta en GPS"
+    ];
+
+    fin_proceso_contacto [
+        label="FIN:\nComunicación establecida con éxito\ny cliente atendido por el personal de la cancha"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_contacto -> mostrar_canales_atencion;
+    mostrar_canales_atencion -> decision_canal;
+
+    // Desvío por cada canal
+    decision_canal -> elegir_telefono [label="Por Teléfono"];
+    elegir_telefono -> iniciar_llamada;
+    iniciar_llamada -> fin_proceso_contacto;
+
+    decision_canal -> elegir_whatsapp [label="Por WhatsApp"];
+    elegir_whatsapp -> abrir_chat_whatsapp;
+    abrir_chat_whatsapp -> fin_proceso_contacto;
+
+    decision_canal -> elegir_correo [label="Por Correo"];
+    elegir_correo -> abrir_correo;
+    abrir_correo -> fin_proceso_contacto;
+
+    decision_canal -> elegir_redes [label="Redes Sociales"];
+    elegir_redes -> abrir_perfil_social;
+    abrir_perfil_social -> fin_proceso_contacto;
+
+    decision_canal -> elegir_ubicacion [label="Ubicación Física"];
+    elegir_ubicacion -> clic_abrir_mapa;
+    clic_abrir_mapa -> abrir_google_maps;
+    abrir_google_maps -> fin_proceso_contacto;
+}

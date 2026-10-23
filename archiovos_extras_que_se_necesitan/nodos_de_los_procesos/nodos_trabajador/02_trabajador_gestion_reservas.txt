@@ -1,0 +1,162 @@
+// ==============================================================================
+// PANEL DEL TRABAJADOR - GESTIÓN DE RESERVAS
+// Módulo: Registro Rápido, Cobro y Control de Alquiler de Cancha
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph TrabajadorGestionReservas {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel del Trabajador - Gestión de Reservas\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_reservas_trabajador [
+        label="INICIO:\nTrabajador ingresa al módulo\nde Gestión de Reservas"
+    ];
+
+    cargar_tabla_reservas_trabajador [
+        label="El sistema despliega la lista de reservas:\nOrdenada desde la más reciente,\ncon buscador por nombre de cliente y filtros de estado"
+    ];
+
+    decision_operacion_trabajador [
+        label="¿Qué acción desea ejecutar\nel trabajador en reservas?"
+    ];
+
+    // Crear Reserva Rápida
+    clic_nueva_reserva_trabajador [
+        label="Operación: Nueva Reserva\nPresiona botón '+ Nueva Reserva'"
+    ];
+
+    mostrar_formulario_simplificado [
+        label="El sistema despliega el formulario simplificado:\n- Cancha Principal seleccionada por defecto\n- Nombre del Cliente (Obligatorio)\n- Teléfono del Cliente (Opcional)\n- Fecha del partido y horario seleccionado\n- Precio estándar (Q100 por defecto)\n- Método de pago (Efectivo por defecto) y estado"
+    ];
+
+    ingresar_datos_cliente [
+        label="Trabajador ingresa los datos acordados con el cliente\ny presiona 'Guardar Reserva'"
+    ];
+
+    comprobar_disponibilidad_hora [
+        label="¿El horario seleccionado se encuentra libre\nde otras reservas o torneos?"
+    ];
+
+    error_horario_ocupado [
+        label="Horario no disponible:\nEl sistema notifica que el turno ya está ocupado\ny solicita seleccionar otra hora"
+    ];
+
+    reserva_guardada_exito [
+        label="Reserva registrada con éxito:\nEl turno queda asignado al cliente,\nse actualiza el calendario y se registra al trabajador como creador"
+    ];
+
+    // Ver Detalle
+    clic_ver_reserva [
+        label="Operación: Ver Detalle\nPresiona botón 'Ver' en la reserva"
+    ];
+
+    mostrar_comprobante_reserva [
+        label="El sistema muestra la información completa:\nCliente, fecha, hora, monto cancelado y método de pago"
+    ];
+
+    // Editar Reserva
+    clic_editar_reserva [
+        label="Operación: Editar Reserva\nPresiona botón 'Editar'"
+    ];
+
+    mostrar_edicion_reserva [
+        label="El sistema carga el formulario de edición:\nPermite actualizar horario, confirmar pago recibido\no agregar notas sobre el cliente"
+    ];
+
+    guardar_edicion_reserva [
+        label="Trabajador guarda los cambios\ny el sistema actualiza la reserva"
+    ];
+
+    // Cancelar Reserva
+    clic_cancelar_reserva [
+        label="Operación: Cancelar Reserva\nPresiona botón 'Anular'"
+    ];
+
+    confirmar_cancelacion [
+        label="¿El trabajador confirma la anulación?"
+    ];
+
+    reserva_cancelada_exito [
+        label="El sistema cancela la reserva\ny libera el horario inmediatamente en el calendario"
+    ];
+
+    fin_gestion_reservas_trabajador [
+        label="FIN:\nAtención de reserva concluida exitosamente"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_reservas_trabajador -> cargar_tabla_reservas_trabajador;
+    cargar_tabla_reservas_trabajador -> decision_operacion_trabajador;
+
+    // Crear
+    decision_operacion_trabajador -> clic_nueva_reserva_trabajador [label="Crear reserva"];
+    clic_nueva_reserva_trabajador -> mostrar_formulario_simplificado;
+    mostrar_formulario_simplificado -> ingresar_datos_cliente;
+    ingresar_datos_cliente -> comprobar_disponibilidad_hora;
+
+    comprobar_disponibilidad_hora -> error_horario_ocupado [label="Horario Ocupado"];
+    error_horario_ocupado -> mostrar_formulario_simplificado [label="Cambia hora"];
+
+    comprobar_disponibilidad_hora -> reserva_guardada_exito [label="Horario Libre"];
+    reserva_guardada_exito -> fin_gestion_reservas_trabajador;
+
+    // Ver
+    decision_operacion_trabajador -> clic_ver_reserva [label="Consultar"];
+    clic_ver_reserva -> mostrar_comprobante_reserva;
+    mostrar_comprobante_reserva -> fin_gestion_reservas_trabajador;
+
+    // Editar
+    decision_operacion_trabajador -> clic_editar_reserva [label="Modificar"];
+    clic_editar_reserva -> mostrar_edicion_reserva;
+    mostrar_edicion_reserva -> guardar_edicion_reserva;
+    guardar_edicion_reserva -> fin_gestion_reservas_trabajador;
+
+    // Cancelar
+    decision_operacion_trabajador -> clic_cancelar_reserva [label="Cancelar"];
+    clic_cancelar_reserva -> confirmar_cancelacion;
+    confirmar_cancelacion -> cargar_tabla_reservas_trabajador [label="No cancela"];
+    confirmar_cancelacion -> reserva_cancelada_exito [label="Confirma cancelación"];
+    reserva_cancelada_exito -> fin_gestion_reservas_trabajador;
+}

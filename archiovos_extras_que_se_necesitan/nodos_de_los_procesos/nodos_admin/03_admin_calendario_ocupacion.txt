@@ -1,0 +1,138 @@
+// ==============================================================================
+// PANEL DE ADMINISTRACIÓN - CALENDARIO DE OCUPACIÓN
+// Módulo: Visualización Gráfica de Disponibilidad y Eventos en Cancha
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph AdminCalendarioOcupacion {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel de Administración - Calendario de Ocupación\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_calendario [
+        label="INICIO:\nAdministrador ingresa al módulo\nde Calendario de Ocupación"
+    ];
+
+    cargar_vista_calendario [
+        label="El sistema recopila las reservas confirmadas,\nlos partidos de torneos y los bloqueos de cancha\npara representarlos en la cuadrícula mensual"
+    ];
+
+    mostrar_mes_activo [
+        label="El sistema despliega el calendario mensual:\n- Nombre del mes y año actual\n- Días del mes con indicadores de ocupación\n- Botones de navegación (Mes anterior / Mes siguiente)"
+    ];
+
+    decision_accion_calendario [
+        label="¿Qué acción desea realizar\nel administrador en el calendario?"
+    ];
+
+    // Navegación de mes
+    clic_cambiar_mes [
+        label="Navegación temporal:\nPresiona flecha para cambiar de mes"
+    ];
+
+    actualizar_cuadricula_mes [
+        label="El sistema recarga los eventos y reservas\ndel nuevo mes seleccionado"
+    ];
+
+    // Selección de fecha específica
+    clic_seleccionar_dia [
+        label="Selección de Fecha:\nPresiona sobre un día específico del mes"
+    ];
+
+    desplegar_cronograma_dia [
+        label="El sistema muestra el cronograma detallado del día:\nListado de todas las horas (07:00 a 23:00)\ncon su estado correspondiente"
+    ];
+
+    decision_sobre_horario [
+        label="¿El administrador interactúa\ncon un horario en particular?"
+    ];
+
+    // Caso horario libre
+    clic_hora_disponible [
+        label="Presiona sobre una hora disponible"
+    ];
+
+    abrir_creacion_rapida [
+        label="El sistema abre el formulario de nueva reserva\ncon la fecha y hora pre-cargadas automáticamente"
+    ];
+
+    // Caso horario ocupado
+    clic_hora_ocupada [
+        label="Presiona sobre una hora ocupada"
+    ];
+
+    mostrar_resumen_evento [
+        label="El sistema despliega la información del evento:\n- Nombre del cliente o torneo\n- Tipo de evento (Alquiler privado / Partido oficial)\n- Estado del pago"
+    ];
+
+    fin_calendario [
+        label="FIN:\nConsulta de ocupación completada\no redirección a gestión de reserva"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_calendario -> cargar_vista_calendario;
+    cargar_vista_calendario -> mostrar_mes_activo;
+    mostrar_mes_activo -> decision_accion_calendario;
+
+    // Cambio de mes
+    decision_accion_calendario -> clic_cambiar_mes [label="Cambiar mes"];
+    clic_cambiar_mes -> actualizar_cuadricula_mes;
+    actualizar_cuadricula_mes -> mostrar_mes_activo;
+
+    // Selección de día
+    decision_accion_calendario -> clic_seleccionar_dia [label="Consultar día"];
+    clic_seleccionar_dia -> desplegar_cronograma_dia;
+    desplegar_cronograma_dia -> decision_sobre_horario;
+
+    // Interacción con horarios del día
+    decision_sobre_horario -> clic_hora_disponible [label="Hora libre"];
+    clic_hora_disponible -> abrir_creacion_rapida;
+    abrir_creacion_rapida -> fin_calendario;
+
+    decision_sobre_horario -> clic_hora_ocupada [label="Hora ocupada"];
+    clic_hora_ocupada -> mostrar_resumen_evento;
+    mostrar_resumen_evento -> fin_calendario;
+
+    decision_sobre_horario -> fin_calendario [label="Concluye consulta"];
+}

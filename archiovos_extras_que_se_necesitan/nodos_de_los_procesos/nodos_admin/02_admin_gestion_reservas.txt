@@ -1,0 +1,174 @@
+// ==============================================================================
+// PANEL DE ADMINISTRACIÓN - GESTIÓN DE RESERVAS
+// Módulo: Control Integral de Reservas, Alquileres y Pagos
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph AdminGestionReservas {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel de Administración - Gestión de Reservas\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_reservas [
+        label="INICIO:\nAdministrador ingresa al módulo\nde Gestión de Reservas"
+    ];
+
+    cargar_tabla_reservas [
+        label="El sistema presenta la tabla de reservas:\nOrdenada desde la más reciente,\ncon buscador y filtros por estado y fecha"
+    ];
+
+    decision_operacion_reserva [
+        label="¿Qué operación desea realizar\nel administrador en reservas?"
+    ];
+
+    // Operación 1: Crear Nueva Reserva
+    clic_nueva_reserva [
+        label="Operación: Nueva Reserva\nPresiona botón '+ Nueva Reserva'"
+    ];
+
+    mostrar_formulario_crear [
+        label="El sistema despliega el formulario de registro:\n- Cancha Principal seleccionada por defecto\n- Datos del Cliente (Nombre obligatorio, Teléfono)\n- Fecha del partido y horario seleccionado\n- Precio estándar (Q100 por defecto)\n- Método de pago (Efectivo por defecto) y estado"
+    ];
+
+    ingresar_datos_reserva [
+        label="Administrador completa los datos\ny presiona 'Guardar Reserva'"
+    ];
+
+    comprobar_disponibilidad_hora [
+        label="El sistema verifica disponibilidad:\n¿La hora y fecha elegida están libres\nde otra reserva o bloqueo de cancha?"
+    ];
+
+    error_horario_ocupado [
+        label="Horario en conflicto:\nEl sistema muestra mensaje de error:\n'El horario seleccionado ya se encuentra ocupado'"
+    ];
+
+    guardar_reserva_exitosa [
+        label="Reserva confirmada con éxito:\nEl sistema guarda el registro en la base de datos,\nactualiza el calendario y notifica en pantalla"
+    ];
+
+    // Operación 2: Consultar Detalle
+    clic_ver_detalle [
+        label="Operación: Ver Detalle\nPresiona icono 'Ver' en una reserva"
+    ];
+
+    mostrar_ficha_reserva [
+        label="El sistema presenta la ficha completa:\nDatos del cliente, fecha, hora, monto cancelado,\nmétodo de pago y usuario que la registró"
+    ];
+
+    // Operación 3: Modificar Reserva
+    clic_editar_reserva [
+        label="Operación: Editar Reserva\nPresiona botón 'Editar'"
+    ];
+
+    mostrar_formulario_edicion [
+        label="El sistema carga los datos actuales\npara permitir cambios de hora, estado de pago o notas"
+    ];
+
+    guardar_cambios_reserva [
+        label="Administrador aplica modificaciones\ny presiona 'Actualizar Reserva'"
+    ];
+
+    validar_cambio_horario [
+        label="¿El nuevo horario está disponible?"
+    ];
+
+    actualizacion_exitosa [
+        label="El sistema actualiza la información\ny recalcula la disponibilidad en el calendario"
+    ];
+
+    // Operación 4: Cancelar / Eliminar
+    clic_eliminar_reserva [
+        label="Operación: Cancelar Reserva\nPresiona botón 'Anular / Eliminar'"
+    ];
+
+    confirmar_anulacion [
+        label="¿El administrador confirma la anulación?"
+    ];
+
+    reserva_anulada [
+        label="El sistema anula la reserva,\nlibera el bloque horario en el calendario\ny registra la acción en el historial de auditoría"
+    ];
+
+    fin_gestion_reservas [
+        label="FIN:\nOperación de reserva concluida\ny calendario actualizado en tiempo real"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_reservas -> cargar_tabla_reservas;
+    cargar_tabla_reservas -> decision_operacion_reserva;
+
+    // Camino Crear Reserva
+    decision_operacion_reserva -> clic_nueva_reserva [label="Crear"];
+    clic_nueva_reserva -> mostrar_formulario_crear;
+    mostrar_formulario_crear -> ingresar_datos_reserva;
+    ingresar_datos_reserva -> comprobar_disponibilidad_hora;
+
+    comprobar_disponibilidad_hora -> error_horario_ocupado [label="Horario Ocupado"];
+    error_horario_ocupado -> mostrar_formulario_crear [label="Cambia fecha/hora"];
+
+    comprobar_disponibilidad_hora -> guardar_reserva_exitosa [label="Horario Libre"];
+    guardar_reserva_exitosa -> fin_gestion_reservas;
+
+    // Camino Ver Detalle
+    decision_operacion_reserva -> clic_ver_detalle [label="Consultar"];
+    clic_ver_detalle -> mostrar_ficha_reserva;
+    mostrar_ficha_reserva -> fin_gestion_reservas;
+
+    // Camino Editar
+    decision_operacion_reserva -> clic_editar_reserva [label="Modificar"];
+    clic_editar_reserva -> mostrar_formulario_edicion;
+    mostrar_formulario_edicion -> guardar_cambios_reserva;
+    guardar_cambios_reserva -> validar_cambio_horario;
+
+    validar_cambio_horario -> error_horario_ocupado [label="Nuevo horario ocupado"];
+    validar_cambio_horario -> actualizacion_exitosa [label="Horario válido"];
+    actualizacion_exitosa -> fin_gestion_reservas;
+
+    // Camino Anular
+    decision_operacion_reserva -> clic_eliminar_reserva [label="Anular"];
+    clic_eliminar_reserva -> confirmar_anulacion;
+    confirmar_anulacion -> cargar_tabla_reservas [label="Cancela acción"];
+    confirmar_anulacion -> reserva_anulada [label="Confirma anulación"];
+    reserva_anulada -> fin_gestion_reservas;
+}

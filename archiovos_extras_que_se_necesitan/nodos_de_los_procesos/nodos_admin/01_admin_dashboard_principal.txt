@@ -1,0 +1,143 @@
+// ==============================================================================
+// PANEL DE ADMINISTRACIÓN - DASHBOARD PRINCIPAL
+// Módulo: Panel de Control General y Accesos Rápidos
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph AdminDashboardPrincipal {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel de Administración - Dashboard Principal\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_dashboard [
+        label="INICIO:\nAdministrador inicia sesión con éxito\ny accede al Dashboard General"
+    ];
+
+    cargar_resumen_general [
+        label="El sistema recopila el estado actual\nde las reservas del día, la ocupación\nde la cancha y los torneos activos"
+    ];
+
+    mostrar_vista_dashboard [
+        label="El sistema despliega la pantalla principal:\n- Mensaje de bienvenida al administrador\n- Tarjetas de accesos directos operativos\n- Menú lateral con todos los módulos de gestión"
+    ];
+
+    decision_navegacion_admin [
+        label="¿Qué acción u operación\ndesea realizar el administrador?"
+    ];
+
+    // Accesos directos principales
+    clic_acceso_reservas [
+        label="Acceso Rápido a Reservas:\nPresiona tarjeta 'Gestión de Reservas'"
+    ];
+
+    ir_modulo_reservas [
+        label="El sistema traslada al administrador\nal módulo de reservas para agendar o cobrar"
+    ];
+
+    clic_acceso_calendario [
+        label="Acceso Rápido a Calendario:\nPresiona tarjeta 'Calendario de Ocupación'"
+    ];
+
+    ir_modulo_calendario [
+        label="El sistema traslada al calendario mensual\npara revisar horas libres y ocupadas"
+    ];
+
+    clic_acceso_torneos [
+        label="Acceso Rápido a Torneos:\nPresiona tarjeta 'Torneos y Partidos'"
+    ];
+
+    ir_modulo_torneos [
+        label="El sistema traslada a la gestión\nde campeonatos, equipos y clasificaciones"
+    ];
+
+    // Navegación por Menú Lateral
+    seleccionar_menu_lateral [
+        label="Selección en Menú Lateral:\nNavega a módulos específicos:\n- Usuarios, Estadísticas o Tarifas\n- Bloqueos de Cancha o Instalaciones\n- Galería, Anuncios o Configuración"
+    ];
+
+    ir_modulo_seleccionado [
+        label="El sistema abre la sección seleccionada\npara realizar tareas administrativas"
+    ];
+
+    // Cierre de sesión
+    clic_cerrar_sesion [
+        label="Presiona botón 'Cerrar Sesión'\nen la parte inferior del menú lateral"
+    ];
+
+    finalizar_sesion [
+        label="El sistema cierra la sesión de forma segura\ny regresa a la página principal pública"
+    ];
+
+    fin_dashboard [
+        label="FIN:\nOperación completada o navegación\nen curso hacia el módulo requerido"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_dashboard -> cargar_resumen_general;
+    cargar_resumen_general -> mostrar_vista_dashboard;
+    mostrar_vista_dashboard -> decision_navegacion_admin;
+
+    // Accesos rápidos
+    decision_navegacion_admin -> clic_acceso_reservas [label="Gestionar Reservas"];
+    clic_acceso_reservas -> ir_modulo_reservas;
+    ir_modulo_reservas -> fin_dashboard;
+
+    decision_navegacion_admin -> clic_acceso_calendario [label="Revisar Calendario"];
+    clic_acceso_calendario -> ir_modulo_calendario;
+    ir_modulo_calendario -> fin_dashboard;
+
+    decision_navegacion_admin -> clic_acceso_torneos [label="Administrar Torneos"];
+    clic_acceso_torneos -> ir_modulo_torneos;
+    ir_modulo_torneos -> fin_dashboard;
+
+    // Menú lateral
+    decision_navegacion_admin -> seleccionar_menu_lateral [label="Abrir otro módulo"];
+    seleccionar_menu_lateral -> ir_modulo_seleccionado;
+    ir_modulo_seleccionado -> fin_dashboard;
+
+    // Logout
+    decision_navegacion_admin -> clic_cerrar_sesion [label="Cerrar Sesión"];
+    clic_cerrar_sesion -> finalizar_sesion;
+    finalizar_sesion -> fin_dashboard;
+}

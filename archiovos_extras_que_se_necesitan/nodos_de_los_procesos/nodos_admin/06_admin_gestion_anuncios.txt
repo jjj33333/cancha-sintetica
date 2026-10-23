@@ -1,0 +1,149 @@
+// ==============================================================================
+// PANEL DE ADMINISTRACIÓN - GESTIÓN DE ANUNCIOS
+// Módulo: Publicación de Comunicados, Novedades, Avisos y Promociones
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph AdminGestionAnuncios {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel de Administración - Gestión de Anuncios\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_anuncios [
+        label="INICIO:\nAdministrador ingresa al módulo\nde Gestión de Anuncios"
+    ];
+
+    cargar_tabla_anuncios [
+        label="El sistema muestra el listado de comunicados:\nTítulo, tipo, nivel de prioridad,\nestado de publicación y contador de lecturas"
+    ];
+
+    decision_operacion_anuncio [
+        label="¿Qué acción desea realizar\nel administrador con los anuncios?"
+    ];
+
+    // Operación 1: Crear Anuncio
+    clic_nuevo_anuncio [
+        label="Operación: Nuevo Anuncio\nPresiona botón '+ Crear Anuncio'"
+    ];
+
+    mostrar_formulario_anuncio [
+        label="El sistema despliega el formulario:\n- Título del comunicado\n- Tipo (Noticia, Promoción, Alerta, Evento)\n- Prioridad (Urgente, Alta, Media, Baja)\n- Imagen o afiche publicitario (opcional)\n- Contenido textual completo\n- Fecha límite de expiración (opcional)\n- Casilla para publicar inmediatamente"
+    ];
+
+    guardar_anuncio [
+        label="Administrador completa los campos\ny presiona 'Guardar Anuncio'"
+    ];
+
+    anuncio_guardado_exito [
+        label="Anuncio guardado y publicado:\nSe hace visible inmediatamente en el portal público\npara todos los visitantes y clientes"
+    ];
+
+    // Operación 2: Conmutar Visibilidad (Ocultar / Mostrar)
+    clic_toggle_visibilidad [
+        label="Operación: Ocultar / Mostrar\nPresiona el botón de visibilidad rápida"
+    ];
+
+    actualizar_visibilidad [
+        label="El sistema cambia el estado del anuncio:\nSi estaba visible se oculta del público,\ny si estaba oculto se vuelve a publicar"
+    ];
+
+    // Operación 3: Modificar Anuncio
+    clic_editar_anuncio [
+        label="Operación: Editar Anuncio\nPresiona botón 'Editar'"
+    ];
+
+    mostrar_formulario_edicion_anuncio [
+        label="El sistema carga los datos actuales:\nPermite corregir textos, cambiar la prioridad\no sustituir la foto promocional"
+    ];
+
+    guardar_edicion_anuncio [
+        label="Administrador confirma cambios\ny el sistema actualiza el anuncio publicado"
+    ];
+
+    // Operación 4: Eliminar Anuncio
+    clic_eliminar_anuncio [
+        label="Operación: Eliminar Anuncio\nPresiona botón 'Eliminar'"
+    ];
+
+    confirmar_eliminar_anuncio [
+        label="¿El administrador confirma la eliminación?"
+    ];
+
+    eliminar_anuncio_exito [
+        label="El sistema elimina el comunicado\ny retira la imagen del servidor"
+    ];
+
+    fin_gestion_anuncios [
+        label="FIN:\nGestión de comunicados completada exitosamente"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_anuncios -> cargar_tabla_anuncios;
+    cargar_tabla_anuncios -> decision_operacion_anuncio;
+
+    // Crear
+    decision_operacion_anuncio -> clic_nuevo_anuncio [label="Crear anuncio"];
+    clic_nuevo_anuncio -> mostrar_formulario_anuncio;
+    mostrar_formulario_anuncio -> guardar_anuncio;
+    guardar_anuncio -> anuncio_guardado_exito;
+    anuncio_guardado_exito -> fin_gestion_anuncios;
+
+    // Toggle visibilidad
+    decision_operacion_anuncio -> clic_toggle_visibilidad [label="Cambiar visibilidad"];
+    clic_toggle_visibilidad -> actualizar_visibilidad;
+    actualizar_visibilidad -> fin_gestion_anuncios;
+
+    // Editar
+    decision_operacion_anuncio -> clic_editar_anuncio [label="Modificar"];
+    clic_editar_anuncio -> mostrar_formulario_edicion_anuncio;
+    mostrar_formulario_edicion_anuncio -> guardar_edicion_anuncio;
+    guardar_edicion_anuncio -> fin_gestion_anuncios;
+
+    // Eliminar
+    decision_operacion_anuncio -> clic_eliminar_anuncio [label="Eliminar"];
+    clic_eliminar_anuncio -> confirmar_eliminar_anuncio;
+    confirmar_eliminar_anuncio -> cargar_tabla_anuncios [label="Cancela"];
+    confirmar_eliminar_anuncio -> eliminar_anuncio_exito [label="Confirma"];
+    eliminar_anuncio_exito -> fin_gestion_anuncios;
+}

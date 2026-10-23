@@ -1,0 +1,148 @@
+// ==============================================================================
+// PANEL DE ADMINISTRACIÓN - CONFIGURACIÓN Y RESPALDOS
+// Módulo: Parámetros del Negocio y Copias de Seguridad de la Base de Datos
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph AdminConfiguracionRespaldos {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel de Administración - Configuración y Respaldos\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_configuracion [
+        label="INICIO:\nAdministrador ingresa al módulo\nde Configuración y Respaldos"
+    ];
+
+    mostrar_secciones_configuracion [
+        label="El sistema despliega dos áreas de trabajo:\n1. Parámetros Generales del Sistema\n2. Centro de Respaldos de Base de Datos"
+    ];
+
+    decision_area_trabajo [
+        label="¿Qué tarea desea realizar\nel administrador?"
+    ];
+
+    // Área 1: Configuración General
+    elegir_parametros_generales [
+        label="Área Parámetros Generales:\nRevisa nombre del establecimiento,\nmoneda, zona horaria y políticas de reserva"
+    ];
+
+    modificar_ajustes [
+        label="Administrador actualiza valores\ny presiona 'Guardar Configuración'"
+    ];
+
+    ajustes_guardados_exito [
+        label="El sistema guarda las preferencias:\nSe aplican inmediatamente a toda la plataforma"
+    ];
+
+    // Área 2: Gestión de Respaldos
+    elegir_centro_respaldos [
+        label="Área Copias de Seguridad:\nVisualiza la lista de respaldos generados,\ncon su fecha de creación y tamaño en disco"
+    ];
+
+    decision_operacion_respaldo [
+        label="¿Qué acción desea ejecutar en respaldos?"
+    ];
+
+    // Generar Respaldo
+    clic_generar_respaldo [
+        label="Presiona botón 'Generar Respaldo Ahora'"
+    ];
+
+    crear_copia_seguridad [
+        label="El sistema genera una copia completa\nde todas las tablas, reservas y datos del negocio"
+    ];
+
+    respaldo_creado_exito [
+        label="Copia de seguridad generada con éxito:\nSe añade a la lista y queda protegida"
+    ];
+
+    // Descargar Respaldo
+    clic_descargar_respaldo [
+        label="Presiona botón 'Descargar Copia'"
+    ];
+
+    descargar_archivo_seguridad [
+        label="El archivo de respaldo se descarga\nal equipo local del administrador"
+    ];
+
+    // Eliminar Respaldo
+    clic_eliminar_respaldo [
+        label="Presiona botón 'Eliminar Copia Antigua'"
+    ];
+
+    respaldo_eliminado_exito [
+        label="El sistema retira el archivo del almacenamiento\npara optimizar el espacio disponible"
+    ];
+
+    fin_gestion_configuracion [
+        label="FIN:\nParámetros y resguardo de datos completados"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_configuracion -> mostrar_secciones_configuracion;
+    mostrar_secciones_configuracion -> decision_area_trabajo;
+
+    // Camino Configuración
+    decision_area_trabajo -> elegir_parametros_generales [label="Ajustar Parámetros"];
+    elegir_parametros_generales -> modificar_ajustes;
+    modificar_ajustes -> ajustes_guardados_exito;
+    ajustes_guardados_exito -> fin_gestion_configuracion;
+
+    // Camino Respaldos
+    decision_area_trabajo -> elegir_centro_respaldos [label="Copias de Seguridad"];
+    elegir_centro_respaldos -> decision_operacion_respaldo;
+
+    decision_operacion_respaldo -> clic_generar_respaldo [label="Crear nuevo"];
+    clic_generar_respaldo -> crear_copia_seguridad;
+    crear_copia_seguridad -> respaldo_creado_exito;
+    respaldo_creado_exito -> fin_gestion_configuracion;
+
+    decision_operacion_respaldo -> clic_descargar_respaldo [label="Descargar"];
+    clic_descargar_respaldo -> descargar_archivo_seguridad;
+    descargar_archivo_seguridad -> fin_gestion_configuracion;
+
+    decision_operacion_respaldo -> clic_eliminar_respaldo [label="Limpiar antiguo"];
+    clic_eliminar_respaldo -> respaldo_eliminado_exito;
+    respaldo_eliminado_exito -> fin_gestion_configuracion;
+}

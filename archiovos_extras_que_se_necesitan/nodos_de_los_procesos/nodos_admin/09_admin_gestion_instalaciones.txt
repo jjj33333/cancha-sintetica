@@ -1,0 +1,108 @@
+// ==============================================================================
+// PANEL DE ADMINISTRACIÓN - GESTIÓN DE INSTALACIONES
+// Módulo: Control de Infraestructura, Ficha Técnica y Estado de la Cancha
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph AdminGestionInstalaciones {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Panel de Administración - Gestión de Instalaciones\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_instalaciones [
+        label="INICIO:\nAdministrador ingresa al módulo\nde Gestión de Instalaciones"
+    ];
+
+    cargar_ficha_instalacion [
+        label="El sistema muestra los datos técnicos de la cancha:\nNombre de la instalación (Cancha Principal),\ntipo de césped, medidas, iluminación y capacidad"
+    ];
+
+    decision_operacion_instalacion [
+        label="¿Qué acción desea realizar el administrador?"
+    ];
+
+    // Consultar Detalles
+    clic_ver_especificaciones [
+        label="Operación: Consultar Especificaciones\nRevisa el estado de la infraestructura"
+    ];
+
+    mostrar_detalles_completos [
+        label="El sistema presenta las comodidades:\nGraderías, vestidores, servicios sanitarios,\niluminación nocturna y estado operativo (Activa/En obra)"
+    ];
+
+    // Editar Información
+    clic_editar_instalacion [
+        label="Operación: Modificar Información\nPresiona botón 'Editar Instalación'"
+    ];
+
+    mostrar_formulario_instalacion [
+        label="El sistema carga el formulario de datos técnicos:\n- Nombre del espacio deportivo\n- Tipo de grama sintética y estado de mantenimiento\n- Capacidad máxima recomendada de jugadores\n- Reglas de uso y calzado permitido\n- Fotografía principal de la cancha"
+    ];
+
+    guardar_cambios_instalacion [
+        label="Administrador actualiza los datos\ny presiona 'Guardar Cambios'"
+    ];
+
+    actualizacion_instalacion_exitosa [
+        label="El sistema actualiza la ficha técnica:\nLa información se refleja de inmediato\nen el portal público para los clientes"
+    ];
+
+    fin_gestion_instalaciones [
+        label="FIN:\nControl de instalaciones finalizado exitosamente"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_instalaciones -> cargar_ficha_instalacion;
+    cargar_ficha_instalacion -> decision_operacion_instalacion;
+
+    decision_operacion_instalacion -> clic_ver_especificaciones [label="Consultar"];
+    clic_ver_especificaciones -> mostrar_detalles_completos;
+    mostrar_detalles_completos -> fin_gestion_instalaciones;
+
+    decision_operacion_instalacion -> clic_editar_instalacion [label="Actualizar datos"];
+    clic_editar_instalacion -> mostrar_formulario_instalacion;
+    mostrar_formulario_instalacion -> guardar_cambios_instalacion;
+    guardar_cambios_instalacion -> actualizacion_instalacion_exitosa;
+    actualizacion_instalacion_exitosa -> fin_gestion_instalaciones;
+}

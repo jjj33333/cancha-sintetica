@@ -1,0 +1,155 @@
+// ==============================================================================
+// DIAGRAMA DE NODOS DE PROCESO: MÓDULO DE ANUNCIOS Y NOTICIAS
+// Módulo: Comunicados Oficiales, Promociones, Eventos y Alertas
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Herramienta: Graphviz Online (https://dreampuf.github.io/GraphvizOnline/)
+// Estilo visual: Óvalos con borde azul, fondo blanco y texto negro
+// ==============================================================================
+
+digraph ProcesoModuloAnuncios {
+    // Configuración general del gráfico
+    graph [
+        rankdir=TB,
+        bgcolor="#FFFFFF",
+        fontname="Helvetica",
+        fontsize=14,
+        label="Portal Público - Anuncios y Noticias\n(Cancha Sintética Deportiva)",
+        labelloc=t,
+        nodesep=0.5,
+        ranksep=0.7,
+        splines=true
+    ];
+
+    // Regla de estilo obligatoria para todos los nodos
+    node [
+        shape=oval,
+        style="filled",
+        fillcolor="#FFFFFF",
+        color="#1D4ED8",
+        fontcolor="#000000",
+        fontname="Helvetica",
+        fontsize=10,
+        penwidth=1.8,
+        margin="0.25,0.15"
+    ];
+
+    // Estilo de las líneas y flechas
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#1D4ED8",
+        fontcolor="#000000",
+        penwidth=1.2,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // DEFINICIÓN DE NODOS DEL PROCESO
+    // --------------------------------------------------------------------------
+
+    inicio_anuncios [
+        label="INICIO:\nUsuario ingresa a la sección\nde Anuncios y Noticias"
+    ];
+
+    buscar_anuncios_vigentes [
+        label="El sistema recopila los comunicados oficiales,\npromociones y avisos vigentes aprobados para el público"
+    ];
+
+    ordenar_por_importancia [
+        label="El sistema organiza los comunicados:\nPriorizando primero los avisos urgentes\ny luego por orden de fecha más reciente"
+    ];
+
+    verificar_hay_anuncios [
+        label="¿Existen anuncios vigentes\npara mostrar en pantalla?"
+    ];
+
+    // Caso sin anuncios
+    aviso_sin_anuncios [
+        label="El sistema muestra un mensaje informativo:\n'No hay comunicados ni noticias\nvigentes en este momento'"
+    ];
+
+    // Caso con anuncios
+    mostrar_lista_comunicados [
+        label="El sistema despliega el listado de tarjetas\ncon cada uno de los comunicados"
+    ];
+
+    identificar_prioridad [
+        label="El sistema clasifica visualmente\nla importancia del comunicado"
+    ];
+
+    // Niveles de importancia
+    prioridad_urgente [
+        label="Aviso Urgente (Borde y etiqueta de alerta):\nComunicados de máxima relevancia o cambios de último momento"
+    ];
+
+    prioridad_alta [
+        label="Aviso Importante (Etiqueta relevante):\nNoticias de inscripciones o mantenimientos programados"
+    ];
+
+    prioridad_normal [
+        label="Aviso Informativo / General:\nPromociones de alquiler, notas deportivas o eventos"
+    ];
+
+    ver_detalles_comunicado [
+        label="El usuario revisa los datos del comunicado:\n- Tipo (Noticia, Promoción, Alerta, Evento)\n- Fecha formal de publicación"
+    ];
+
+    verificar_tiene_foto [
+        label="¿El anuncio cuenta con afiche\no fotografía adjunta?"
+    ];
+
+    mostrar_foto_anuncio [
+        label="El sistema muestra la imagen promocional\no afiche publicitario en alta definición"
+    ];
+
+    formato_solo_texto [
+        label="El sistema muestra el comunicado\nen formato de lectura directa"
+    ];
+
+    leer_contenido_completo [
+        label="El usuario lee el título principal\ny el cuerpo completo del mensaje"
+    ];
+
+    registrar_lectura [
+        label="El sistema contabiliza la visualización\npara llevar el control de alcance del comunicado"
+    ];
+
+    fin_proceso_anuncios [
+        label="FIN:\nUsuario enterado de todas las novedades,\npromociones y avisos de la cancha"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DEL FLUJO
+    // --------------------------------------------------------------------------
+
+    inicio_anuncios -> buscar_anuncios_vigentes;
+    buscar_anuncios_vigentes -> ordenar_por_importancia;
+    ordenar_por_importancia -> verificar_hay_anuncios;
+
+    // Camino si no hay anuncios
+    verificar_hay_anuncios -> aviso_sin_anuncios [label="Sin anuncios"];
+    aviso_sin_anuncios -> fin_proceso_anuncios;
+
+    // Camino si hay anuncios
+    verificar_hay_anuncios -> mostrar_lista_comunicados [label="Anuncios activos"];
+    mostrar_lista_comunicados -> identificar_prioridad;
+
+    identificar_prioridad -> prioridad_urgente [label="Urgente"];
+    identificar_prioridad -> prioridad_alta [label="Importante"];
+    identificar_prioridad -> prioridad_normal [label="General / Promoción"];
+
+    prioridad_urgente -> ver_detalles_comunicado;
+    prioridad_alta -> ver_detalles_comunicado;
+    prioridad_normal -> ver_detalles_comunicado;
+
+    ver_detalles_comunicado -> verificar_tiene_foto;
+
+    verificar_tiene_foto -> mostrar_foto_anuncio [label="Tiene imagen"];
+    verificar_tiene_foto -> formato_solo_texto [label="Solo texto"];
+
+    mostrar_foto_anuncio -> leer_contenido_completo;
+    formato_solo_texto -> leer_contenido_completo;
+
+    leer_contenido_completo -> registrar_lectura;
+    registrar_lectura -> fin_proceso_anuncios;
+}
