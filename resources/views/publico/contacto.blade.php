@@ -19,11 +19,15 @@
                 <div class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 p-6 text-center">
                     <div class="text-4xl mb-4">📱</div>
                     <h3 class="text-lg font-bold text-gray-800 mb-2">Teléfono</h3>
-                    <a href="tel:{{ $contacto->telefono_principal }}" class="text-[#10B981] font-semibold hover:underline text-lg">
-                        {{ $contacto->telefono_principal }}
-                    </a>
-                    @if($contacto->telefono_secundario)
-                        <p class="text-sm text-gray-500 mt-1">{{ $contacto->telefono_secundario }}</p>
+                    @if(!empty($contacto?->telefono_principal))
+                        <a href="tel:{{ $contacto?->telefono_principal }}" class="text-[#10B981] font-semibold hover:underline text-lg">
+                            {{ $contacto?->telefono_principal }}
+                        </a>
+                    @else
+                        <span class="text-gray-500">No disponible por el momento</span>
+                    @endif
+                    @if(!empty($contacto?->telefono_secundario))
+                        <p class="text-sm text-gray-500 mt-1">{{ $contacto?->telefono_secundario }}</p>
                     @endif
                 </div>
 
@@ -31,39 +35,47 @@
                 <div class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 p-6 text-center">
                     <div class="text-4xl mb-4">💬</div>
                     <h3 class="text-lg font-bold text-gray-800 mb-2">WhatsApp</h3>
-                    <a href="https://wa.me/{{ str_replace(['+', ' '], '', $contacto->numero_whatsapp) }}" target="_blank"
-                       class="text-[#10B981] font-semibold hover:underline text-lg">
-                        {{ $contacto->numero_whatsapp }}
-                    </a>
+                    @if(!empty($contacto?->numero_whatsapp))
+                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contacto?->numero_whatsapp) }}" target="_blank"
+                           class="text-[#10B981] font-semibold hover:underline text-lg">
+                            {{ $contacto?->numero_whatsapp }}
+                        </a>
+                    @else
+                        <span class="text-gray-500">No disponible por el momento</span>
+                    @endif
                 </div>
 
                 <!-- Email -->
                 <div class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 p-6 text-center">
                     <div class="text-4xl mb-4">✉️</div>
                     <h3 class="text-lg font-bold text-gray-800 mb-2">Email</h3>
-                    <a href="mailto:{{ $contacto->email_principal }}" class="text-[#10B981] font-semibold hover:underline">
-                        {{ $contacto->email_principal }}
-                    </a>
+                    @if(!empty($contacto?->email_principal))
+                        <a href="mailto:{{ $contacto?->email_principal }}" class="text-[#10B981] font-semibold hover:underline">
+                            {{ $contacto?->email_principal }}
+                        </a>
+                    @else
+                        <span class="text-gray-500">contacto@canchasintetica.com</span>
+                    @endif
                 </div>
 
                 <!-- Facebook -->
-                @if($contacto->url_facebook)
+                @if(!empty($contacto?->url_facebook))
                     <div class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 p-6 text-center">
                         <div class="text-4xl mb-4">📘</div>
                         <h3 class="text-lg font-bold text-gray-800 mb-2">Facebook</h3>
-                        <a href="{{ $contacto->url_facebook }}" target="_blank" class="text-[#10B981] font-semibold hover:underline">
-                            /CanchaSintetica
+                        <a href="{{ $contacto?->url_facebook }}" target="_blank" class="text-[#10B981] font-semibold hover:underline">
+                            Facebook Oficial
                         </a>
                     </div>
                 @endif
 
                 <!-- Instagram -->
-                @if($contacto->url_instagram)
+                @if(!empty($contacto?->url_instagram))
                     <div class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 p-6 text-center">
                         <div class="text-4xl mb-4">📷</div>
                         <h3 class="text-lg font-bold text-gray-800 mb-2">Instagram</h3>
-                        <a href="{{ $contacto->url_instagram }}" target="_blank" class="text-[#10B981] font-semibold hover:underline">
-                            @cancha_sintetica
+                        <a href="{{ $contacto?->url_instagram }}" target="_blank" class="text-[#10B981] font-semibold hover:underline">
+                            Instagram Oficial
                         </a>
                     </div>
                 @endif
@@ -72,9 +84,9 @@
                 <div class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 p-6 text-center">
                     <div class="text-4xl mb-4">📍</div>
                     <h3 class="text-lg font-bold text-gray-800 mb-2">Dirección</h3>
-                    <p class="text-gray-600">{{ $contacto->direccion }}</p>
-                    @if($contacto->enlace_google_maps)
-                        <a href="{{ $contacto->enlace_google_maps }}" target="_blank"
+                    <p class="text-gray-600">{{ $contacto?->direccion ?? 'Av. Los Deportistas 123, Chinique' }}</p>
+                    @if(!empty($contacto?->enlace_google_maps))
+                        <a href="{{ $contacto?->enlace_google_maps }}" target="_blank"
                            class="inline-block mt-3 text-sm bg-[#ECFDF5] hover:bg-[#D1FAE5] text-[#065F46] font-semibold px-4 py-2 rounded-lg transition-colors">
                             Ver en Google Maps
                         </a>
@@ -83,10 +95,10 @@
             </div>
 
             <!-- Horario de Atención -->
-            @if($contacto->horario_atencion)
+            @if(!empty($contacto?->horario_atencion))
                 <div class="mt-12 bg-[#ECFDF5] rounded-xl p-8 text-center">
                     <h3 class="text-xl font-bold text-[#065F46] mb-3">🕐 Horario de Atención</h3>
-                    <p class="text-gray-700 text-lg">{{ $contacto->horario_atencion }}</p>
+                    <p class="text-gray-700 text-lg">{{ $contacto?->horario_atencion }}</p>
                 </div>
             @endif
         </div>

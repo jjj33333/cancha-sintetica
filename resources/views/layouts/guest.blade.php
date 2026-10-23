@@ -29,7 +29,7 @@
                 <a href="{{ route('home') }}" class="flex-shrink-0 flex items-center gap-2 hover:opacity-95 transition-opacity min-w-0">
                     <span class="text-2xl flex-shrink-0">⚽</span>
                     <span class="font-bold text-lg sm:text-xl tracking-tight truncate max-w-[160px] sm:max-w-none">
-                        {{ $contacto->nombre_negocio ?? 'Cancha Sintética' }}
+                        {{ $contacto?->nombre_negocio ?? 'Cancha Sintética' }}
                     </span>
                 </a>
                 
@@ -106,11 +106,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                 <div>
                     <h3 class="text-white font-bold text-lg mb-3 flex items-center gap-2">
-                        <span>⚽</span> {{ $contacto->nombre_negocio ?? 'Cancha Sintética' }}
+                        <span>⚽</span> {{ $contacto?->nombre_negocio ?? 'Cancha Sintética' }}
                     </h3>
-                    <p class="text-sm text-emerald-100/90 leading-relaxed">{{ $contacto->direccion ?? 'Av. Los Deportistas 123, Chinique' }}</p>
-                    @if(!empty($contacto->telefono_principal))
-                        <p class="text-sm mt-2 text-emerald-100">📞 <a href="tel:{{ $contacto->telefono_principal }}" class="hover:underline hover:text-white">{{ $contacto->telefono_principal }}</a></p>
+                    <p class="text-sm text-emerald-100/90 leading-relaxed">{{ $contacto?->direccion ?? 'Av. Los Deportistas 123, Chinique' }}</p>
+                    @if(!empty($contacto?->telefono_principal))
+                        <p class="text-sm mt-2 text-emerald-100">📞 <a href="tel:{{ $contacto?->telefono_principal }}" class="hover:underline hover:text-white">{{ $contacto?->telefono_principal }}</a></p>
                     @endif
                 </div>
                 <div>
@@ -125,23 +125,23 @@
                 <div class="sm:col-span-2 md:col-span-1">
                     <h3 class="text-white font-bold text-lg mb-3">Atención y Redes</h3>
                     <div class="flex space-x-4 mb-3">
-                        @if(!empty($contacto->url_facebook))
-                            <a href="{{ $contacto->url_facebook }}" class="hover:text-[#10B981] text-2xl transition-transform hover:scale-110" target="_blank" title="Facebook">📘</a>
+                        @if(!empty($contacto?->url_facebook))
+                            <a href="{{ $contacto?->url_facebook }}" class="hover:text-[#10B981] text-2xl transition-transform hover:scale-110" target="_blank" title="Facebook">📘</a>
                         @endif
-                        @if(!empty($contacto->url_instagram))
-                            <a href="{{ $contacto->url_instagram }}" class="hover:text-[#10B981] text-2xl transition-transform hover:scale-110" target="_blank" title="Instagram">📷</a>
+                        @if(!empty($contacto?->url_instagram))
+                            <a href="{{ $contacto?->url_instagram }}" class="hover:text-[#10B981] text-2xl transition-transform hover:scale-110" target="_blank" title="Instagram">📷</a>
                         @endif
-                        @if(!empty($contacto->numero_whatsapp))
-                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contacto->numero_whatsapp) }}" class="hover:text-[#10B981] text-2xl transition-transform hover:scale-110" target="_blank" title="WhatsApp">💬</a>
+                        @if(!empty($contacto?->numero_whatsapp))
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contacto?->numero_whatsapp) }}" class="hover:text-[#10B981] text-2xl transition-transform hover:scale-110" target="_blank" title="WhatsApp">💬</a>
                         @endif
                     </div>
-                    @if(!empty($contacto->horario_atencion))
-                        <p class="text-xs text-emerald-200/90">⏰ {{ $contacto->horario_atencion }}</p>
+                    @if(!empty($contacto?->horario_atencion))
+                        <p class="text-xs text-emerald-200/90">⏰ {{ $contacto?->horario_atencion }}</p>
                     @endif
                 </div>
             </div>
             <div class="border-t border-[#047857] mt-8 pt-6 text-center text-xs sm:text-sm text-emerald-200/70">
-                <p>&copy; {{ date('Y') }} {{ $contacto->nombre_negocio ?? 'Cancha Sintética Deportiva' }}. Todos los derechos reservados.</p>
+                <p>&copy; {{ date('Y') }} {{ $contacto?->nombre_negocio ?? 'Cancha Sintética Deportiva' }}. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>

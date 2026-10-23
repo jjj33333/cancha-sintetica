@@ -32,8 +32,8 @@
                     <span>📅</span> Ver Horarios y Disponibilidad
                 </a>
 
-                @if(!empty($contacto->numero_whatsapp ?? $contacto->telefono_principal))
-                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contacto->numero_whatsapp ?? $contacto->telefono_principal) }}?text=Hola,%20quisiera%20consultar%20disponibilidad%20de%20la%20cancha" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-emerald-50 text-[#065F46] border border-emerald-300 font-semibold py-3.5 px-6 rounded-xl shadow-sm hover:shadow transition-all text-center text-sm sm:text-base">
+                @if(!empty($contacto?->numero_whatsapp ?? $contacto?->telefono_principal))
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contacto?->numero_whatsapp ?? $contacto?->telefono_principal) }}?text=Hola,%20quisiera%20consultar%20disponibilidad%20de%20la%20cancha" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-emerald-50 text-[#065F46] border border-emerald-300 font-semibold py-3.5 px-6 rounded-xl shadow-sm hover:shadow transition-all text-center text-sm sm:text-base">
                         <span>💬</span> Contactar por WhatsApp
                     </a>
                 @else
@@ -85,13 +85,13 @@
                     </div>
                     <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-2">Ubicación</h3>
                     <p class="text-sm sm:text-base text-gray-600 leading-relaxed mb-3">
-                        {{ $contacto->direccion ?? 'Av. Los Deportistas 123, Chinique' }}
-                        @if(!empty($contacto->ciudad))
-                            <span class="block text-xs text-gray-500 mt-1">{{ $contacto->ciudad }}{{ !empty($contacto->pais) ? ', ' . $contacto->pais : '' }}</span>
+                        {{ $contacto?->direccion ?? 'Av. Los Deportistas 123, Chinique' }}
+                        @if(!empty($contacto?->ciudad))
+                            <span class="block text-xs text-gray-500 mt-1">{{ $contacto?->ciudad }}{{ !empty($contacto?->pais) ? ', ' . $contacto?->pais : '' }}</span>
                         @endif
                     </p>
-                    @if(!empty($contacto->enlace_google_maps))
-                        <a href="{{ $contacto->enlace_google_maps }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-semibold text-[#10B981] hover:underline">
+                    @if(!empty($contacto?->enlace_google_maps))
+                        <a href="{{ $contacto?->enlace_google_maps }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-semibold text-[#10B981] hover:underline">
                             Ver en Google Maps ↗
                         </a>
                     @endif
@@ -104,10 +104,10 @@
                     </div>
                     <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-2">Dimensiones</h3>
                     <p class="text-sm sm:text-base text-gray-600 leading-relaxed mb-1">
-                        {{ $instalacion->dimensiones ?? '40m x 20m' }}
+                        {{ $instalacion?->dimensiones ?? '40m x 20m' }}
                     </p>
                     <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100 mt-1">
-                        Capacidad: {{ $instalacion->capacidad ?? 10 }} jugadores
+                        Capacidad: {{ $instalacion?->capacidad ?? 10 }} jugadores
                     </span>
                 </div>
 
@@ -133,7 +133,7 @@
                     </div>
                     <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-2">Estacionamiento</h3>
                     <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
-                        @if(!empty($instalacion->tiene_estacionamiento))
+                        @if(!empty($instalacion?->tiene_estacionamiento))
                             Estacionamiento privado para vehículos y motocicletas, garantizando tu tranquilidad durante el juego.
                         @else
                             Espacio accesible en los alrededores de las instalaciones.
@@ -148,7 +148,7 @@
                     </div>
                     <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-2">Vestuarios</h3>
                     <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
-                        @if(!empty($instalacion->tiene_casilleros))
+                        @if(!empty($instalacion?->tiene_casilleros))
                             Casilleros individuales, duchas y área de vestuario totalmente higienizadas.
                         @else
                             Áreas de hidratación y sanitarios disponibles en el recinto deportivo.
@@ -163,14 +163,14 @@
                     </div>
                     <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-2">Superficie</h3>
                     <p class="text-sm sm:text-base text-gray-600 leading-relaxed">
-                        {{ $instalacion->tipo_superficie ?? 'Césped sintético' }}.
+                        {{ $instalacion?->tipo_superficie ?? 'Césped sintético' }}.
                         Fibras sintéticas diseñadas para reducir el desgaste articular y asegurar un bote regular del balón.
                     </p>
                 </div>
             </div>
 
             <!-- Descripción adicional en banner responsive -->
-            @if(!empty($instalacion->descripcion))
+            @if(!empty($instalacion?->descripcion))
                 <div class="bg-gradient-to-r from-emerald-50/90 via-[#ECFDF5] to-teal-50/90 rounded-2xl p-6 sm:p-8 border border-emerald-100/90 shadow-sm max-w-4xl mx-auto">
                     <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
                         <div class="w-12 h-12 rounded-xl bg-emerald-100 text-[#065F46] flex items-center justify-center text-2xl flex-shrink-0">
@@ -178,10 +178,10 @@
                         </div>
                         <div>
                             <h3 class="text-base sm:text-lg font-bold text-[#065F46] mb-1">
-                                {{ $instalacion->nombre ?? 'Instalación Principal' }}
+                                {{ $instalacion?->nombre ?? 'Instalación Principal' }}
                             </h3>
                             <p class="text-gray-700 text-sm sm:text-base leading-relaxed">
-                                {{ $instalacion->descripcion }}
+                                {{ $instalacion?->descripcion }}
                             </p>
                         </div>
                     </div>
@@ -201,9 +201,9 @@
                     Horarios de Atención y Reservas
                 </h2>
 
-                @if(!empty($contacto->horario_atencion))
+                @if(!empty($contacto?->horario_atencion))
                     <div class="inline-block bg-emerald-50 border border-emerald-200/80 text-emerald-900 rounded-xl px-4 py-2.5 text-xs sm:text-sm md:text-base font-medium mb-6 max-w-2xl">
-                        ⏰ {{ $contacto->horario_atencion }}
+                        ⏰ {{ $contacto?->horario_atencion }}
                     </div>
                 @endif
 
@@ -217,14 +217,14 @@
                         <span>📅</span> Ver Calendario Completo
                     </a>
 
-                    @if(!empty($contacto->telefono_principal))
-                        <a href="tel:{{ $contacto->telefono_principal }}" class="inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-[#065F46] border border-emerald-300 font-semibold py-3.5 px-6 rounded-xl shadow-sm transition-all text-center text-sm sm:text-base">
-                            <span>📞</span> Llamar {{ $contacto->telefono_principal }}
+                    @if(!empty($contacto?->telefono_principal))
+                        <a href="tel:{{ $contacto?->telefono_principal }}" class="inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-[#065F46] border border-emerald-300 font-semibold py-3.5 px-6 rounded-xl shadow-sm transition-all text-center text-sm sm:text-base">
+                            <span>📞</span> Llamar {{ $contacto?->telefono_principal }}
                         </a>
                     @endif
 
-                    @if(!empty($contacto->numero_whatsapp))
-                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contacto->numero_whatsapp) }}?text=Hola,%20quisiera%20reservar%20la%20cancha" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#059669] text-white font-semibold py-3.5 px-6 rounded-xl shadow-md transition-all transform hover:-translate-y-0.5 text-center text-sm sm:text-base">
+                    @if(!empty($contacto?->numero_whatsapp))
+                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contacto?->numero_whatsapp) }}?text=Hola,%20quisiera%20reservar%20la%20cancha" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#059669] text-white font-semibold py-3.5 px-6 rounded-xl shadow-md transition-all transform hover:-translate-y-0.5 text-center text-sm sm:text-base">
                             <span>💬</span> WhatsApp
                         </a>
                     @endif
