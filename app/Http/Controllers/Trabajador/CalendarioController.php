@@ -106,7 +106,9 @@ class CalendarioController extends Controller
             $eventos->push([
                 'fecha' => Carbon::parse($partido->fecha_partido),
                 'hora_inicio' => Carbon::parse($partido->hora_inicio)->format('H:i'),
-                'hora_fin' => Carbon::parse($partido->hora_inicio)->addHours(2)->format('H:i'),
+                'hora_fin' => $partido->hora_fin
+                    ? Carbon::parse($partido->hora_fin)->format('H:i')
+                    : Carbon::parse($partido->hora_inicio)->addHours(2)->format('H:i'),
                 'tipo' => 'torneo',
                 'detalle' => "{$icono} {$torneoNombre}: {$equipoLocal} vs {$equipoVisitante}",
                 'telefono' => null,

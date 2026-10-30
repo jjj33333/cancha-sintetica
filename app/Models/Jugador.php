@@ -16,6 +16,7 @@ class Jugador extends Model
         'fecha_nacimiento',
         'posicion',
         'numero_camiseta',
+        'goles',
         'telefono',
         'email',
         'es_capitan',
@@ -24,6 +25,7 @@ class Jugador extends Model
     ];
 
     protected $casts = [
+        'goles' => 'integer',
         'es_capitan' => 'boolean',
         'esta_activo' => 'boolean',
         'fecha_nacimiento' => 'date',

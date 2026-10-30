@@ -85,13 +85,18 @@ class PartidosController extends Controller
                 ->get();
         }
 
-        $instalaciones = Instalacion::where('esta_activo', true)->orderBy('nombre')->get();
+        $canchaPrincipal = $this->obtenerCanchaPrincipal();
+
+        if (!$canchaPrincipal) {
+            return redirect()->route('organizador.partidos.index')
+                ->with('error', 'No hay una cancha activa disponible. Contacta al administrador.');
+        }
 
         return view('organizador.partidos.create', compact(
             'torneosAsignados',
             'torneoSeleccionado',
             'equipos',
-            'instalaciones'
+            'canchaPrincipal'
         ));
     }
 
@@ -112,13 +117,23 @@ class PartidosController extends Controller
                 ->with('error', 'No tienes permiso para crear partidos en este torneo.');
         }
 
-        // Calcular hora_fin (asumiendo 2 horas de duración por partido)
-        $horaInicio = Carbon::parse($datos['hora_inicio']);
-        $datos['hora_fin'] = $horaInicio->copy()->addHours(2)->format('H:i');
+        // Todos los partidos se registran en la cancha principal
+        $canchaPrincipal = $this->obtenerCanchaPrincipal();
 
-        // Verificar conflictos de horario en la cancha seleccionada
+        if (!$canchaPrincipal) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'No hay una cancha activa disponible. Contacta al administrador.');
+        }
+
+        // Duración definida por el organizador (hora de inicio y hora de fin)
+        $horaInicio = Carbon::parse($datos['hora_inicio']);
+        $horaFin = Carbon::parse($datos['hora_fin']);
+        $totalHoras = round($horaInicio->diffInMinutes($horaFin) / 60, 2);
+
+        // Verificar conflictos de horario en la cancha principal
         $conflicto = $this->verificarConflictoHorario(
-            $datos['instalacion_id'],
+            $canchaPrincipal->id,
             $datos['fecha_partido'],
             $datos['hora_inicio'],
             $datos['hora_fin']
@@ -140,7 +155,8 @@ class PartidosController extends Controller
                 'equipo_visitante_id' => $datos['equipo_visitante_id'],
                 'fecha_partido' => $datos['fecha_partido'],
                 'hora_inicio' => $datos['hora_inicio'],
-                'instalacion_id' => $datos['instalacion_id'],
+                'hora_fin' => $datos['hora_fin'],
+                'instalacion_id' => $canchaPrincipal->id,
                 'numero_jornada' => $datos['numero_jornada'] ?? null,
                 'nombre_grupo' => $datos['nombre_grupo'] ?? null,
                 'arbitro' => $datos['arbitro'] ?? null,
@@ -157,14 +173,14 @@ class PartidosController extends Controller
 
             Reserva::create([
                 'codigo_reserva' => 'TOR-' . strtoupper(substr(md5(uniqid()), 0, 6)),
-                'instalacion_id' => $datos['instalacion_id'],
+                'instalacion_id' => $canchaPrincipal->id,
                 'nombre_cliente' => $torneo->nombre . ': ' . $equipoLocal->nombre . ' vs ' . $equipoVisitante->nombre,
                 'telefono_cliente' => $equipoLocal->telefono_capitan ?? 'N/A',
                 'email_cliente' => $equipoLocal->email_capitan ?? null,
                 'fecha_reserva' => $datos['fecha_partido'],
                 'hora_inicio' => $datos['hora_inicio'],
                 'hora_fin' => $datos['hora_fin'],
-                'total_horas' => 2,
+                'total_horas' => $totalHoras,
                 'precio_total' => 0, // Los partidos de torneo no tienen costo de reserva
                 'estado' => 'confirmada',
                 'tipo_reserva' => 'torneo',
@@ -244,14 +260,14 @@ class PartidosController extends Controller
             ->orderBy('nombre')
             ->get();
 
-        $instalaciones = Instalacion::where('esta_activo', true)->orderBy('nombre')->get();
+        $canchaPrincipal = $this->obtenerCanchaPrincipal() ?? $partido->instalacion;
 
         return view('organizador.partidos.edit', compact(
             'partido',
             'torneo',
             'torneosAsignados',
             'equipos',
-            'instalaciones'
+            'canchaPrincipal'
         ));
     }
 
@@ -278,13 +294,18 @@ class PartidosController extends Controller
 
         $datos = $request->validated();
 
-        // Calcular hora_fin
+        // Todos los partidos se registran en la cancha principal
+        $canchaPrincipal = $this->obtenerCanchaPrincipal();
+        $instalacionId = $canchaPrincipal?->id ?? $partido->instalacion_id;
+
+        // Duración definida por el organizador (hora de inicio y hora de fin)
         $horaInicio = Carbon::parse($datos['hora_inicio']);
-        $datos['hora_fin'] = $horaInicio->copy()->addHours(2)->format('H:i');
+        $horaFin = Carbon::parse($datos['hora_fin']);
+        $totalHoras = round($horaInicio->diffInMinutes($horaFin) / 60, 2);
 
         // Verificar conflictos (excluyendo el partido actual)
         $conflicto = $this->verificarConflictoHorario(
-            $datos['instalacion_id'],
+            $instalacionId,
             $datos['fecha_partido'],
             $datos['hora_inicio'],
             $datos['hora_fin'],
@@ -307,7 +328,8 @@ class PartidosController extends Controller
                 'equipo_visitante_id' => $datos['equipo_visitante_id'],
                 'fecha_partido' => $datos['fecha_partido'],
                 'hora_inicio' => $datos['hora_inicio'],
-                'instalacion_id' => $datos['instalacion_id'],
+                'hora_fin' => $datos['hora_fin'],
+                'instalacion_id' => $instalacionId,
                 'numero_jornada' => $datos['numero_jornada'] ?? null,
                 'nombre_grupo' => $datos['nombre_grupo'] ?? null,
                 'arbitro' => $datos['arbitro'] ?? null,
@@ -323,12 +345,13 @@ class PartidosController extends Controller
                 $equipoVisitante = Equipo::find($datos['equipo_visitante_id']);
 
                 $reserva->update([
-                    'instalacion_id' => $datos['instalacion_id'],
+                    'instalacion_id' => $instalacionId,
                     'nombre_cliente' => $torneo->nombre . ': ' . $equipoLocal->nombre . ' vs ' . $equipoVisitante->nombre,
                     'telefono_cliente' => $equipoLocal->telefono_capitan ?? 'N/A',
                     'fecha_reserva' => $datos['fecha_partido'],
                     'hora_inicio' => $datos['hora_inicio'],
                     'hora_fin' => $datos['hora_fin'],
+                    'total_horas' => $totalHoras,
                     'actualizado_por' => auth()->id(),
                 ]);
             }
@@ -358,6 +381,11 @@ class PartidosController extends Controller
         if (!$torneo) {
             return redirect()->route('organizador.partidos.index')
                 ->with('error', 'No tienes permiso para registrar resultados en este partido.');
+        }
+
+        if ($partido->estado === 'finalizado') {
+            return redirect()->back()
+                ->with('error', 'Este partido ya está finalizado. Usa la acción "Editar marcador" para corregir el resultado.');
         }
 
         $request->validate([
@@ -396,6 +424,59 @@ class PartidosController extends Controller
             DB::rollBack();
             return redirect()->back()
                 ->with('error', 'Error al registrar el resultado: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Actualiza únicamente el marcador de un partido finalizado.
+     * Las estadísticas de los equipos se recalculan automáticamente.
+     */
+    public function actualizarMarcador(Request $request, Partido $partido)
+    {
+        // Verificar permisos
+        $torneo = Torneo::where('id', $partido->torneo_id)
+            ->where('organizador_asignado_id', auth()->id())
+            ->first();
+
+        if (!$torneo) {
+            return redirect()->route('organizador.partidos.index')
+                ->with('error', 'No tienes permiso para editar el marcador de este partido.');
+        }
+
+        if ($partido->estado !== 'finalizado') {
+            return redirect()->back()
+                ->with('error', 'Solo puedes editar el marcador de un partido finalizado.');
+        }
+
+        $request->validate([
+            'marcador_local' => ['required', 'integer', 'min:0', 'max:99'],
+            'marcador_visitante' => ['required', 'integer', 'min:0', 'max:99'],
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // Revertir las estadísticas calculadas con el marcador anterior
+            $this->revertirEstadisticasEquipos($partido);
+
+            // Actualizar únicamente el marcador
+            $partido->update([
+                'marcador_local' => $request->marcador_local,
+                'marcador_visitante' => $request->marcador_visitante,
+                'actualizado_por' => auth()->id(),
+            ]);
+
+            // Recalcular estadísticas con el nuevo marcador
+            $this->actualizarEstadisticasEquipos($partido);
+
+            DB::commit();
+
+            return redirect()->route('organizador.partidos.index', ['torneo_id' => $partido->torneo_id])
+                ->with('success', 'Marcador corregido exitosamente. Las estadísticas de los equipos fueron recalculadas.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Error al editar el marcador: ' . $e->getMessage());
         }
     }
 
@@ -513,5 +594,62 @@ class PartidosController extends Controller
             $equipoVisitante->increment('partidos_empatados');
             $equipoVisitante->increment('puntos', 1);
         }
+    }
+
+    /**
+     * Revierte las estadísticas de los equipos calculadas con un marcador previo.
+     */
+    private function revertirEstadisticasEquipos(Partido $partido)
+    {
+        if ($partido->marcador_local === null || $partido->marcador_visitante === null) {
+            return;
+        }
+
+        $equipoLocal = Equipo::find($partido->equipo_local_id);
+        $equipoVisitante = Equipo::find($partido->equipo_visitante_id);
+
+        if (!$equipoLocal || !$equipoVisitante) {
+            return;
+        }
+
+        // Revertir partidos jugados
+        $equipoLocal->decrement('partidos_jugados');
+        $equipoVisitante->decrement('partidos_jugados');
+
+        // Revertir goles
+        $equipoLocal->decrement('goles_favor', $partido->marcador_local);
+        $equipoLocal->decrement('goles_contra', $partido->marcador_visitante);
+        $equipoVisitante->decrement('goles_favor', $partido->marcador_visitante);
+        $equipoVisitante->decrement('goles_contra', $partido->marcador_local);
+
+        // Revertir resultado y puntos
+        if ($partido->marcador_local > $partido->marcador_visitante) {
+            $equipoLocal->decrement('partidos_ganados');
+            $equipoLocal->decrement('puntos', 3);
+            $equipoVisitante->decrement('partidos_perdidos');
+        } elseif ($partido->marcador_visitante > $partido->marcador_local) {
+            $equipoVisitante->decrement('partidos_ganados');
+            $equipoVisitante->decrement('puntos', 3);
+            $equipoLocal->decrement('partidos_perdidos');
+        } else {
+            $equipoLocal->decrement('partidos_empatados');
+            $equipoLocal->decrement('puntos', 1);
+            $equipoVisitante->decrement('partidos_empatados');
+            $equipoVisitante->decrement('puntos', 1);
+        }
+    }
+
+    /**
+     * Obtiene la cancha principal activa (o la primera cancha activa disponible).
+     */
+    private function obtenerCanchaPrincipal(): ?Instalacion
+    {
+        return Instalacion::where('esta_activo', true)
+                ->where('nombre', 'like', '%principal%')
+                ->orderBy('id')
+                ->first()
+            ?? Instalacion::where('esta_activo', true)
+                ->orderBy('id')
+                ->first();
     }
 }

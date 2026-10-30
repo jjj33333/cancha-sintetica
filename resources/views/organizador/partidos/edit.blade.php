@@ -78,13 +78,13 @@
                 </div>
             </div>
 
-            <!-- Fecha, Hora y Cancha -->
+            <!-- Fecha y Hora -->
             <div class="border-b border-gray-100 pb-5 sm:pb-6">
                 <h2 class="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
                     <span class="text-lg sm:text-xl">📅</span>
-                    Fecha, Hora y Cancha
+                    Fecha y Hora
                 </h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
                     <div>
                         <label for="fecha_partido" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                             Fecha del Partido <span class="text-red-500">*</span>
@@ -103,21 +103,27 @@
                         @error('hora_inicio') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
-                    <div class="sm:col-span-2 md:col-span-1">
-                        <label for="instalacion_id" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                            Cancha <span class="text-red-500">*</span>
+                    <div>
+                        <label for="hora_fin" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                            Hora de Fin <span class="text-red-500">*</span>
                         </label>
-                        <select name="instalacion_id" id="instalacion_id" required
-                                class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-base sm:text-sm @error('instalacion_id') border-red-500 @enderror">
-                            <option value="">Seleccionar cancha...</option>
-                            @foreach($instalaciones as $inst)
-                                <option value="{{ $inst->id }}" {{ old('instalacion_id', $partido->instalacion_id) == $inst->id ? 'selected' : '' }}>
-                                    {{ $inst->nombre }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('instalacion_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        @php
+                            $horaFinActual = $partido->hora_fin
+                                ? \Carbon\Carbon::parse($partido->hora_fin)->format('H:i')
+                                : \Carbon\Carbon::parse($partido->hora_inicio)->addHours(2)->format('H:i');
+                        @endphp
+                        <input type="time" name="hora_fin" id="hora_fin" value="{{ old('hora_fin', $horaFinActual) }}" required
+                               class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-base sm:text-sm @error('hora_fin') border-red-500 @enderror">
+                        @error('hora_fin') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
+                </div>
+
+                <div class="mt-3.5 sm:mt-4 flex items-center gap-2 bg-[#F9FAFB] border border-gray-200 rounded-lg px-3.5 sm:px-4 py-2.5">
+                    <span class="text-base sm:text-lg">🏟️</span>
+                    <p class="text-xs sm:text-sm text-gray-600">
+                        Cancha asignada automáticamente:
+                        <span class="font-semibold text-gray-800">{{ $canchaPrincipal->nombre ?? 'Cancha Principal' }}</span>
+                    </p>
                 </div>
             </div>
 

@@ -29,9 +29,15 @@ class HorariosController extends Controller
         $finPeriodo = $inicioSemanaActual->copy()->addWeeks(3)->endOfWeek(Carbon::SUNDAY);
 
         // Obtener reservas activas y confirmadas/pendientes en el rango de 3 semanas
+        // (incluyendo el partido asociado cuando la reserva proviene de un campeonato)
         $reservas = Reserva::activas()
             ->whereIn('estado', ['confirmada', 'pendiente', 'completada'])
             ->whereBetween('fecha_reserva', [$inicioSemanaActual->toDateString(), $finPeriodo->toDateString()])
+            ->with([
+                'partido.torneo',
+                'partido.equipoLocal',
+                'partido.equipoVisitante',
+            ])
             ->get();
 
         // Obtener bloqueos de cancha activos en el rango de 3 semanas
@@ -101,7 +107,7 @@ class HorariosController extends Controller
                         $slotFinStr = $nextSlot->format('H:i');
 
                         // Comprobar si hay traslape con alguna reserva
-                        $ocupadoPorReserva = $reservasDia->contains(function ($res) use ($slotInicioStr, $slotFinStr) {
+                        $reservaOcupante = $reservasDia->first(function ($res) use ($slotInicioStr, $slotFinStr) {
                             $resIni = Carbon::parse($res->hora_inicio)->format('H:i');
                             $resFin = Carbon::parse($res->hora_fin)->format('H:i');
                             return $resIni < $slotFinStr && $resFin > $slotInicioStr;
@@ -114,15 +120,54 @@ class HorariosController extends Controller
                             return $bloqIni < $slotFinStr && $bloqFin > $slotInicioStr;
                         });
 
-                        $disponible = !$ocupadoPorReserva && !$ocupadoPorBloqueo;
+                        // Estado del bloque: disponible, ocupado por partido de campeonato u ocupado
+                        $estadoSlot = 'disponible';
+                        $datosCampeonato = [
+                            'campeonato_nombre' => null,
+                            'campeonato_partido' => null,
+                            'campeonato_jornada' => null,
+                            'campeonato_url' => null,
+                        ];
 
-                        $slots[] = [
+                        if ($reservaOcupante) {
+                            $partido = $reservaOcupante->partido;
+
+                            if ($reservaOcupante->tipo_reserva === 'torneo' && $partido) {
+                                $local = $partido->equipoLocal?->nombre ?? 'TBD';
+                                $visitante = $partido->equipoVisitante?->nombre ?? 'TBD';
+
+                                $estadoSlot = 'campeonato';
+                                $datosCampeonato = [
+                                    'campeonato_nombre' => $partido->torneo?->nombre,
+                                    'campeonato_partido' => "{$local} vs {$visitante}",
+                                    'campeonato_jornada' => $partido->numero_jornada,
+                                    'campeonato_url' => route('torneos', [
+                                        'tab' => 'calendario',
+                                        'torneo_id' => $partido->torneo_id,
+                                    ]),
+                                ];
+                            } else {
+                                $estadoSlot = 'ocupado';
+                            }
+                        } elseif ($ocupadoPorBloqueo) {
+                            $estadoSlot = 'ocupado';
+                        }
+
+                        $disponible = $estadoSlot === 'disponible';
+
+                        $slots[] = array_merge([
                             'hora_inicio' => $slotInicioStr,
                             'hora_fin' => $slotFinStr,
                             'texto_horario' => "{$slotInicioStr} - {$slotFinStr}",
                             'disponible' => $disponible,
-                            'estado_texto' => $disponible ? 'Disponible' : 'No disponible',
-                        ];
+                            'estado' => $estadoSlot,
+                            'es_campeonato' => $estadoSlot === 'campeonato',
+                            'estado_texto' => match ($estadoSlot) {
+                                'disponible' => 'Disponible',
+                                'campeonato' => 'No disponible · Campeonato',
+                                default => 'No disponible',
+                            },
+                        ], $datosCampeonato);
 
                         $currentSlot->addHour();
                     }

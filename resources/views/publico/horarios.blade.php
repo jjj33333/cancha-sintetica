@@ -164,13 +164,16 @@
                     </div>
 
                     <!-- Leyenda de Estados -->
-                    <div class="flex items-center gap-3 bg-white px-4 py-2 rounded-xl border border-gray-200 shadow-sm text-xs">
+                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 bg-white px-4 py-2 rounded-xl border border-gray-200 shadow-sm text-xs">
                         <span class="text-gray-500 font-medium">Leyenda:</span>
                         <span class="inline-flex items-center gap-1.5 font-semibold text-[#065F46]">
                             <span class="w-3 h-3 rounded-full bg-[#10B981]"></span> Disponible
                         </span>
                         <span class="inline-flex items-center gap-1.5 font-semibold text-red-700">
                             <span class="w-3 h-3 rounded-full bg-red-500"></span> No disponible
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 font-semibold text-[#92400E]">
+                            <span class="w-3 h-3 rounded-full bg-[#F59E0B]"></span> Campeonato
                         </span>
                     </div>
                 </div>
@@ -182,7 +185,9 @@
                             <div class="p-4 rounded-xl border-2 flex flex-col items-center justify-center text-center transition-all min-h-[110px]"
                                  :class="slot.disponible ? 
                                      'border-[#10B981] bg-[#ECFDF5] text-[#065F46] shadow-sm hover:shadow-md' : 
-                                     'border-red-200 bg-red-50/80 text-red-800 shadow-sm'">
+                                     (slot.es_campeonato
+                                         ? 'border-[#F59E0B] bg-[#FFFBEB] text-[#92400E] shadow-sm'
+                                         : 'border-red-200 bg-red-50/80 text-red-800 shadow-sm')">
                                 
                                 <!-- Hora de Inicio y Fin -->
                                 <div class="text-base sm:text-lg font-bold tracking-tight" x-text="slot.texto_horario"></div>
@@ -193,10 +198,27 @@
                                           class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#D1FAE5] text-[#065F46] border border-[#10B981]/30">
                                         🟢 Disponible
                                     </span>
-                                    <span x-show="!slot.disponible" 
+                                    <span x-show="!slot.disponible && !slot.es_campeonato" 
                                           class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700 border border-red-200">
                                         🔴 No disponible
                                     </span>
+                                    <span x-show="slot.es_campeonato" 
+                                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FEF3C7] text-[#92400E] border border-[#F59E0B]/40">
+                                        🟠 Campeonato
+                                    </span>
+                                </div>
+
+                                <!-- Detalle del partido de campeonato que ocupa el horario -->
+                                <div x-show="slot.es_campeonato" class="mt-2 space-y-1">
+                                    <p class="text-[11px] font-bold leading-tight" x-text="slot.campeonato_partido"></p>
+                                    <p class="text-[10px] font-medium opacity-80" x-text="slot.campeonato_nombre"></p>
+                                    <p class="text-[10px] font-semibold" x-show="slot.campeonato_jornada">
+                                        Jornada <span x-text="slot.campeonato_jornada"></span>
+                                    </p>
+                                    <a :href="slot.campeonato_url"
+                                       class="inline-flex items-center gap-1 text-[10px] font-bold underline decoration-[#F59E0B]/50 underline-offset-2 hover:text-[#78350F] transition-colors">
+                                        Ver jornada →
+                                    </a>
                                 </div>
                             </div>
                         </template>

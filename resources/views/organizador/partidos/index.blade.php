@@ -115,6 +115,9 @@
                                 <span class="flex items-center gap-1 font-medium text-gray-700">
                                     <svg class="w-3.5 h-3.5 text-[#F59E0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                     {{ $partido->fecha_partido->format('d/m/Y') }} • {{ \Carbon\Carbon::parse($partido->hora_inicio)->format('H:i') }}
+                                    @if($partido->hora_fin)
+                                        - {{ \Carbon\Carbon::parse($partido->hora_fin)->format('H:i') }}
+                                    @endif
                                 </span>
                                 @php
                                     $estadoBadge = match($partido->estado) {
@@ -204,12 +207,20 @@
                                     </a>
 
                                     @if($partido->estado === 'programado')
-                                        <button onclick="abrirModalResultado({{ $partido->id }}, '{{ $partido->equipoLocal->nombre }}', '{{ $partido->equipoVisitante->nombre }}')" 
+                                        <button onclick="abrirModalResultado({{ $partido->id }}, '{{ addslashes($partido->equipoLocal->nombre) }}', '{{ addslashes($partido->equipoVisitante->nombre) }}')" 
                                                 class="inline-flex items-center justify-center min-h-[36px] px-3 py-1.5 bg-emerald-50 text-[#10B981] hover:bg-[#D1FAE5] rounded-lg text-xs font-semibold transition-colors">
                                             <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                             Resultado
                                         </button>
                                     @endif
+                                @endif
+
+                                @if($partido->estado === 'finalizado' && $partido->marcador_local !== null)
+                                    <button onclick="abrirModalEditarMarcador({{ $partido->id }}, '{{ addslashes($partido->equipoLocal->nombre) }}', '{{ addslashes($partido->equipoVisitante->nombre) }}', {{ $partido->marcador_local }}, {{ $partido->marcador_visitante }})" 
+                                            class="inline-flex items-center justify-center min-h-[36px] px-3 py-1.5 bg-blue-50 text-[#3B82F6] hover:bg-blue-100 rounded-lg text-xs font-semibold transition-colors">
+                                        <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                        Editar marcador
+                                    </button>
                                 @endif
 
                                 @if($partido->estado !== 'finalizado')
@@ -266,7 +277,7 @@
                                                 <p class="text-sm font-medium text-gray-900">{{ $partido->fecha_partido->format('d/m/Y') }}</p>
                                                 <p class="text-xs text-gray-500">
                                                     {{ \Carbon\Carbon::parse($partido->hora_inicio)->format('H:i') }} - 
-                                                    {{ \Carbon\Carbon::parse($partido->hora_inicio)->addHours(2)->format('H:i') }}
+                                                    {{ $partido->hora_fin ? \Carbon\Carbon::parse($partido->hora_fin)->format('H:i') : \Carbon\Carbon::parse($partido->hora_inicio)->addHours(2)->format('H:i') }}
                                                 </p>
                                             </div>
                                         </div>
@@ -344,12 +355,20 @@
                                                 </a>
 
                                                 @if($partido->estado === 'programado')
-                                                    <button onclick="abrirModalResultado({{ $partido->id }}, '{{ $partido->equipoLocal->nombre }}', '{{ $partido->equipoVisitante->nombre }}')" 
+                                                    <button onclick="abrirModalResultado({{ $partido->id }}, '{{ addslashes($partido->equipoLocal->nombre) }}', '{{ addslashes($partido->equipoVisitante->nombre) }}')" 
                                                             class="p-2 text-gray-500 hover:text-[#10B981] hover:bg-[#D1FAE5] rounded-lg transition-colors" 
                                                             title="Registrar resultado">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                                     </button>
                                                 @endif
+                                            @endif
+
+                                            @if($partido->estado === 'finalizado' && $partido->marcador_local !== null)
+                                                <button onclick="abrirModalEditarMarcador({{ $partido->id }}, '{{ addslashes($partido->equipoLocal->nombre) }}', '{{ addslashes($partido->equipoVisitante->nombre) }}', {{ $partido->marcador_local }}, {{ $partido->marcador_visitante }})" 
+                                                        class="p-2 text-gray-500 hover:text-[#3B82F6] hover:bg-[#DBEAFE] rounded-lg transition-colors" 
+                                                        title="Editar marcador">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                                </button>
                                             @endif
 
                                             @if($partido->estado !== 'finalizado')
@@ -394,7 +413,8 @@
                     <p class="font-semibold mb-1">ℹ️ Información importante</p>
                     <p class="text-[#78350F] leading-relaxed">
                         Al registrar el resultado de un partido, las estadísticas de los equipos (puntos, goles, partidos jugados) 
-                        se actualizan automáticamente. Los partidos finalizados no pueden ser editados ni eliminados.
+                        se actualizan automáticamente. Los partidos finalizados no pueden editarse ni eliminarse, pero su marcador 
+                        puede corregirse con la acción "Editar marcador".
                     </p>
                 </div>
             </div>
@@ -446,6 +466,57 @@
         </div>
     </div>
 
+    <!-- Modal para Editar Marcador -->
+    <div id="modalEditarMarcador" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4">
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" onclick="cerrarModalEditarMarcador()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden z-10 max-h-[90vh] overflow-y-auto">
+            <div class="bg-[#3B82F6] p-4 sm:p-6 text-center relative">
+                <h3 class="text-xl sm:text-2xl font-bold text-white">Editar Marcador</h3>
+                <button onclick="cerrarModalEditarMarcador()" class="absolute top-3 sm:top-4 right-3 sm:right-4 text-white/70 hover:text-white transition-colors p-1" aria-label="Cerrar modal">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <form id="formEditarMarcador" method="POST" class="p-4 sm:p-6 space-y-4">
+                @csrf
+                @method('PUT')
+
+                <div class="text-center mb-3 sm:mb-4">
+                    <p class="text-xs sm:text-sm text-gray-600 mb-1">Partido:</p>
+                    <p class="font-bold text-sm sm:text-base text-gray-800 break-words" id="nombrePartidoEditar"></p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1 text-center">Marcador Local</label>
+                        <input type="number" name="marcador_local" id="marcador_local_editar" min="0" max="99" required
+                               class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent outline-none text-center text-xl sm:text-2xl font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1 text-center">Marcador Visitante</label>
+                        <input type="number" name="marcador_visitante" id="marcador_visitante_editar" min="0" max="99" required
+                               class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent outline-none text-center text-xl sm:text-2xl font-bold">
+                    </div>
+                </div>
+
+                <div class="bg-[#DBEAFE] border border-[#3B82F6]/40 rounded-lg p-3">
+                    <p class="text-[11px] sm:text-xs text-[#1E40AF] leading-relaxed">
+                        ℹ️ Solo se modificará el marcador. Las estadísticas de los equipos se recalcularán automáticamente.
+                    </p>
+                </div>
+
+                <div class="flex flex-col-reverse sm:flex-row justify-end gap-2.5 sm:gap-3 pt-4 border-t border-gray-100">
+                    <button type="button" onclick="cerrarModalEditarMarcador()" class="w-full sm:w-auto min-h-[44px] px-6 py-2.5 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors text-xs sm:text-sm">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="w-full sm:w-auto min-h-[44px] px-6 py-2.5 bg-[#3B82F6] hover:bg-[#2563EB] text-white font-semibold rounded-lg shadow-sm hover:shadow-md transition-all text-xs sm:text-sm">
+                        💾 Guardar Marcador
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         function abrirModalResultado(partidoId, equipoLocal, equipoVisitante) {
             document.getElementById('modalResultado').classList.remove('hidden');
@@ -460,10 +531,24 @@
             document.getElementById('modalResultado').classList.add('hidden');
         }
 
-        // Cerrar modal con tecla ESC
+        function abrirModalEditarMarcador(partidoId, equipoLocal, equipoVisitante, marcadorLocal, marcadorVisitante) {
+            document.getElementById('modalEditarMarcador').classList.remove('hidden');
+            document.getElementById('formEditarMarcador').action = '/organizador/partidos/' + partidoId + '/editar-marcador';
+            document.getElementById('nombrePartidoEditar').textContent = equipoLocal + ' vs ' + equipoVisitante;
+            document.getElementById('marcador_local_editar').value = marcadorLocal;
+            document.getElementById('marcador_visitante_editar').value = marcadorVisitante;
+            document.getElementById('marcador_local_editar').focus();
+        }
+
+        function cerrarModalEditarMarcador() {
+            document.getElementById('modalEditarMarcador').classList.add('hidden');
+        }
+
+        // Cerrar modales con tecla ESC
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 cerrarModalResultado();
+                cerrarModalEditarMarcador();
             }
         });
     </script>

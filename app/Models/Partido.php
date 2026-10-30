@@ -15,6 +15,7 @@ class Partido extends Model
         'equipo_visitante_id',
         'fecha_partido',
         'hora_inicio',
+        'hora_fin',
         'instalacion_id',
         'numero_jornada',
         'nombre_grupo',

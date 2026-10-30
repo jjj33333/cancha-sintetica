@@ -36,19 +36,24 @@
     <!-- Filtros -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-3.5 sm:p-4 mb-4 sm:mb-6">
         <form method="GET" action="{{ route('organizador.jugadores.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-end">
-            <div class="lg:col-span-4">
+            <div class="lg:col-span-3">
                 <label class="block text-xs font-medium text-gray-500 mb-1">Buscar</label>
                 <input type="text" name="buscar" value="{{ request('buscar') }}" placeholder="Nombre o DPI..." 
                        class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-base sm:text-sm">
             </div>
-            <div class="lg:col-span-3">
+            <div class="lg:col-span-2">
                 <label class="block text-xs font-medium text-gray-500 mb-1">Torneo</label>
-                <select name="torneo_id" onchange="this.form.submit()" class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-base sm:text-sm">
-                    <option value="">Todos los torneos</option>
-                    @foreach($torneos as $torneo)
-                        <option value="{{ $torneo->id }}" {{ request('torneo_id') == $torneo->id ? 'selected' : '' }}>{{ $torneo->nombre }}</option>
-                    @endforeach
-                </select>
+                @if($torneos->isEmpty())
+                    <select disabled class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-200 rounded-lg bg-gray-100 text-gray-500 outline-none text-base sm:text-sm">
+                        <option>Sin torneos asignados</option>
+                    </select>
+                @else
+                    <select name="torneo_id" onchange="this.form.submit()" class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-base sm:text-sm">
+                        @foreach($torneos as $torneo)
+                            <option value="{{ $torneo->id }}" {{ $torneoSeleccionado && $torneoSeleccionado->id == $torneo->id ? 'selected' : '' }}>{{ $torneo->nombre }}</option>
+                        @endforeach
+                    </select>
+                @endif
             </div>
             <div class="lg:col-span-3">
                 <label class="block text-xs font-medium text-gray-500 mb-1">Equipo</label>
@@ -59,11 +64,18 @@
                     @endforeach
                 </select>
             </div>
+            <div class="lg:col-span-2">
+                <label class="block text-xs font-medium text-gray-500 mb-1">Ordenar por</label>
+                <select name="orden" onchange="this.form.submit()" class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-base sm:text-sm">
+                    <option value="goles" {{ request('orden', 'goles') === 'goles' ? 'selected' : '' }}>⚽ Goles (mayor a menor)</option>
+                    <option value="nombre" {{ request('orden') === 'nombre' ? 'selected' : '' }}>🔤 Nombre (A-Z)</option>
+                </select>
+            </div>
             <div class="lg:col-span-2 flex gap-2">
                 <button type="submit" class="flex-1 min-h-[42px] px-4 py-2.5 bg-[#065F46] hover:bg-[#047857] text-white font-medium rounded-lg transition-colors text-xs sm:text-sm flex items-center justify-center">
                     Filtrar
                 </button>
-                @if(request()->hasAny(['buscar', 'torneo_id', 'equipo_id']))
+                @if(request()->hasAny(['buscar', 'torneo_id', 'equipo_id', 'orden']))
                     <a href="{{ route('organizador.jugadores.index') }}" class="min-h-[42px] px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors text-xs sm:text-sm flex items-center justify-center" title="Limpiar filtros">
                         ✕
                     </a>
@@ -71,6 +83,20 @@
             </div>
         </form>
     </div>
+
+    @php
+        // Ordenamiento de la tabla: por defecto por goles (mayor a menor)
+        $ordenSeleccionado = request('orden', 'goles');
+        if ($ordenSeleccionado === 'nombre') {
+            $jugadores = $jugadores->sortBy('nombre_completo', SORT_NATURAL | SORT_FLAG_CASE)->values();
+        } else {
+            $ordenSeleccionado = 'goles';
+            $jugadores = $jugadores->sortBy([
+                ['goles', 'desc'],
+                ['nombre_completo', 'asc'],
+            ])->values();
+        }
+    @endphp
 
     <!-- Listado de Jugadores: Vista Móvil + Vista Desktop -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -115,15 +141,20 @@
                             <span class="text-gray-700 truncate ml-2">{{ $jugador->equipo->torneo->nombre ?? 'N/A' }}</span>
                         </div>
                         <div class="flex justify-between items-center pt-1 border-t border-gray-200">
-                            <span class="text-gray-400">DPI / Posición:</span>
-                            <div class="flex items-center gap-2">
-                                <span class="font-mono text-gray-700">{{ $jugador->dni ?: '-' }}</span>
-                                @if($jugador->posicion)
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gray-200 text-gray-700">
-                                        {{ $jugador->posicion }}
-                                    </span>
-                                @endif
-                            </div>
+                            <span class="text-gray-400">Posición:</span>
+                            @if($jugador->posicion)
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gray-200 text-gray-700">
+                                    {{ $jugador->posicion }}
+                                </span>
+                            @else
+                                <span class="text-gray-500">-</span>
+                            @endif
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Goles:</span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#D1FAE5] text-[#065F46]">
+                                ⚽ {{ (int) $jugador->goles }}
+                            </span>
                         </div>
                     </div>
 
@@ -132,7 +163,11 @@
                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[#D1FAE5] text-[#065F46]">
                             Activo
                         </span>
-                        <div class="flex items-center gap-2">
+                        <div class="flex flex-wrap items-center justify-end gap-2">
+                            <button type="button" onclick="abrirModalGoleo({{ $jugador->id }}, '{{ addslashes($jugador->nombre_completo) }}', {{ (int) $jugador->goles }})"
+                                    class="inline-flex items-center justify-center min-h-[36px] px-3 py-1.5 bg-emerald-50 text-[#065F46] hover:bg-[#D1FAE5] rounded-lg text-xs font-semibold transition-colors">
+                                <span class="mr-1 text-sm">⚽</span> Goleo
+                            </button>
                             <a href="{{ route('organizador.jugadores.edit', $jugador) }}" 
                                class="inline-flex items-center justify-center min-h-[36px] px-3 py-1.5 bg-amber-50 text-[#F59E0B] hover:bg-[#FEF3C7] rounded-lg text-xs font-semibold transition-colors">
                                 <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
@@ -170,7 +205,7 @@
                 <thead>
                     <tr class="bg-[#F9FAFB] border-b-2 border-gray-200">
                         <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Nombre</th>
-                        <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">DPI</th>
+                        <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">Goles</th>
                         <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Posición</th>
                         <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center"># Camiseta</th>
                         <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Equipo</th>
@@ -202,9 +237,11 @@
                                 </div>
                             </td>
 
-                            <!-- DNI -->
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                {{ $jugador->dni ?: '-' }}
+                            <!-- Goles -->
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="inline-flex items-center justify-center gap-1 min-w-[52px] px-2.5 py-1 rounded-full text-xs font-bold bg-[#D1FAE5] text-[#065F46]">
+                                    ⚽ {{ (int) $jugador->goles }}
+                                </span>
                             </td>
 
                             <!-- Posición -->
@@ -249,6 +286,11 @@
                             <!-- Acciones -->
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
+                                    <button type="button" onclick="abrirModalGoleo({{ $jugador->id }}, '{{ addslashes($jugador->nombre_completo) }}', {{ (int) $jugador->goles }})"
+                                            class="p-2 text-gray-500 hover:text-[#065F46] hover:bg-[#D1FAE5] rounded-lg transition-colors" 
+                                            title="Goleo del jugador">
+                                        <span class="text-base leading-none">⚽</span>
+                                    </button>
                                     <a href="{{ route('organizador.jugadores.edit', $jugador) }}" 
                                        class="p-2 text-gray-500 hover:text-[#F59E0B] hover:bg-[#FEF3C7] rounded-lg transition-colors" 
                                        title="Editar">
@@ -305,4 +347,149 @@
             </p>
         </div>
     </div>
+
+    <!-- Modal de Goleo del Jugador -->
+    <div id="modalGoleo" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-4">
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" onclick="cerrarModalGoleo()"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden z-10 max-h-[90vh] overflow-y-auto">
+            <div class="bg-[#065F46] p-4 sm:p-5 text-center relative">
+                <h3 class="text-lg sm:text-xl font-bold text-white">⚽ Goleo del Jugador</h3>
+                <button type="button" onclick="cerrarModalGoleo()" class="absolute top-3 right-3 text-white/70 hover:text-white transition-colors p-1" aria-label="Cerrar modal">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <div class="p-4 sm:p-6 space-y-4">
+                <div class="text-center">
+                    <p class="font-bold text-sm sm:text-base text-gray-800 break-words" id="nombreJugadorGoleo"></p>
+                    <p class="text-xs text-gray-500 mt-1">Goles anotados</p>
+
+                    <!-- Contador actual con botón pequeño para editar -->
+                    <div id="golesVista" class="flex items-center justify-center gap-2 mt-0.5">
+                        <p id="golesActuales" class="text-3xl sm:text-4xl font-extrabold text-[#065F46] leading-tight">0</p>
+                        <button type="button" onclick="mostrarEdicionGoles()" title="Editar goleo"
+                                class="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-[#F59E0B] hover:bg-[#FEF3C7] transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            <span class="sr-only">Editar goles</span>
+                        </button>
+                    </div>
+
+                    <!-- Edición directa del goleo, junto al contador -->
+                    <form id="formEditarGoles" method="POST" class="hidden items-center justify-center gap-1.5 mt-1">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="accion" value="editar">
+                        <input type="number" name="goles" id="golesEditar" min="0" max="999" value="0" inputmode="numeric" required
+                               class="w-24 px-2 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-center text-xl font-bold">
+                        <button type="submit" title="Guardar goleo"
+                                class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#065F46] text-white hover:bg-[#047857] transition-colors text-base font-bold">
+                            ✓
+                        </button>
+                        <button type="button" onclick="cancelarEdicionGoles()" title="Cancelar edición"
+                                class="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors text-base font-bold">
+                            ✕
+                        </button>
+                    </form>
+                </div>
+
+                <form id="formAgregarGoles" method="POST" class="space-y-4">
+                    @csrf
+                    @method('PUT')
+                    <div>
+                        <label for="inputGoles" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1 text-center">
+                            Cantidad de goles a añadir
+                        </label>
+                        <div class="flex items-stretch gap-2">
+                            <button type="button" onclick="ajustarGoles(-1)" aria-label="Quitar un gol"
+                                    class="flex-shrink-0 w-12 min-h-[48px] flex items-center justify-center rounded-lg bg-[#FEE2E2] text-[#991B1B] hover:bg-[#FECACA] text-2xl font-bold transition-colors select-none">
+                                −
+                            </button>
+                            <input type="number" name="goles" id="inputGoles" min="0" max="999" value="0" inputmode="numeric" required
+                                   class="flex-1 min-w-0 px-2 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#065F46] focus:border-transparent outline-none text-center text-2xl font-bold">
+                            <button type="button" onclick="ajustarGoles(1)" aria-label="Agregar un gol"
+                                    class="flex-shrink-0 w-12 min-h-[48px] flex items-center justify-center rounded-lg bg-[#D1FAE5] text-[#065F46] hover:bg-[#A7F3D0] text-2xl font-bold transition-colors select-none">
+                                +
+                            </button>
+                        </div>
+                        <p class="text-[11px] text-gray-500 mt-1.5 text-center">Puedes tocar la casilla y escribirlo con el teclado.</p>
+                    </div>
+
+                    <button type="submit" name="accion" value="sumar"
+                            class="w-full min-h-[44px] px-4 py-2.5 bg-[#065F46] hover:bg-[#047857] text-white font-semibold rounded-lg shadow-sm transition-colors text-xs sm:text-sm">
+                        ➕ Añadir goles
+                    </button>
+                </form>
+
+                <p class="text-[11px] text-gray-500 leading-relaxed">
+                    <span class="font-semibold text-gray-700">Añadir goles</span> suma la cantidad al total actual.
+                    Si necesitas corregir el goleo, usa el lápiz junto al número de goles.
+                </p>
+
+                <button type="button" onclick="cerrarModalGoleo()"
+                        class="w-full min-h-[44px] px-4 py-2.5 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors text-xs sm:text-sm">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let golesJugadorActual = 0;
+
+        function abrirModalGoleo(jugadorId, nombre, goles) {
+            const url = '/organizador/jugadores/' + jugadorId + '/goles';
+
+            document.getElementById('modalGoleo').classList.remove('hidden');
+            document.getElementById('formAgregarGoles').action = url;
+            document.getElementById('formEditarGoles').action = url;
+            document.getElementById('nombreJugadorGoleo').textContent = nombre;
+            document.getElementById('golesActuales').textContent = goles;
+
+            golesJugadorActual = parseInt(goles, 10) || 0;
+            document.getElementById('golesEditar').value = golesJugadorActual;
+            document.getElementById('inputGoles').value = 0;
+            cancelarEdicionGoles();
+            document.getElementById('inputGoles').focus();
+        }
+
+        function cerrarModalGoleo() {
+            document.getElementById('modalGoleo').classList.add('hidden');
+        }
+
+        function mostrarEdicionGoles() {
+            document.getElementById('golesVista').classList.add('hidden');
+            document.getElementById('formEditarGoles').classList.remove('hidden');
+            document.getElementById('formEditarGoles').classList.add('flex');
+
+            const input = document.getElementById('golesEditar');
+            input.value = golesJugadorActual;
+            input.focus();
+            input.select();
+        }
+
+        function cancelarEdicionGoles() {
+            document.getElementById('golesVista').classList.remove('hidden');
+            document.getElementById('formEditarGoles').classList.add('hidden');
+            document.getElementById('formEditarGoles').classList.remove('flex');
+        }
+
+        function ajustarGoles(delta) {
+            const input = document.getElementById('inputGoles');
+            let valor = parseInt(input.value, 10);
+            if (isNaN(valor)) {
+                valor = 0;
+            }
+            valor = Math.max(0, Math.min(999, valor + delta));
+            input.value = valor;
+        }
+
+        // Cerrar modal con tecla ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                cerrarModalGoleo();
+            }
+        });
+    </script>
 @endsection

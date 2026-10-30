@@ -14,7 +14,7 @@
                 Volver a jugadores
             </a>
             <h1 class="text-xl sm:text-2xl font-bold text-[#065F46] mt-2">⚽ Agregar Nuevo Jugador</h1>
-            <p class="text-xs sm:text-sm text-gray-500 mt-1">Registra un nuevo jugador y asígnalo a un equipo.</p>
+            <p class="text-xs sm:text-sm text-gray-500 mt-1">Registra un nuevo jugador y asígnalo a un campeonato y equipo.</p>
         </div>
 
         <form method="POST" action="{{ route('organizador.jugadores.store') }}" 
@@ -27,8 +27,27 @@
                     <span class="text-lg sm:text-xl">🏆</span>
                     Asignación
                 </h2>
+                @php
+                    $equipoSeleccionado = old('equipo_id') ? $equipos->firstWhere('id', old('equipo_id')) : null;
+                    $torneoSeleccionadoId = old('torneo_id', request('torneo_id', $equipoSeleccionado?->torneo_id));
+                @endphp
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
-                    <div class="md:col-span-2">
+                    <div>
+                        <label for="torneo_id" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                            Campeonato <span class="text-red-500">*</span>
+                        </label>
+                        <select name="torneo_id" id="torneo_id" required onchange="filtrarEquiposPorTorneo()"
+                                class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-base sm:text-sm">
+                            <option value="">Seleccionar campeonato...</option>
+                            @foreach($torneos as $torneo)
+                                <option value="{{ $torneo->id }}" {{ (string) $torneoSeleccionadoId === (string) $torneo->id ? 'selected' : '' }}>
+                                    {{ $torneo->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
                         <label for="equipo_id" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                             Equipo <span class="text-red-500">*</span>
                         </label>
@@ -36,11 +55,12 @@
                                 class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-base sm:text-sm @error('equipo_id') border-red-500 @enderror">
                             <option value="">Seleccionar equipo...</option>
                             @foreach($equipos as $equipo)
-                                <option value="{{ $equipo->id }}" {{ old('equipo_id') == $equipo->id ? 'selected' : '' }}>
-                                    {{ $equipo->nombre }} ({{ $equipo->torneo->nombre }})
+                                <option value="{{ $equipo->id }}" data-torneo="{{ $equipo->torneo_id }}" {{ old('equipo_id') == $equipo->id ? 'selected' : '' }}>
+                                    {{ $equipo->nombre }}
                                 </option>
                             @endforeach
                         </select>
+                        <p id="ayudaEquipos" class="hidden text-[11px] text-gray-500 mt-1"></p>
                         @error('equipo_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
@@ -156,7 +176,53 @@
     </div>
 
     <script>
-        // Script simple para cargar equipos según el torneo seleccionado (si se implementa en el futuro)
-        // Por ahora, el select de equipos ya viene filtrado o vacío según la lógica del controlador.
+        function filtrarEquiposPorTorneo() {
+            const torneoSelect = document.getElementById('torneo_id');
+            const equipoSelect = document.getElementById('equipo_id');
+            const ayuda = document.getElementById('ayudaEquipos');
+
+            if (!torneoSelect || !equipoSelect || !ayuda) {
+                return;
+            }
+
+            const torneoId = torneoSelect.value;
+            let equiposDisponibles = 0;
+
+            Array.from(equipoSelect.options).forEach(function (opcion) {
+                // La opción vacía ("Seleccionar equipo...") siempre debe quedar visible.
+                if (opcion.value === '') {
+                    opcion.hidden = false;
+                    opcion.disabled = false;
+                    return;
+                }
+
+                const coincide = torneoId !== '' && opcion.dataset.torneo === torneoId;
+                opcion.hidden = !coincide;
+                opcion.disabled = !coincide;
+
+                if (coincide) {
+                    equiposDisponibles++;
+                }
+            });
+
+            // Si el equipo elegido ya no pertenece al campeonato, se limpia la selección.
+            const seleccionada = equipoSelect.options[equipoSelect.selectedIndex];
+            if (!seleccionada || seleccionada.value === '' || seleccionada.disabled) {
+                equipoSelect.value = '';
+            }
+
+            if (torneoId === '') {
+                ayuda.textContent = 'Selecciona un campeonato para ver sus equipos.';
+                ayuda.classList.remove('hidden');
+            } else if (equiposDisponibles === 0) {
+                ayuda.textContent = 'Este campeonato todavía no tiene equipos disponibles.';
+                ayuda.classList.remove('hidden');
+            } else {
+                ayuda.textContent = '';
+                ayuda.classList.add('hidden');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', filtrarEquiposPorTorneo);
     </script>
 @endsection

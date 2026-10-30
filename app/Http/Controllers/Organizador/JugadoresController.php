@@ -18,6 +18,26 @@ class JugadoresController extends Controller
     {
         $usuarioId = auth()->id();
 
+        // Torneos asignados al organizador (orden alfabético)
+        $torneos = Torneo::where('organizador_asignado_id', $usuarioId)
+            ->where('esta_activo', true)
+            ->orderBy('nombre')
+            ->get();
+
+        // Torneo seleccionado: por defecto el primero en orden alfabético
+        $torneoSeleccionado = $request->filled('torneo_id')
+            ? $torneos->firstWhere('id', $request->torneo_id)
+            : null;
+        $torneoSeleccionado = $torneoSeleccionado ?? $torneos->first();
+
+        // Equipos del torneo seleccionado (para el filtro de equipo)
+        $equipos = $torneoSeleccionado
+            ? Equipo::where('torneo_id', $torneoSeleccionado->id)
+                ->where('esta_activo', true)
+                ->orderBy('nombre')
+                ->get()
+            : collect();
+
         // Query base: Jugadores de equipos de torneos asignados al organizador
         $query = Jugador::with(['equipo.torneo'])
             ->whereHas('equipo.torneo', function ($q) use ($usuarioId) {
@@ -25,6 +45,13 @@ class JugadoresController extends Controller
                   ->where('esta_activo', true);
             })
             ->where('esta_activo', true);
+
+        // Filtro por torneo (siempre hay uno seleccionado)
+        if ($torneoSeleccionado) {
+            $query->whereHas('equipo', function ($q) use ($torneoSeleccionado) {
+                $q->where('torneo_id', $torneoSeleccionado->id);
+            });
+        }
 
         // Filtro por búsqueda
         if ($request->filled('buscar')) {
@@ -35,32 +62,22 @@ class JugadoresController extends Controller
             });
         }
 
-        // Filtro por torneo
-        if ($request->filled('torneo_id')) {
-            $query->whereHas('equipo', function ($q) use ($request) {
-                $q->where('torneo_id', $request->torneo_id);
-            });
-        }
-
-        // Filtro por equipo
+        // Filtro por equipo (solo equipos del torneo seleccionado)
         if ($request->filled('equipo_id')) {
-            $query->where('equipo_id', $request->equipo_id);
+            $equipoSeleccionado = $equipos->firstWhere('id', $request->equipo_id);
+            if ($equipoSeleccionado) {
+                $query->where('equipo_id', $equipoSeleccionado->id);
+            }
         }
 
         $jugadores = $query->orderBy('nombre_completo')->get();
 
-        // Obtener torneos y equipos para los filtros
-        $torneos = Torneo::where('organizador_asignado_id', $usuarioId)
-            ->where('esta_activo', true)
-            ->orderBy('nombre')
-            ->get();
-
-        $equipos = Equipo::whereIn('torneo_id', $torneos->pluck('id'))
-            ->where('esta_activo', true)
-            ->orderBy('nombre')
-            ->get();
-
-        return view('organizador.jugadores.index', compact('jugadores', 'torneos', 'equipos'));
+        return view('organizador.jugadores.index', compact(
+            'jugadores',
+            'torneos',
+            'equipos',
+            'torneoSeleccionado'
+        ));
     }
 
     /**
@@ -176,6 +193,42 @@ class JugadoresController extends Controller
 
         return redirect()->route('organizador.jugadores.index')
             ->with('success', 'Jugador actualizado exitosamente.');
+    }
+
+    /**
+     * Añade o corrige los goles (goleo) de un jugador.
+     */
+    public function actualizarGoles(Request $request, Jugador $jugador)
+    {
+        // Verificar permisos
+        $equipo = Equipo::with('torneo')->findOrFail($jugador->equipo_id);
+        if ($equipo->torneo->organizador_asignado_id !== auth()->id()) {
+            return redirect()->route('organizador.jugadores.index')
+                ->with('error', 'No tienes permiso para editar el goleo de este jugador.');
+        }
+
+        $datos = $request->validate([
+            'goles' => ['required', 'integer', 'min:0', 'max:999'],
+            'accion' => ['required', 'in:sumar,editar'],
+        ]);
+
+        $goles = (int) $datos['goles'];
+
+        if ($datos['accion'] === 'sumar') {
+            $jugador->goles = (int) $jugador->goles + $goles;
+        } else {
+            $jugador->goles = $goles;
+        }
+
+        $jugador->actualizado_por = auth()->id();
+        $jugador->save();
+
+        $mensaje = $datos['accion'] === 'sumar'
+            ? 'Goles añadidos exitosamente. Goleo actual: ' . $jugador->goles . '.'
+            : 'Goleo actualizado exitosamente. Total: ' . $jugador->goles . ' goles.';
+
+        return redirect()->route('organizador.jugadores.index', ['torneo_id' => $equipo->torneo_id])
+            ->with('success', $mensaje);
     }
 
     /**

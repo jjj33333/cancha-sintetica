@@ -73,7 +73,7 @@
                         <span class="text-gray-500">Hora:</span>
                         <span class="font-medium text-gray-800">
                             {{ \Carbon\Carbon::parse($partido->hora_inicio)->format('H:i') }} - 
-                            {{ \Carbon\Carbon::parse($partido->hora_inicio)->addHours(2)->format('H:i') }}
+                            {{ $partido->hora_fin ? \Carbon\Carbon::parse($partido->hora_fin)->format('H:i') : \Carbon\Carbon::parse($partido->hora_inicio)->addHours(2)->format('H:i') }}
                         </span>
                     </div>
                     <div class="flex justify-between items-center text-xs sm:text-sm">

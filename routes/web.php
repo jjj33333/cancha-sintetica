@@ -125,6 +125,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/jugadores', [App\Http\Controllers\Organizador\JugadoresController::class, 'store'])->name('jugadores.store');
         Route::get('/jugadores/{jugador}/editar', [App\Http\Controllers\Organizador\JugadoresController::class, 'edit'])->name('jugadores.edit');
         Route::put('/jugadores/{jugador}', [App\Http\Controllers\Organizador\JugadoresController::class, 'update'])->name('jugadores.update');
+        Route::put('/jugadores/{jugador}/goles', [App\Http\Controllers\Organizador\JugadoresController::class, 'actualizarGoles'])->name('jugadores.actualizar-goles');
         Route::delete('/jugadores/{jugador}', [App\Http\Controllers\Organizador\JugadoresController::class, 'destroy'])->name('jugadores.destroy');
         
         // Apartado de partidos - organizador
@@ -135,6 +136,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/partidos/{partido}/editar', [App\Http\Controllers\Organizador\PartidosController::class, 'edit'])->name('partidos.edit');
         Route::put('/partidos/{partido}', [App\Http\Controllers\Organizador\PartidosController::class, 'update'])->name('partidos.update');
         Route::put('/partidos/{partido}/registrar-resultado', [App\Http\Controllers\Organizador\PartidosController::class, 'registrarResultado'])->name('partidos.registrar-resultado');
+        Route::put('/partidos/{partido}/editar-marcador', [App\Http\Controllers\Organizador\PartidosController::class, 'actualizarMarcador'])->name('partidos.actualizar-marcador');
         Route::delete('/partidos/{partido}', [App\Http\Controllers\Organizador\PartidosController::class, 'destroy'])->name('partidos.destroy');
 
         // Apartado de posiciones - organizador

@@ -15,7 +15,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             <!-- Tabs de navegación -->
-            <div class="flex flex-wrap gap-2 mb-10 border-b-2 border-gray-100 pb-4" x-data="{ tab: 'activos' }">
+            <div class="flex flex-wrap gap-2 mb-10 border-b-2 border-gray-100 pb-4" x-data="{ tab: @js($tabInicial) }">
 
                 <button @click="tab = 'activos'"
                     :class="tab === 'activos' ? 'bg-[#10B981] text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
@@ -59,9 +59,10 @@
                                         <p><span class="font-medium text-gray-700">Equipos:</span> {{ $torneo->equipos_count }}/{{ $torneo->max_equipos }}</p>
                                         <p><span class="font-medium text-gray-700">Organizador:</span> {{ $torneo->organizador->nombre ?? 'Por asignar' }}</p>
                                     </div>
-                                    <button class="mt-4 w-full bg-[#ECFDF5] hover:bg-[#D1FAE5] text-[#065F46] font-semibold py-2 rounded-lg transition-colors text-sm">
+                                    <a href="{{ route('torneos', ['tab' => 'calendario', 'torneo_id' => $torneo->id]) }}"
+                                       class="mt-4 block w-full text-center bg-[#ECFDF5] hover:bg-[#D1FAE5] text-[#065F46] font-semibold py-2 rounded-lg transition-colors text-sm">
                                         Ver partidos
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         @empty
@@ -75,11 +76,30 @@
 
                 <!-- TAB 2: Calendario de Partidos -->
                 <div x-show="tab === 'calendario'" x-transition class="w-full mt-6">
-                    <!-- Próximos partidos -->
-                    <h3 class="text-xl font-bold text-[#065F46] mb-4">📅 Próximos Partidos Programados</h3>
-                    <p class="text-sm text-gray-500 mb-6">ℹ️ Los jugadores pueden consultar aquí la fecha, hora y equipos de sus próximos partidos.</p>
+                    <!-- Encabezado y filtro por campeonato -->
+                    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
+                        <div>
+                            <h3 class="text-xl font-bold text-[#065F46]">📅 Próximos Partidos Programados</h3>
+                            <p class="text-sm text-gray-500 mt-1">ℹ️ Fecha y hora de los próximos encuentros del campeonato seleccionado.</p>
+                        </div>
 
-                    <div class="space-y-4 mb-10">
+                        <form method="GET" action="{{ route('torneos') }}" class="w-full md:w-auto">
+                            <input type="hidden" name="tab" value="calendario">
+                            <label for="torneo_calendario" class="block text-xs font-medium text-gray-500 mb-1">Campeonato</label>
+                            <select name="torneo_id" id="torneo_calendario" onchange="this.form.submit()"
+                                    class="w-full md:min-w-[240px] px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none text-base sm:text-sm font-medium text-gray-700">
+                                @forelse($torneos as $torneo)
+                                    <option value="{{ $torneo->id }}" {{ $torneoCalendarioSeleccionado && $torneoCalendarioSeleccionado->id == $torneo->id ? 'selected' : '' }}>
+                                        {{ $torneo->nombre }}
+                                    </option>
+                                @empty
+                                    <option value="">Sin campeonatos</option>
+                                @endforelse
+                            </select>
+                        </form>
+                    </div>
+
+                    <div class="space-y-4">
                         @forelse($partidosProximos as $partido)
                             <div class="bg-white rounded-xl border border-gray-100 p-5 hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
                                 <div class="flex items-center gap-4">
@@ -91,10 +111,10 @@
                                     </span>
                                     <div>
                                         <p class="font-bold text-gray-800">
-                                            {{ $partido->torneo->nombre }}: {{ $partido->equipoLocal->nombre ?? 'TBD' }} vs {{ $partido->equipoVisitante->nombre ?? 'TBD' }}
+                                            {{ $partido->equipoLocal->nombre ?? 'TBD' }} vs {{ $partido->equipoVisitante->nombre ?? 'TBD' }}
                                         </p>
                                         <p class="text-sm text-gray-500 mt-1">
-                                            📅 {{ $partido->fecha_partido->format('d/m/Y') }} | 🕐 {{ \Carbon\Carbon::parse($partido->hora_inicio)->format('H:i') }} | 📍 {{ $partido->instalacion->nombre }}
+                                            📅 {{ $partido->fecha_partido->format('d/m/Y') }} | 🕐 {{ \Carbon\Carbon::parse($partido->hora_inicio)->format('H:i') }}
                                         </p>
                                     </div>
                                 </div>
@@ -103,34 +123,12 @@
                                 </span>
                             </div>
                         @empty
-                            <p class="text-gray-400 text-center py-8">No hay partidos programados próximamente.</p>
+                            <div class="bg-white rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-400">
+                                <p class="text-3xl mb-2">📅</p>
+                                <p class="font-medium">No hay partidos programados próximamente para este campeonato.</p>
+                            </div>
                         @endforelse
                     </div>
-
-                    <!-- Partidos finalizados -->
-                    @if($partidosFinalizados->count() > 0)
-                        <h3 class="text-xl font-bold text-[#065F46] mb-4">✅ Partidos Finalizados</h3>
-                        <div class="space-y-4">
-                            @foreach($partidosFinalizados as $partido)
-                                <div class="bg-gray-50 rounded-xl border border-gray-100 p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                    <div class="flex items-center gap-4">
-                                        <span class="text-xl">⚽</span>
-                                        <div>
-                                            <p class="font-bold text-gray-800">
-                                                {{ $partido->torneo->nombre }}: {{ $partido->equipoLocal->nombre }} {{ $partido->marcador }} {{ $partido->equipoVisitante->nombre }}
-                                            </p>
-                                            <p class="text-sm text-gray-500 mt-1">
-                                                📅 {{ $partido->fecha_partido->format('d/m/Y') }} | 🕐 {{ \Carbon\Carbon::parse($partido->hora_inicio)->format('H:i') }} | 📍 {{ $partido->instalacion->nombre }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[#D1FAE5] text-[#065F46] self-start md:self-auto">
-                                        Finalizado
-                                    </span>
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
                 </div>
 
                 <!-- TAB 3: Tabla de Posiciones -->

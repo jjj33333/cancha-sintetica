@@ -6,10 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Torneo;
 use App\Models\Partido;
 use App\Models\InformacionContacto;
+use Illuminate\Http\Request;
 
 class TorneosController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $contacto = InformacionContacto::activa()->first();
 
@@ -29,19 +30,36 @@ class TorneosController extends Controller
 
         $torneos = $torneos->merge($torneosProximos);
 
-        // Próximos partidos programados
-        $partidosProximos = Partido::activos()
+        // Partido próximo más cercano (define el campeonato por defecto del calendario)
+        $proximoPartido = Partido::activos()
             ->proximos()
-            ->with(['torneo', 'equipoLocal', 'equipoVisitante', 'instalacion'])
-            ->take(10)
-            ->get();
+            ->orderBy('fecha_partido')
+            ->orderBy('hora_inicio')
+            ->first();
 
-        // Partidos finalizados recientes
-        $partidosFinalizados = Partido::activos()
-            ->finalizados()
-            ->with(['torneo', 'equipoLocal', 'equipoVisitante', 'instalacion'])
-            ->take(5)
-            ->get();
+        // Campeonato seleccionado en el filtro del calendario.
+        // Por defecto se usa el campeonato con la jornada más próxima a jugarse.
+        $torneoCalendarioSeleccionado = null;
+
+        if ($request->filled('torneo_id')) {
+            $torneoCalendarioSeleccionado = $torneos->firstWhere('id', $request->integer('torneo_id'));
+        }
+
+        if (!$torneoCalendarioSeleccionado) {
+            $torneoCalendarioSeleccionado = $torneos->firstWhere('id', $proximoPartido?->torneo_id)
+                ?? $torneos->first();
+        }
+
+        // Próximos partidos programados del campeonato seleccionado
+        $partidosProximos = collect();
+
+        if ($torneoCalendarioSeleccionado) {
+            $partidosProximos = Partido::activos()
+                ->proximos()
+                ->where('torneo_id', $torneoCalendarioSeleccionado->id)
+                ->with(['torneo', 'equipoLocal', 'equipoVisitante'])
+                ->get();
+        }
 
         // Tablas de posiciones (equipos ordenados por puntos)
         $tablasPosiciones = [];
@@ -55,12 +73,18 @@ class TorneosController extends Controller
             }
         }
 
+        // Pestaña activa al ingresar (permite abrir el calendario desde otro apartado)
+        $tabInicial = in_array($request->input('tab'), ['activos', 'calendario', 'posiciones'], true)
+            ? $request->input('tab')
+            : 'activos';
+
         return view('publico.torneos', compact(
             'contacto',
             'torneos',
             'partidosProximos',
-            'partidosFinalizados',
-            'tablasPosiciones'
+            'torneoCalendarioSeleccionado',
+            'tablasPosiciones',
+            'tabInicial'
         ));
     }
 }

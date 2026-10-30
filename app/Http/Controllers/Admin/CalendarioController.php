@@ -147,7 +147,9 @@ class CalendarioController extends Controller
                     $origen = 'Sistema';
                 }
 
-                $horaFin = Carbon::parse($partido->hora_inicio)->addHours(2)->format('H:i');
+                $horaFin = $partido->hora_fin
+                    ? Carbon::parse($partido->hora_fin)->format('H:i')
+                    : Carbon::parse($partido->hora_inicio)->addHours(2)->format('H:i');
 
                 $eventos->push([
                     'id' => 'partido_' . $partido->id,
