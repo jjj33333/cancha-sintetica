@@ -235,27 +235,16 @@
                 </div>
             @endif
 
-            <!-- Información del Sistema -->
-            <div class="bg-gradient-to-br from-[#065F46] to-[#10B981] rounded-xl shadow-sm p-4 sm:p-6 text-white">
-                <h3 class="text-sm font-semibold mb-3 opacity-90">Información del Sistema</h3>
-                <div class="space-y-2 text-sm">
-                    <div class="flex justify-between">
-                        <span class="opacity-80">Laravel:</span>
-                        <span class="font-medium">{{ app()->version() }}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="opacity-80">PHP:</span>
-                        <span class="font-medium">{{ phpversion() }}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="opacity-80">Base de datos:</span>
-                        <span class="font-medium">{{ config('database.connections.mysql.database') }}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="opacity-80">Entorno:</span>
-                        <span class="font-medium capitalize">{{ app()->environment() }}</span>
-                    </div>
+            <!-- Empresa Desarrolladora -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 text-center">
+                <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Desarrollado por</p>
+                <div class="mt-2 flex items-center justify-center">
+                    <img src="{{ asset('images/saula.png') }}"
+                         alt="Saula Slate"
+                         class="h-28 w-auto object-contain">
                 </div>
+                <p class="mt-2 text-base font-bold text-[#065F46]">Saula Slate</p>
+                <p class="text-xs text-gray-500">Empresa desarrolladora del sistema</p>
             </div>
         </div>
     </div>

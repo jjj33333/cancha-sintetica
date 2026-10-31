@@ -2,20 +2,21 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Ejecuta los seeders de la aplicación.
+     * Ejecuta el seeder base de la aplicación.
+     *
+     * Deja la base de datos lista para operar, sin datos de prueba.
+     * Los seeders de demostración (InstalacionContactoSeeder y DatosPublicosSeeder)
+     * se mantienen solo como referencia y pueden ejecutarse manualmente.
      */
     public function run(): void
     {
         $this->call([
-            InstalacionContactoSeeder::class,
-            DatosPublicosSeeder::class,
+            DatosBaseSeeder::class,
         ]);
     }
 }

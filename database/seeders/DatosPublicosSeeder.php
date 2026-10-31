@@ -66,26 +66,26 @@ class DatosPublicosSeeder extends Seeder
         // ============================================
         $admin = Usuario::create([
             'nombre' => 'Administrador',
-            'email' => 'admin@cancha.com',
-            'password' => Hash::make('admin123'),
+            'email' => 'admin@gmail',
+            'password' => Hash::make('admincancha123'),
             'rol' => 'admin',
             'telefono' => '+502 5555 0000',
             'esta_activo' => true,
         ]);
 
         $organizador = Usuario::create([
-            'nombre' => 'Carlos Organizador',
-            'email' => 'carlos@org.com',
-            'password' => Hash::make('org123'),
+            'nombre' => 'Carlos',
+            'email' => 'kike@gmail.com',
+            'password' => Hash::make('kikecancha123'),
             'rol' => 'organizador',
             'telefono' => '+502 5555 1111',
             'esta_activo' => true,
         ]);
 
         $trabajador = Usuario::create([
-            'nombre' => 'María Trabajadora',
-            'email' => 'maria@cancha.com',
-            'password' => Hash::make('trab123'),
+            'nombre' => 'Usuario',
+            'email' => 'usuario@gmail..com',
+            'password' => Hash::make('usuariocancha123'),
             'rol' => 'trabajador',
             'telefono' => '+502 5555 2222',
             'esta_activo' => true,
