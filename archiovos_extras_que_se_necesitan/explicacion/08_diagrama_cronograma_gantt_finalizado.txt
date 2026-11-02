@@ -1,0 +1,278 @@
+// ==============================================================================
+// DIAGRAMA DE CRONOGRAMA GANTT - ESTADO: 100% FINALIZADO
+// Basado en: archiovos_extras_que_se_necesitan\Diagrama_de_Ganntt\diagrama.txt
+// Formato: Graphviz (DOT Language)
+// Herramienta recomendada para visualizar: https://dreampuf.github.io/GraphvizOnline/
+// ==============================================================================
+
+digraph CronogramaGanttFinalizado {
+    // Configuración general del lienzo
+    graph [
+        rankdir="TB",
+        splines="polyline",
+        nodesep="0.4",
+        ranksep="0.6",
+        bgcolor="#F8FAFC",
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="16",
+        label="CRONOGRAMA GANTT DEL PROYECTO - TODAS LAS FASES FINALIZADAS\n(Período: 21 Julio 2026 - 21 Octubre 2026 | Estado General: 100% Concluido)",
+        labelloc="t",
+        compound=true
+    ];
+
+    // Configuración global de nodos
+    node [
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="10",
+        style="filled,rounded",
+        shape="box",
+        margin="0.22,0.15",
+        penwidth=1.4
+    ];
+
+    // Configuración global de aristas
+    edge [
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="9",
+        color="#16A34A",
+        fontcolor="#14532D",
+        penwidth=1.5,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // PANEL RESUMEN DE ESTADO DEL PROYECTO
+    // --------------------------------------------------------------------------
+    resumen_proyecto [
+        label="RESUMEN EJECUTIVO DE FINALIZACIÓN\n=======================================================\n- Total de Tareas Planificadas: 18 / 18 (100% Concluidas)\n- Fecha de Inicio: 21 de Julio de 2026\n- Fecha de Finalización: 21 de Octubre de 2026\n- Duración Total: 3 meses (92 días)\n- Hito de Entrega: Superado y Validado con Éxito\n- Estado Actual: PROYECTO FINALIZADO Y OPERATIVO",
+        shape="component",
+        fillcolor="#1E293B",
+        color="#0F172A",
+        fontcolor="#FFFFFF",
+        fontsize="11",
+        margin="0.3,0.2"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CLÚSTER 1: INICIO Y REQUERIMIENTOS
+    // --------------------------------------------------------------------------
+    subgraph cluster_fase1 {
+        label="FASE 1: INICIO Y REQUERIMIENTOS [ESTADO: 100% FINALIZADO]";
+        style="filled,rounded";
+        fillcolor="#F0FDF4";
+        color="#86EFAC";
+        fontsize="11";
+
+        task1 [
+            label="[task1] Inicio del proyecto - entrevista dirigida\n- Fecha: 2026-07-21 (Duración: 1 día)\n- Entregable: Diagnóstico de necesidades de la cancha\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task2 [
+            label="[task2] Formulación de requerimientos\n- Fecha: 2026-08-10 (Duración: 5 días)\n- Entregable: 12 RF, 5 RNF y alcance formal\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task1 -> task2 [label="Completado"];
+    }
+
+    // --------------------------------------------------------------------------
+    // CLÚSTER 2: NÚCLEO, SEGURIDAD Y RESERVAS
+    // --------------------------------------------------------------------------
+    subgraph cluster_fase2 {
+        label="FASE 2: NÚCLEO, SEGURIDAD Y RESERVAS [ESTADO: 100% FINALIZADO]";
+        style="filled,rounded";
+        fillcolor="#F0FDF4";
+        color="#86EFAC";
+        fontsize="11";
+
+        task3 [
+            label="[task3] Autenticación y seguridad\n- Fecha: 2026-08-15 (Duración: 10 días)\n- Entregable: Login multi-rol, Hash Bcrypt y CSRF\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task4 [
+            label="[task4] Gestión de reservas\n- Fecha: 2026-08-20 (Duración: 12 días)\n- Entregable: CRUD reservas, validación de traslape y precios Q.\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task5 [
+            label="[task5] Calendario y disponibilidad\n- Fecha: 2026-08-25 (Duración: 12 días)\n- Entregable: Calendario interactivo semanal de 3 semanas\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task6 [
+            label="[task6] Anuncios y noticias\n- Fecha: 2026-08-30 (Duración: 12 días)\n- Entregable: Módulo público y panel de avisos\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task3 -> task4 [label="Completado"];
+        task4 -> task5 [label="Completado"];
+        task5 -> task6 [label="Completado"];
+    }
+
+    // --------------------------------------------------------------------------
+    // CLÚSTER 3: TORNEOS, COMPETENCIAS Y PRUEBAS
+    // --------------------------------------------------------------------------
+    subgraph cluster_fase3 {
+        label="FASE 3: TORNEOS, JUGADORES Y PLANIFICACIÓN DE PRUEBAS [ESTADO: 100% FINALIZADO]";
+        style="filled,rounded";
+        fillcolor="#F0FDF4";
+        color="#86EFAC";
+        fontsize="11";
+
+        task7 [
+            label="[task7] Torneos y campeonatos\n- Fecha: 2026-09-05 (Duración: 10 días)\n- Entregable: Creación de torneos y fixture\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task17 [
+            label="[task17] Casos de prueba y planificación\n- Fecha: 2026-09-08 (Duración: 5 días)\n- Entregable: Plan de pruebas E2E Dusk y matrices de QA\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task8 [
+            label="[task8] Equipos y jugadores\n- Fecha: 2026-09-12 (Duración: 10 días)\n- Entregable: Plantillas de jugadores con DPI y dorsales\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task7 -> task17 [label="Completado"];
+        task17 -> task8 [label="Completado"];
+    }
+
+    // --------------------------------------------------------------------------
+    // CLÚSTER 4: REPORTES, AUDITORÍA Y CONFIGURACIÓN
+    // --------------------------------------------------------------------------
+    subgraph cluster_fase4 {
+        label="FASE 4: ESTADÍSTICAS, HISTORIAL Y CONFIGURACIÓN [ESTADO: 100% FINALIZADO]";
+        style="filled,rounded";
+        fillcolor="#F0FDF4";
+        color="#86EFAC";
+        fontsize="11";
+
+        task9 [
+            label="[task9] Estadísticas y reportes\n- Fecha: 2026-09-18 (Duración: 10 días)\n- Entregable: Métricas monetarias en Q. con Chart.js\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task10 [
+            label="[task10] Historial y auditoría\n- Fecha: 2026-09-24 (Duración: 8 días)\n- Entregable: Trazabilidad completa de modificaciones e IPs\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task11 [
+            label="[task11] Configuración del sistema\n- Fecha: 2026-09-28 (Duración: 8 días)\n- Entregable: Parámetros del sistema y respaldos de BD\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task9 -> task10 [label="Completado"];
+        task10 -> task11 [label="Completado"];
+    }
+
+    // --------------------------------------------------------------------------
+    // CLÚSTER 5: GESTIÓN DE INSTALACIONES Y CONTACTO
+    // --------------------------------------------------------------------------
+    subgraph cluster_fase5 {
+        label="FASE 5: GESTIÓN DE INSTALACIONES Y OPERACIONES [ESTADO: 100% FINALIZADO]";
+        style="filled,rounded";
+        fillcolor="#F0FDF4";
+        color="#86EFAC";
+        fontsize="11";
+
+        task12 [
+            label="[task12] Gestión de instalaciones\n- Fecha: 2026-10-02 (Duración: 7 días)\n- Entregable: Ficha técnica y dimensiones de la cancha\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task13 [
+            label="[task13] Tarifas y precios\n- Fecha: 2026-10-05 (Duración: 6 días)\n- Entregable: Esquema tarifario por hora diurna/nocturna\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task14 [
+            label="[task14] Bloqueos de cancha\n- Fecha: 2026-10-07 (Duración: 6 días)\n- Entregable: Módulo de inhabilitación por clima o mantenimiento\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task15 [
+            label="[task15] Galería de imágenes\n- Fecha: 2026-10-10 (Duración: 5 días)\n- Entregable: Catálogo multimedia con FilePond y storage\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task16 [
+            label="[task16] Información de contacto\n- Fecha: 2026-10-12 (Duración: 5 días)\n- Entregable: Datos del negocio, WhatsApp (+502) y mapas\n- ESTADO: [✓ FINALIZADO 100%]",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        task12 -> task13 [label="Completado"];
+        task13 -> task14 [label="Completado"];
+        task14 -> task15 [label="Completado"];
+        task15 -> task16 [label="Completado"];
+    }
+
+    // --------------------------------------------------------------------------
+    // CLÚSTER 6: HITO FINAL - CIERRE Y ENTREGA DEL PROYECTO
+    // --------------------------------------------------------------------------
+    subgraph cluster_cierre {
+        label="FASE FINAL: HITO DE ENTREGA Y CIERRE";
+        style="filled,rounded";
+        fillcolor="#ECFDF5";
+        color="#059669";
+        fontsize="11";
+
+        task18 [
+            label="★ [task18] HITO: FINALIZACIÓN DEL PROYECTO ★\n=======================================================\n- Fecha de Culminación: 2026-10-21 (Milestone Cumplido)\n- Pruebas Dusk de Aceptación: 100% Aprobadas\n- Despliegue y Puesta en Marcha: Operativo al 100%\n- ESTADO: [✓ PROYECTO CONCLUIDO Y ENTREGADO EXITOSAMENTE]",
+            shape="record",
+            fillcolor="#059669",
+            color="#047857",
+            fontcolor="#FFFFFF",
+            fontsize="12",
+            margin="0.3,0.2"
+        ];
+    }
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES INTER-FASES HACIA EL HITO FINAL
+    // --------------------------------------------------------------------------
+    resumen_proyecto -> task1 [label="Inicia cronograma"];
+    task2 -> task3 [label="Pasa a Fase 2"];
+    task6 -> task7 [label="Pasa a Fase 3"];
+    task8 -> task9 [label="Pasa a Fase 4"];
+    task11 -> task12 [label="Pasa a Fase 5"];
+    task16 -> task18 [label="Culmina en Hito Final", penwidth=2.5, color="#059669"];
+}
+

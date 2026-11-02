@@ -18,7 +18,7 @@
                 </h1>
                 <p class="text-xs sm:text-sm text-gray-500 mt-1">Torneo: <span class="font-medium text-gray-700">{{ $torneo->nombre }}</span></p>
             </div>
-            @if($partido->estado === 'programado' || $partido->estado === 'en_curso')
+            @if($partido->estado !== 'finalizado')
                 <a href="{{ route('organizador.partidos.edit', $partido) }}" 
                    class="w-full sm:w-auto inline-flex items-center justify-center min-h-[44px] px-4 py-2 bg-[#F59E0B] hover:bg-[#D97706] text-white text-xs sm:text-sm font-semibold rounded-lg shadow-sm hover:shadow transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
@@ -72,8 +72,8 @@
                     <div class="flex justify-between items-center text-xs sm:text-sm">
                         <span class="text-gray-500">Hora:</span>
                         <span class="font-medium text-gray-800">
-                            {{ \Carbon\Carbon::parse($partido->hora_inicio)->format('H:i') }} - 
-                            {{ $partido->hora_fin ? \Carbon\Carbon::parse($partido->hora_fin)->format('H:i') : \Carbon\Carbon::parse($partido->hora_inicio)->addHours(2)->format('H:i') }}
+                            {{ \Carbon\Carbon::parse($partido->hora_inicio)->format('g:i A') }} - 
+                            {{ $partido->hora_fin ? \Carbon\Carbon::parse($partido->hora_fin)->format('g:i A') : \Carbon\Carbon::parse($partido->hora_inicio)->addHours(2)->format('g:i A') }}
                         </span>
                     </div>
                     <div class="flex justify-between items-center text-xs sm:text-sm">
@@ -136,7 +136,7 @@
                         <div class="text-center py-6 sm:py-8">
                             <span class="text-3xl sm:text-4xl mb-2 inline-block">⏳</span>
                             <p class="text-xs sm:text-sm text-gray-500 font-medium">Partido no finalizado</p>
-                            @if($partido->estado === 'programado' || $partido->estado === 'en_curso')
+                            @if(in_array($partido->estado, ['programado', 'en_curso', 'aplazado']))
                                 <button onclick="abrirModalResultado({{ $partido->id }}, '{{ addslashes($partido->equipoLocal->nombre) }}', '{{ addslashes($partido->equipoVisitante->nombre) }}')" 
                                         class="mt-4 w-full sm:w-auto inline-flex items-center justify-center min-h-[44px] px-6 py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-medium rounded-lg shadow-sm hover:shadow transition-all text-xs sm:text-sm">
                                     ⚽ Registrar Resultado

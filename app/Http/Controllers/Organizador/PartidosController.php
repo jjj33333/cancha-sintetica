@@ -9,9 +9,12 @@ use App\Models\Torneo;
 use App\Models\Equipo;
 use App\Models\Reserva;
 use App\Models\Instalacion;
+use App\Models\InformacionContacto;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PartidosController extends Controller
 {
@@ -37,22 +40,127 @@ class PartidosController extends Controller
             $torneoSeleccionado = $torneosAsignados->first();
         }
 
+        // Ordenamiento por fecha y hora (descendente por defecto)
+        $ordenRaw = $request->input('orden', 'desc');
+        $esDesc = in_array(strtolower($ordenRaw), ['desc', 'descendente', 'reciente']);
+        $orden = $esDesc ? 'desc' : 'asc';
+
+        // Filtro por jornada
+        $jornadaSeleccionada = $request->filled('jornada') ? (string) $request->input('jornada') : null;
+
         // Partidos del torneo seleccionado
         $partidos = collect();
+        $jornadas = collect();
+        $totalPartidos = 0;
+        $totalFinalizados = 0;
+
         if ($torneoSeleccionado) {
-            $partidos = Partido::with(['equipoLocal', 'equipoVisitante', 'instalacion'])
-                ->where('torneo_id', $torneoSeleccionado->id)
+            // Jornadas que existen en el torneo (para el selector)
+            $jornadas = Partido::where('torneo_id', $torneoSeleccionado->id)
                 ->where('esta_activo', true)
-                ->orderBy('fecha_partido')
-                ->orderBy('hora_inicio')
-                ->get();
+                ->whereNotNull('numero_jornada')
+                ->distinct()
+                ->orderBy('numero_jornada')
+                ->pluck('numero_jornada');
+
+            $query = Partido::with(['equipoLocal', 'equipoVisitante', 'instalacion'])
+                ->where('torneo_id', $torneoSeleccionado->id)
+                ->where('esta_activo', true);
+
+            if ($jornadaSeleccionada !== null) {
+                $query->where('numero_jornada', $jornadaSeleccionada);
+            }
+
+            if ($esDesc) {
+                $query->orderByDesc('fecha_partido')->orderByDesc('hora_inicio');
+            } else {
+                $query->orderBy('fecha_partido', 'asc')->orderBy('hora_inicio', 'asc');
+            }
+
+            $totalPartidos = (clone $query)->count();
+            $totalFinalizados = (clone $query)->where('estado', 'finalizado')->count();
+
+            // Máximo 15 filas por página; el resto se navega con la paginación
+            $partidos = $query->paginate(15)->withQueryString();
         }
 
         return view('organizador.partidos.index', compact(
             'torneosAsignados',
             'torneoSeleccionado',
-            'partidos'
+            'partidos',
+            'orden',
+            'jornadas',
+            'jornadaSeleccionada',
+            'totalPartidos',
+            'totalFinalizados'
         ));
+    }
+
+    /**
+     * Genera un PDF vertical con los partidos que coinciden con el torneo y
+     * la jornada seleccionados (sin límite de paginación).
+     */
+    public function imprimir(Request $request)
+    {
+        $usuarioId = auth()->id();
+
+        $torneosAsignados = Torneo::where('organizador_asignado_id', $usuarioId)
+            ->where('esta_activo', true)
+            ->orderBy('nombre')
+            ->get();
+
+        $torneoSeleccionado = null;
+        if ($request->filled('torneo_id')) {
+            $torneoSeleccionado = $torneosAsignados->firstWhere('id', $request->torneo_id);
+        }
+        if (!$torneoSeleccionado) {
+            $torneoSeleccionado = $torneosAsignados->first();
+        }
+
+        if (!$torneoSeleccionado) {
+            return redirect()->route('organizador.partidos.index')
+                ->with('error', 'No tienes torneos asignados disponibles para imprimir.');
+        }
+
+        $ordenRaw = $request->input('orden', 'desc');
+        $esDesc = in_array(strtolower($ordenRaw), ['desc', 'descendente', 'reciente']);
+
+        $jornadaSeleccionada = $request->filled('jornada') ? (string) $request->input('jornada') : null;
+
+        $query = Partido::with(['equipoLocal', 'equipoVisitante'])
+            ->where('torneo_id', $torneoSeleccionado->id)
+            ->where('esta_activo', true);
+
+        if ($jornadaSeleccionada !== null) {
+            $query->where('numero_jornada', $jornadaSeleccionada);
+        }
+
+        if ($esDesc) {
+            $query->orderByDesc('fecha_partido')->orderByDesc('hora_inicio');
+        } else {
+            $query->orderBy('fecha_partido')->orderBy('hora_inicio');
+        }
+
+        $partidos = $query->get();
+
+        $contacto = InformacionContacto::activa()->first();
+        $jornadaTexto = $jornadaSeleccionada !== null
+            ? 'Jornada ' . $jornadaSeleccionada
+            : 'Todas las jornadas';
+
+        $nombreArchivo = 'partidos-' . Str::slug($torneoSeleccionado->nombre)
+            . ($jornadaSeleccionada !== null ? '-jornada-' . $jornadaSeleccionada : '')
+            . '.pdf';
+
+        $pdf = Pdf::loadView('organizador.partidos.pdf', compact(
+            'torneoSeleccionado',
+            'partidos',
+            'contacto',
+            'jornadaTexto',
+            'jornadaSeleccionada'
+        ))->setPaper('a4', 'portrait');
+
+        return $pdf->stream($nombreArchivo);
     }
 
     /**
@@ -77,12 +185,20 @@ class PartidosController extends Controller
         }
 
         $equipos = collect();
+        $cruces = collect();
         if ($torneoSeleccionado) {
             $equipos = Equipo::where('torneo_id', $torneoSeleccionado->id)
                 ->where('esta_activo', true)
                 ->whereIn('estado', ['registrado', 'confirmado'])
                 ->orderBy('nombre')
                 ->get();
+
+            // Partidos ya programados en este torneo: sirven para no repetir
+            // el mismo cruce local vs. visitante (ida y vuelta).
+            $cruces = Partido::where('torneo_id', $torneoSeleccionado->id)
+                ->where('esta_activo', true)
+                ->where('estado', '!=', 'cancelado')
+                ->get(['equipo_local_id', 'equipo_visitante_id']);
         }
 
         $canchaPrincipal = $this->obtenerCanchaPrincipal();
@@ -96,6 +212,7 @@ class PartidosController extends Controller
             'torneosAsignados',
             'torneoSeleccionado',
             'equipos',
+            'cruces',
             'canchaPrincipal'
         ));
     }
@@ -335,6 +452,7 @@ class PartidosController extends Controller
                 'arbitro' => $datos['arbitro'] ?? null,
                 'notas' => $datos['notas'] ?? null,
                 'estado' => $datos['estado'],
+                'esta_activo' => true,
                 'actualizado_por' => auth()->id(),
             ]);
 
@@ -344,6 +462,12 @@ class PartidosController extends Controller
                 $equipoLocal = Equipo::find($datos['equipo_local_id']);
                 $equipoVisitante = Equipo::find($datos['equipo_visitante_id']);
 
+                $estadoReserva = match($datos['estado']) {
+                    'cancelado' => 'cancelada',
+                    'finalizado' => 'completada',
+                    default => 'confirmada',
+                };
+
                 $reserva->update([
                     'instalacion_id' => $instalacionId,
                     'nombre_cliente' => $torneo->nombre . ': ' . $equipoLocal->nombre . ' vs ' . $equipoVisitante->nombre,
@@ -352,6 +476,8 @@ class PartidosController extends Controller
                     'hora_inicio' => $datos['hora_inicio'],
                     'hora_fin' => $datos['hora_fin'],
                     'total_horas' => $totalHoras,
+                    'estado' => $estadoReserva,
+                    'esta_activo' => $datos['estado'] !== 'cancelado',
                     'actualizado_por' => auth()->id(),
                 ]);
             }
@@ -386,6 +512,11 @@ class PartidosController extends Controller
         if ($partido->estado === 'finalizado') {
             return redirect()->back()
                 ->with('error', 'Este partido ya está finalizado. Usa la acción "Editar marcador" para corregir el resultado.');
+        }
+
+        if ($partido->estado === 'cancelado') {
+            return redirect()->back()
+                ->with('error', 'No se puede registrar resultado en un partido cancelado. Edita el partido para reactivarlo primero.');
         }
 
         $request->validate([

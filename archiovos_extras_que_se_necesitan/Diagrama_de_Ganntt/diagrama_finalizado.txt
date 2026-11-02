@@ -1,0 +1,47 @@
+// ==============================================================================
+// DIAGRAMA DE GANTT DEL PROYECTO - ESTADO: 100% FINALIZADO
+// Basado en: archiovos_extras_que_se_necesitan\Diagrama_de_Ganntt\diagrama.txt
+// Formato: Mermaid (código sirena)
+// Todas las tareas han sido marcadas como ':done' y el hito como ':milestone, done'
+// ==============================================================================
+
+---
+config:
+  theme: default
+  fontFamily: '''Merriweather Variable'', serif'
+---
+gantt
+    title Diagrama de Gantt del Proyecto - Estado: 100% Finalizado
+    dateFormat  YYYY-MM-DD
+    axisFormat  %d %b
+
+    section Fase 1: Inicio y Requerimientos
+    Inicio del proyecto - entrevista dirigida :done, task1, 2026-07-21, 1d
+    Formulación de requerimientos            :done, task2, 2026-08-10, 5d
+
+    section Fase 2: Núcleo y Seguridad
+    Autenticación y seguridad               :done, task3, 2026-08-15, 10d
+    Gestión de reservas                     :done, task4, 2026-08-20, 12d
+    Calendario y disponibilidad             :done, task5, 2026-08-25, 12d
+    Anuncios y noticias                     :done, task6, 2026-08-30, 12d
+
+    section Fase 3: Torneos y Competencia
+    Casos de prueba y planificación         :done, task17, 2026-09-08, 5d
+    Torneos y campeonatos                   :done, task7, 2026-09-05, 10d
+    Equipos y jugadores                     :done, task8, 2026-09-12, 10d
+
+    section Fase 4: Reportes y Configuración
+    Estadísticas y reportes                 :done, task9, 2026-09-18, 10d
+    Historial                               :done, task10, 2026-09-24, 8d
+    Configuración del sistema               :done, task11, 2026-09-28, 8d
+
+    section Fase 5: Operación e Instalaciones
+    Gestión de instalaciones                :done, task12, 2026-10-02, 7d
+    Tarifas y precios                       :done, task13, 2026-10-05, 6d
+    Bloqueos de cancha                      :done, task14, 2026-10-07, 6d
+    Galeria de imágenes                     :done, task15, 2026-10-10, 5d
+    Información de contacto                 :done, task16, 2026-10-12, 5d
+
+    section Cierre del Proyecto
+    Finalización del proyecto               :milestone, done, task18, 2026-10-21, 1d
+

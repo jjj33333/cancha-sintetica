@@ -1,0 +1,281 @@
+// ==============================================================================
+// DIAGRAMA GRÁFICO DE REQUISITOS DEL SISTEMA (RF Y RNF)
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Formato: Graphviz (DOT Language)
+// Herramienta recomendada para visualizar: https://dreampuf.github.io/GraphvizOnline/
+// ==============================================================================
+
+digraph DiagramaRequisitosSistema {
+    // Configuración general del lienzo
+    graph [
+        rankdir="TB",
+        splines="ortho",
+        nodesep="0.4",
+        ranksep="0.7",
+        bgcolor="#F8FAFC",
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="16",
+        label="MAPA GRÁFICO DE REQUISITOS DEL SISTEMA\nRequisitos Funcionales (RF), Requisitos No Funcionales (RNF) y Alcance",
+        labelloc="t"
+    ];
+
+    // Configuración general de nodos
+    node [
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="10",
+        style="filled,rounded",
+        shape="box",
+        margin="0.2,0.15",
+        penwidth=1.4
+    ];
+
+    // Configuración de aristas
+    edge [
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="8",
+        color="#475569",
+        fontcolor="#334155",
+        penwidth=1.2,
+        arrowsize=0.7
+    ];
+
+    // --------------------------------------------------------------------------
+    // NODO CENTRAL / RAÍZ
+    // --------------------------------------------------------------------------
+    sistema_central [
+        label="SISTEMA DE GESTIÓN DE CANCHA SINTÉTICA\n(Especificación de Requisitos de Software)",
+        shape="component",
+        fillcolor="#1E293B",
+        color="#0F172A",
+        fontcolor="#FFFFFF",
+        fontsize="12",
+        margin="0.3,0.2"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CATEGORÍAS PRINCIPALES
+    // --------------------------------------------------------------------------
+    cat_rf [
+        label="REQUISITOS FUNCIONALES (RF)\n(Capacidades y comportamientos del software)",
+        fillcolor="#0284C7",
+        color="#0369A1",
+        fontcolor="#FFFFFF",
+        fontsize="11"
+    ];
+
+    cat_rnf [
+        label="REQUISITOS NO FUNCIONALES (RNF)\n(Atributos de calidad, seguridad y arquitectura)",
+        fillcolor="#059669",
+        color="#047857",
+        fontcolor="#FFFFFF",
+        fontsize="11"
+    ];
+
+    cat_alcance [
+        label="ALCANCE Y LÍMITES DEL PROYECTO\n(Funcionalidades incluidas y exclusiones explícitas)",
+        fillcolor="#D97706",
+        color="#B45309",
+        fontcolor="#FFFFFF",
+        fontsize="11"
+    ];
+
+    sistema_central -> cat_rf [penwidth=2.0, color="#0284C7"];
+    sistema_central -> cat_rnf [penwidth=2.0, color="#059669"];
+    sistema_central -> cat_alcance [penwidth=2.0, color="#D97706"];
+
+    // --------------------------------------------------------------------------
+    // MÓDULOS DE REQUISITOS FUNCIONALES
+    // --------------------------------------------------------------------------
+    mod_publico [
+        label="MÓDULO PÚBLICO / VISITANTES",
+        fillcolor="#E0F2FE",
+        color="#0284C7",
+        fontcolor="#0369A1"
+    ];
+
+    mod_seguridad [
+        label="MÓDULO AUTENTICACIÓN Y ROLES",
+        fillcolor="#EDE9FE",
+        color="#7C3AED",
+        fontcolor="#5B21B6"
+    ];
+
+    mod_reservas [
+        label="MÓDULO GESTIÓN DE RESERVAS",
+        fillcolor="#EFF6FF",
+        color="#2563EB",
+        fontcolor="#1E40AF"
+    ];
+
+    mod_torneos [
+        label="MÓDULO TORNEOS Y PARTIDOS",
+        fillcolor="#FAF5FF",
+        color="#9333EA",
+        fontcolor="#6B21A8"
+    ];
+
+    mod_admin [
+        label="MÓDULO ADMINISTRACIÓN Y CONTROL",
+        fillcolor="#FEF3C7",
+        color="#D97706",
+        fontcolor="#92400E"
+    ];
+
+    cat_rf -> mod_publico;
+    cat_rf -> mod_seguridad;
+    cat_rf -> mod_reservas;
+    cat_rf -> mod_torneos;
+    cat_rf -> mod_admin;
+
+    // --------------------------------------------------------------------------
+    // DESGLOSE DE REQUISITOS FUNCIONALES (RF-01 AL RF-12)
+    // --------------------------------------------------------------------------
+    rf01 [
+        label="[RF-01] Calendario Público de Disponibilidad\n- Bloques horarios de 1 hora (verde/rojo)\n- Navegación interactiva de 3 semanas\n- Ocupación por reservas o campeonatos",
+        fillcolor="#FFFFFF",
+        color="#0284C7"
+    ];
+
+    rf05 [
+        label="[RF-05] Portal de Anuncios y Contacto\n- Consulta pública de torneos y tabla general\n- Cartelera de avisos de la cancha\n- Ubicación, WhatsApp (+502) y mapa",
+        fillcolor="#FFFFFF",
+        color="#0284C7"
+    ];
+
+    mod_publico -> rf01;
+    mod_publico -> rf05;
+
+    rf02 [
+        label="[RF-02] Autenticación y Control de Roles\n- Inicio de sesión con credenciales seguras\n- Redirección automática según rol:\n  * Administrador (/admin/dashboard)\n  * Organizador (/organizador/dashboard)\n  * Trabajador (/trabajador/dashboard)",
+        fillcolor="#FFFFFF",
+        color="#7C3AED"
+    ];
+
+    mod_seguridad -> rf02;
+
+    rf03 [
+        label="[RF-03] Gestión Integral de Reservas\n- Registro manual de reservas con código único\n- Edición, confirmación y cancelación\n- Validación de traslapes y cálculo de horas\n- Precios en Quetzales (GTQ)",
+        fillcolor="#FFFFFF",
+        color="#2563EB"
+    ];
+
+    rf11 [
+        label="[RF-11] Planes Tarifarios y Bloqueos\n- Configuración de tarifas (normal / nocturna)\n- Bloqueo de turnos por lluvia o mantenimiento",
+        fillcolor="#FFFFFF",
+        color="#2563EB"
+    ];
+
+    mod_reservas -> rf03;
+    mod_reservas -> rf11;
+
+    rf04 [
+        label="[RF-04] Gestión de Torneos\n- Creación de campeonatos y costos de inscripción\n- Asignación de organizador encargado\n- Estados: Planificado, En Curso, Finalizado",
+        fillcolor="#FFFFFF",
+        color="#9333EA"
+    ];
+
+    rf08 [
+        label="[RF-08] Equipos y Jugadores con DPI\n- Registro de plantillas de equipos\n- Padrón de jugadores con DPI (Guatemala)\n- Números de camiseta y posición",
+        fillcolor="#FFFFFF",
+        color="#9333EA"
+    ];
+
+    rf09 [
+        label="[RF-09] Programación de Partidos y Posiciones\n- Calendario de jornadas y designación de horarios\n- Registro de marcadores y goles\n- Cómputo automático: PJ, PG, PE, PP, GF, GC, DG, PTS",
+        fillcolor="#FFFFFF",
+        color="#9333EA"
+    ];
+
+    mod_torneos -> rf04;
+    mod_torneos -> rf08;
+    mod_torneos -> rf09;
+
+    rf06 [
+        label="[RF-06] Historial y Auditoría\n- Trazabilidad de cambios de estado en reservas\n- Registro de usuario creador, fecha e IP",
+        fillcolor="#FFFFFF",
+        color="#D97706"
+    ];
+
+    rf07 [
+        label="[RF-07] Métricas y Reportes Financieros\n- Panel de estadísticas con gráficos interactivos\n- Ingresos mensuales y promedios en Quetzales (Q.)\n- Horas de mayor demanda y tasa de ocupación",
+        fillcolor="#FFFFFF",
+        color="#D97706"
+    ];
+
+    rf10 [
+        label="[RF-10] Parámetros y Respaldos de BD\n- Zona horaria America/Guatemala y moneda GTQ\n- Generación y descarga de copias de seguridad SQL",
+        fillcolor="#FFFFFF",
+        color="#D97706"
+    ];
+
+    rf12 [
+        label="[RF-12] Instalaciones y Galería Visual\n- Ficha técnica (Césped sintético, iluminación LED)\n- Catálogo fotográfico de las instalaciones",
+        fillcolor="#FFFFFF",
+        color="#D97706"
+    ];
+
+    mod_admin -> rf06;
+    mod_admin -> rf07;
+    mod_admin -> rf10;
+    mod_admin -> rf12;
+
+    // --------------------------------------------------------------------------
+    // REQUISITOS NO FUNCIONALES (RNF-01 AL RNF-05)
+    // --------------------------------------------------------------------------
+    rnf01 [
+        label="[RNF-01] Usabilidad y Responsividad\n- Interfaz adaptativa (Mobile, Tablet, Desktop)\n- Construida con Tailwind CSS utilitario",
+        fillcolor="#ECFDF5",
+        color="#059669"
+    ];
+
+    rnf02 [
+        label="[RNF-02] Seguridad de la Información\n- Cifrado de claves mediante Hash Bcrypt\n- Token @csrf en formularios contra ataques CSRF\n- Consultas preparadas contra inyección SQL",
+        fillcolor="#ECFDF5",
+        color="#059669"
+    ];
+
+    rnf03 [
+        label="[RNF-03] Rendimiento y Velocidad\n- Tiempos de respuesta menores a 2 segundos\n- Consultas indexadas y optimización en MySQL\n- Carga asíncrona ágil con Alpine.js",
+        fillcolor="#ECFDF5",
+        color="#059669"
+    ];
+
+    rnf04 [
+        label="[RNF-04] Intuitividad y Experiencia de Usuario\n- Paleta visual deportiva (verde césped y blanco)\n- Notificaciones claras (Toastify) y estados por color",
+        fillcolor="#ECFDF5",
+        color="#059669"
+    ];
+
+    rnf05 [
+        label="[RNF-05] Mantenibilidad y Arquitectura MVC\n- Estructura limpia basada en Laravel 11\n- Separación estricta de responsabilidades (SoC)\n- Seeders idempotentes y pruebas Dusk",
+        fillcolor="#ECFDF5",
+        color="#059669"
+    ];
+
+    cat_rnf -> rnf01;
+    cat_rnf -> rnf02;
+    cat_rnf -> rnf03;
+    cat_rnf -> rnf04;
+    cat_rnf -> rnf05;
+
+    // --------------------------------------------------------------------------
+    // ALCANCE Y EXCLUSIONES
+    // --------------------------------------------------------------------------
+    alcance_incluye [
+        label="INCLUIDO EN EL ALCANCE:\n- Agenda completa de reservas del dueño y trabajadores\n- Calendario público de disponibilidad en vivo\n- Organización de torneos, equipos y estadísticas\n- Panel de finanzas y configuración en Quetzales",
+        fillcolor="#FEFCE8",
+        color="#CA8A04",
+        fontcolor="#713F12"
+    ];
+
+    alcance_excluye [
+        label="NO INCLUIDO (EXCLUSIONES EXPLÍCITAS):\n- Pasarelas de pago electrónico online (Stripe / PayPal)\n- Aplicación móvil nativa (Android / iOS)\n- Notificaciones push o envíos de SMS automáticos\n- Registro de usuarios clientes externos para autoservicio",
+        fillcolor="#FFF1F2",
+        color="#E11D48",
+        fontcolor="#881337"
+    ];
+
+    cat_alcance -> alcance_incluye;
+    cat_alcance -> alcance_excluye;
+}
+

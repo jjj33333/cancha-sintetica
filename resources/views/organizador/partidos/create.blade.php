@@ -67,7 +67,7 @@
                         <label for="equipo_local_id" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                             Equipo Local <span class="text-red-500">*</span>
                         </label>
-                        <select name="equipo_local_id" id="equipo_local_id" required
+                        <select name="equipo_local_id" id="equipo_local_id" required onchange="actualizarVisitantes()"
                                 class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-base sm:text-sm @error('equipo_local_id') border-red-500 @enderror">
                             <option value="">Seleccionar equipo local...</option>
                             @foreach($equipos as $equipo)
@@ -93,6 +93,9 @@
                             @endforeach
                         </select>
                         @error('equipo_visitante_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        <p id="sinVisitantes" class="hidden text-amber-600 text-xs mt-1">
+                            Este equipo ya enfrentó a todos los rivales disponibles en condición de visitante.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -226,5 +229,60 @@
                 window.location.href = '{{ route("organizador.partidos.create") }}?torneo_id=' + torneoId;
             }
         }
+
+        // Equipos del torneo y cruces ya programados (local vs. visitante)
+        const equiposTorneo = @json($equipos->map(fn ($equipo) => ['id' => (string) $equipo->id, 'nombre' => $equipo->nombre])->values());
+        const crucesTorneo = @json($cruces->map(fn ($cruce) => ['local' => (string) $cruce->equipo_local_id, 'visitante' => (string) $cruce->equipo_visitante_id])->values());
+        const localSelect = document.getElementById('equipo_local_id');
+        const visitanteSelect = document.getElementById('equipo_visitante_id');
+        const sinVisitantes = document.getElementById('sinVisitantes');
+        const visitanteInicial = @json(old('equipo_visitante_id'));
+        let primeraCargaVisitantes = true;
+
+        function actualizarVisitantes() {
+            const localId = localSelect.value;
+            const seleccionado = primeraCargaVisitantes
+                ? (visitanteInicial || '')
+                : visitanteSelect.value;
+
+            const disponibles = equiposTorneo.filter(function (equipo) {
+                // Un equipo no puede ser local y visitante en el mismo partido
+                if (equipo.id === localId) {
+                    return false;
+                }
+
+                // Sin local seleccionado se muestran todos los equipos
+                if (!localId) {
+                    return true;
+                }
+
+                // Ocultar rivales que ya visitaron a este equipo local
+                return !crucesTorneo.some(function (cruce) {
+                    return cruce.local === localId && cruce.visitante === equipo.id;
+                });
+            });
+
+            visitanteSelect.innerHTML = '<option value="">Seleccionar equipo visitante...</option>';
+
+            disponibles.forEach(function (equipo) {
+                const option = document.createElement('option');
+                option.value = equipo.id;
+                option.textContent = equipo.nombre;
+                if (equipo.id === seleccionado) {
+                    option.selected = true;
+                }
+                visitanteSelect.appendChild(option);
+            });
+
+            if (localId && disponibles.length === 0) {
+                sinVisitantes.classList.remove('hidden');
+            } else {
+                sinVisitantes.classList.add('hidden');
+            }
+
+            primeraCargaVisitantes = false;
+        }
+
+        document.addEventListener('DOMContentLoaded', actualizarVisitantes);
     </script>
 @endsection

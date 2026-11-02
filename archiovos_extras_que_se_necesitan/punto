@@ -1,0 +1,137 @@
+Objective
+Analyze the QA documentation in archiovos_extras_que_se_necesitan and complete the summary table (Requisitos, Casos de prueba, Defectos, Pruebas funcionales, Pruebas no funcionales, Evidencias, Validación del usuario) with Total / Cumplidos / Parciales / No cumplidos, without modifying code.
+Earlier work (completed): public Horarios championship slots, public Torneos calendar simplification, login password toggle, admin config “Saula Slate” card, clean-base DB seeder.
+Requirements
+Do not modify any code for the current analysis request; only deliver the completed table/analysis.
+Base the analysis on the system plus support files under archiovos_extras_que_se_necesitan (Caso_de_pruebas, Plan_caso_de_pruebas, cumplimiento de requisitos, Registros_de_errores, Registro_de_evidencias, Dusk tests).
+Prior requirements already implemented: player goals inline edit, championship filter on new-player form, tournament-default player list sorted by goals, public Horarios “no disponible por campeonato” state, public Torneos simplified calendar with single championship filter, login password visibility toggle, admin config company card.
+Decisions
+DB reset seeder is database/seeders/DatosBaseSeeder.php; DatabaseSeeder now calls only it.
+New seeder truncates 20 data tables and seeds 1 active installation, 3 users, 7 schedules, contact, 2 tariffs, 8 configs; views are preserved.
+Seeder user credentials were changed (post-creation, apparently by user) to admin@gmail.com / admincancha123, kike@gmail.com / kikecancha123, usuario@gmail.com / usuariocancha123; DB currently reflects these.
+Admin config “Información del Sistema” card was replaced by a “Desarrollado por / Saula Slate” card; logo copied to public/images/saula.png.
+Analysis classifications should distinguish documented status vs. actual code state where they differ.
+Work State
+Completed
+Public Horarios: championship-blocked slots with amber state, match/championship/jornada and “Ver jornada” link; legend includes Campeonato.
+Public Torneos: court info and finalized matches removed; single championship filter defaulting to nearest upcoming jornada; “Local vs Visitante” without tournament prefix; tab persistence.
+Login modal: password show/hide control verified in browser.
+Admin configuration: system info card replaced by Saula Slate company card; logo served from public/images/saula.png; page verified over HTTP and tests pass.
+Clean-base DB reset executed twice; counts verified (1 installation, 3 users, 7 schedules, 1 contact, 2 tariffs, 8 configs; all other data tables 0).
+QA documentation exploration largely complete: requirements matrix has 12 RF + 5 RNF = 17 requirements; documented test cases total 36 (AUTH 5, PUB 7, ADM 15, ORG 5, TRAB 4), all marked “Aprobado”; 15 defects documented all “Resuelto”; 16 evidence records; 34 Dusk test methods across 5 files.
+Actual-code verification found discrepancies: ERR-003 (login modal should stay open on validation errors) not implemented — layouts/guest.blade.php still uses x-data="{ openLoginModal: false, mobileMenuOpen: false }"; ERR-008 (bloqueo vs reserva overlap validation) not implemented in BloqueosController/StoreBloqueoCanchaRequest; ERR-015 (role middleware rol:admin) absent — only Route::middleware('auth').
+Other spot checks suggest fixes present for ERR-001, 002, 004, 006, 007, 009, 010, 011, 012, 013, 014.
+Active
+Preparing the final completed summary table and analysis in Spanish, with clear criteria and notes on the 3 unresolved defects and evidence gaps.
+Blocked
+(none)
+Next Move
+Produce the completed table using documented figures where consistent and mark partial/non-compliant items based on the actual code findings (at minimum ERR-003, ERR-008, ERR-015).
+Define and state the counting criteria for each category (e.g., requirements 17 = 12 RF + 5 RNF; cases 36; defects 15; functional 12; non-functional 5; evidence 16; user validation as documented/estimated).
+Note that some evidence paths referenced in the registry (e.g., evidencias/capturas/..., storage/logs/...) do not exist in the repo, so evidence compliance may be documental rather than physical.
+Optionally note that credentials in docs (admin@cancha.com etc.) differ from current DB accounts (admin@gmail.com etc.) and that empty DB means data-dependent cases cannot be re-executed without test data.
+Relevant Files
+archiovos_extras_que_se_necesitan/cumplimiento de requisitos/alcances_y_requerimientos.txt: original 7 RF + 5 RNF scope.
+archiovos_extras_que_se_necesitan/cumplimiento de requisitos/cumplimiento_de_requisitos.txt: 12 RF + 5 RNF compliance matrix mapping to test cases/evidence.
+archiovos_extras_que_se_necesitan/Caso_de_pruebas/: 36 manual test cases (AUTH, PUB, ADM, ORG, TRAB).
+archiovos_extras_que_se_necesitan/Plan_caso_de_pruebas/: 5 Graphviz plans matching the 36 case IDs.
+archiovos_extras_que_se_necesitan/Registros_de_errores/registro_de_errores.txt: 15 defects, claimed resolved.
+archiovos_extras_que_se_necesitan/Registro_de_evidencias/registro_de_evidencias.txt: 16 evidence records.
+archiovos_extras_que_se_necesitan/tests_de_caso_de_pruebas_en_laravel_dusk/: 34 Dusk test methods; credentials use old seed emails.
+routes/web.php: only Route::middleware('auth'); no role middleware (confirms ERR-015 open).
+resources/views/layouts/guest.blade.php: login modal x-data still defaults closed (confirms ERR-003 open).
+app/Http/Controllers/Admin/BloqueosController.php: no overlap validation in store (confirms ERR-008 open).
+database/seeders/DatosBaseSeeder.php: current clean-base seeder with updated user credentials.
+database/seeders/DatabaseSeeder.php: calls only DatosBaseSeeder.
+resources/views/admin/configuracion/index.blade.php: Saula Slate card replacement.
+public/images/saula.png: web-served logo copy.
+Important Context
+All 36 manual cases and 17 requirements are marked compliant in the documentation; the requested table likely reflects those totals, but actual code still has 3 unfixed defects, so a purely documentary summary would overstate compliance.
+Current DB is clean: no tournaments, teams, players, matches, reservations, announcements, blocks, gallery, stats, or history, so data-dependent test cases cannot be rerun without seeding demo data.
+Current admin/organizer/worker accounts are admin@gmail.com/admincancha123, kike@gmail.com/kikecancha123, usuario@gmail.com/usuariocancha123; old docs use admin@cancha.com/admin123, carlos@org.com/org123, maria@cancha.com/trab123.
+There are no migrations; MySQL schema lives in database/canchasintetica_db_estructura.sql; php artisan test passes (2 tests) and php artisan view:cache works.
+Working tree has uncommitted changes (controllers, views, seeders, routes, public image, etc.); no commits made.
+Public app URL: http://localhost/cancha-sintetica/public/....
+Dusk tests are reference files in the extras folder, not installed/runnable in the project.
+Análisis realizado sin modificar código. Corte: 30/10/2026. Fuentes: carpeta archiovos_extras_que_se_necesitan, código en app/, routes/, resources/views/, base canchasintetica_db y pruebas HTTP de solo lectura.
+
+1. Criterio de conteo
+Categoría	Unidad contada
+Requisitos	17 = 12 RF + 5 RNF de la matriz de cumplimiento
+Casos de prueba	36 = AUTH 5 + PUB 7 + ADM 15 + ORG 5 + TRAB 4
+Defectos	15 = ERR-001 a ERR-015 del registro de errores
+Pruebas funcionales	31 casos ligados a requisitos funcionales
+Pruebas no funcionales	5 casos ligados a RNF (CP-PUB-001, CP-PUB-003, CP-PUB-004, CP-AUTH-004, CP-ADM-013)
+Evidencias	16 = 4 documentos + 5 reportes + 7 capturas
+Validación del usuario	1 proceso de aceptación/UAT
+Criterio de estado: Cumplido = implementado y verificable; Parcial = funciona en parte o tiene una brecha concreta; No cumplido = ausente, no localizable o contradice lo documentado.
+
+2. Cuadro consolidado
+Categoría	Total	Cumplidos	Parciales	No cumplidos
+Requisitos	17	14	3	0
+Casos de prueba	36	32	4	0
+Defectos	15	12	1	2
+Pruebas funcionales	31	28	3	0
+Pruebas no funcionales	5	4	1	0
+Evidencias	16	3	2	11
+Validación del usuario	1	0	0	1
+Los casos que dependen de datos (torneos, equipos, reservas, anuncios, galería, bloqueos, estadísticas, historial) se clasificaron por inspección de código y por el registro documental, porque la base actual está limpia y no se re-ejecutaron de punta a punta.
+
+3. Justificación de parciales y no cumplidos
+Requisitos — 14/3/0
+Requisito	Estado	Motivo
+RF-02 Autenticación y redirección por rol	Parcial	El login y la redirección por rol funcionan, pero no existe middleware de rol: routes/web.php:34 solo usa Route::middleware('auth') y no hay carpeta app/Http/Middleware. Un usuario con rol trabajador puede entrar a /admin/configuracion y recibe 200 en lugar de 403.
+RF-03 Reservas con validación de traslapes y DPI	Parcial	El CRUD funciona, pero no se valida el cruce de horarios en Admin\ReservasController@store ni en Trabajador\ReservasController@store, y tampoco se valida bloqueo contra reserva. Además, el formulario no tiene campo DPI y el controlador fuerza dni_cliente = null.
+RNF-02 Seguridad y cifrado	Parcial	Las contraseñas están hasheadas y hay CSRF, pero la ausencia de autorización por rol deja una brecha crítica de acceso.
+Los otros 14 requisitos (RF-01, RF-04 a RF-12 y RNF-01, RNF-03, RNF-04, RNF-05) se consideran cumplidos. RNF-03 se midió en local: las páginas públicas respondieron entre 300 y 787 ms, por debajo de 2 s.
+
+Casos de prueba — 32/4/0
+Caso	Estado	Motivo
+CP-AUTH-004 Credenciales inválidas	Parcial	El sistema rechaza el login (302), pero el modal se cierra: guest.blade.php:22 inicializa openLoginModal: false y no se reabre con $errors->any(). El mensaje “credenciales” existe en el HTML, pero queda oculto dentro del modal cerrado.
+CP-ADM-002 Reserva con DPI	Parcial	No hay campo DPI en el formulario y el controlador guarda dni_cliente = null.
+CP-ADM-009 Bloqueo de cancha	Parcial	El bloqueo se crea y se ve en el calendario público, pero no impide crear una reserva en ese horario: no hay validación en los controladores de reservas.
+CP-TRAB-002 Reserva manual con DPI	Parcial	Mismo caso que CP-ADM-002: el DPI no se captura.
+Los 32 restantes se mantienen como cumplidos según el registro y la inspección del código.
+
+Defectos — 12/1/2
+Defecto	Estado real	Evidencia técnica
+ERR-003 Modal de login se cierra con errores	Parcial	El bloque de errores existe en guest.blade.php:185, pero el modal sigue cerrado (openLoginModal: false).
+ERR-008 Bloqueo sobre reserva confirmada	No cumplido	BloqueosController@store no consulta reservas; tampoco hay validación inversa en los controladores de reservas. La acción correctiva descrita en el registro (“Ya existe una reserva confirmada…”) no está en el código.
+ERR-015 Trabajador accede a rutas admin	No cumplido	No existe el middleware rol:admin ni ningún equivalente. Verificado en vivo: sesión de trabajador → /admin/configuracion → 200.
+Los otros 12 defectos sí tienen su corrección en el código: ERR-001 (ruta horarios), ERR-002 (precio por defecto), ERR-004 (punto de empate), ERR-005 (zona horaria), ERR-006 (scope público de anuncios), ERR-007 (tarjetas móviles), ERR-009 (baja lógica de jugador), ERR-010 (validación de archivo), ERR-011 (sanitización WhatsApp), ERR-012 (precio no negativo), ERR-013 (Escape/backdrop), ERR-014 (sin scope global).
+
+Hallazgo adicional H-01, no incluido en los 15: cualquier ruta protegida sin sesión devuelve 500 Route [login] not defined en lugar de redirigir al login. La única ruta de login se llama login.post (routes/web.php:28) y no existe una ruta login. Conviene registrarlo como ERR-016.
+
+Pruebas funcionales — 28/3/0 y no funcionales — 4/1/0
+Funcionales parciales: CP-ADM-002, CP-ADM-009 y CP-TRAB-002.
+No funcional parcial: CP-AUTH-004 (mensaje de error no visible).
+No funcionales cumplidas: responsive, navegación/UI, rendimiento y mantenibilidad MVC.
+Evidencias — 3/2/11
+Estado	Evidencias
+Cumplidas (3)	EVI-001, EVI-006, EVI-015: los archivos existen y coinciden con lo descrito.
+Parciales (2)	EVI-009: apunta a un archivo de test, no a un reporte de ejecución; Dusk no está instalado. EVI-011: apunta a la matriz de requisitos, pero esa matriz no documenta la regla bloqueo/reserva que se le atribuye.
+No cumplidas (11)	EVI-002, 004, 007, 008, 010, 013 y 014: capturas no localizadas en evidencias/capturas/. EVI-003, 005 y 012: reportes no localizados en tests/reports/ ni storage/logs/. EVI-016: el archivo PanelAdministradorTest.php existe, pero no contiene ninguna prueba de 403 ni de rol; la afirmación de “cero brechas” no está respaldada.
+Validación del usuario — 0/1
+No hay acta, registro de UAT ni firma de aceptación del usuario final en la carpeta. Los 36 casos dicen “Resultados reales: Como se esperaba” y “Aprobado”, pero eso es ejecución del equipo de QA, no validación del usuario. Por eso se reporta como no cumplida / sin evidencia.
+
+4. Contraste con la documentación
+Categoría	Lo que reporta la documentación	Verificación real
+Requisitos	17 / 17 / 0 / 0	17 / 14 / 3 / 0
+Casos de prueba	36 / 36 / 0 / 0	36 / 32 / 4 / 0
+Defectos	15 / 15 / 0 / 0	15 / 12 / 1 / 2
+Pruebas funcionales	31 / 31 / 0 / 0	31 / 28 / 3 / 0
+Pruebas no funcionales	5 / 5 / 0 / 0	5 / 4 / 1 / 0
+Evidencias	16 / 16 / 0 / 0	16 / 3 / 2 / 11
+Validación del usuario	Sin registro	1 / 0 / 0 / 1
+La documentación es consistente entre sí (todo “Aprobado” y “Resuelto”), pero no coincide con el estado actual del código en ERR-003, ERR-008 y ERR-015, y las evidencias físicas son la brecha más grande.
+
+5. Limitaciones de la medición
+Base de datos limpia: 1 instalación, 3 usuarios, 7 horarios, 1 contacto, 2 tarifas y 8 configuraciones; 0 torneos, equipos, jugadores, partidos, reservas, anuncios, bloqueos, galería, estadísticas e historial. Los casos dependientes de datos no se pudieron re-ejecutar completos.
+Credenciales de la documentación desactualizadas: los casos usan admin@cancha.com/admin123, carlos@org.com/org123 y maria@cancha.com/trab123, pero la base actual tiene admin@gmail.com/admincancha123, kike@gmail.com/kikecancha123 y usuario@gmail.com/usuariocancha123. Los tests Dusk de referencia fallarían tal como están.
+Dusk no instalado: los archivos de tests_de_caso_de_pruebas_en_laravel_dusk son de referencia; no están integrados en tests/Browser ni se pudieron ejecutar.
+Evidencias no anexadas: las rutas evidencias/capturas/..., tests/reports/... y storage/logs/... no existen en el repositorio. Si los archivos están fuera de él, deben incorporarse para que la evidencia sea verificable.
+Sin validación del usuario: no hay acta ni consentimiento del cliente.
+6. Conclusión
+El núcleo funcional del sistema está operativo y la mayoría de los requisitos y casos se sostienen (aproximadamente 80–90% en requisitos, casos, defectos y pruebas). Sin embargo, no está al 100% como indica la documentación: quedan 3 defectos abiertos (ERR-003, ERR-008, ERR-015), 3 requisitos parciales, 4 casos parciales, 11 evidencias no localizadas y ninguna validación del usuario registrada.
+
+Para cerrar la brecha al 100% haría falta, sin cambiar el alcance funcional: corregir ERR-003, ERR-008 y ERR-015; resolver H-01 (redirección de invitados); validar traslapes y capturar DPI en reservas; anexar las 11 evidencias faltantes; y levantar un acta de validación del usuario.

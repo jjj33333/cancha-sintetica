@@ -1,0 +1,317 @@
+// ==============================================================================
+// ARQUITECTURA GENERAL Y FLUJO DE TRABAJO DEL PROYECTO
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Formato: Graphviz (DOT Language)
+// Herramienta recomendada para visualizar: https://dreampuf.github.io/GraphvizOnline/
+// ==============================================================================
+
+digraph ArquitecturaGeneralProyecto {
+    // Configuración general del lienzo
+    graph [
+        rankdir="TB",
+        splines="polyline",
+        nodesep="0.6",
+        ranksep="0.8",
+        bgcolor="#F8FAFC",
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="16",
+        label="ARQUITECTURA GENERAL Y FLUJO OPERATIVO DEL SISTEMA\nCancha Sintética Deportiva (Laravel 11 + MySQL + Tailwind + Alpine)",
+        labelloc="t",
+        compound=true
+    ];
+
+    // Configuración global de nodos
+    node [
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="10",
+        style="filled,rounded",
+        shape="box",
+        margin="0.25,0.18",
+        penwidth=1.5
+    ];
+
+    // Configuración global de aristas
+    edge [
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="9",
+        color="#475569",
+        fontcolor="#1E293B",
+        penwidth=1.3,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // CAPA 1: ACTORES / USUARIOS DEL SISTEMA
+    // --------------------------------------------------------------------------
+    subgraph cluster_actores {
+        label="1. ACTORES DEL SISTEMA (ROLES Y PERMISOS)";
+        style="filled,rounded";
+        fillcolor="#F1F5F9";
+        color="#CBD5E1";
+        fontsize="12";
+
+        actor_publico [
+            label="Visitante / Cliente Público\n(Consulta calendario, horarios,\ntorneos y anuncios)",
+            shape="ellipse",
+            fillcolor="#ECFDF5",
+            color="#059669",
+            fontcolor="#065F46"
+        ];
+
+        actor_admin [
+            label="Super Administrador\n(Acceso total: finanzas, reservas,\nusuarios, configuración, respaldos)",
+            shape="ellipse",
+            fillcolor="#EFF6FF",
+            color="#1D4ED8",
+            fontcolor="#1E40AF"
+        ];
+
+        actor_organizador [
+            label="Organizador de Torneos\n(Gestión de campeonatos, equipos,\njugadores, partidos y posiciones)",
+            shape="ellipse",
+            fillcolor="#FAF5FF",
+            color="#7E22CE",
+            fontcolor="#6B21A8"
+        ];
+
+        actor_trabajador [
+            label="Trabajador / Operador de Cancha\n(Registro de reservas manuales,\ncontrol diario de turnos)",
+            shape="ellipse",
+            fillcolor="#FFFBEB",
+            color="#D97706",
+            fontcolor="#92400E"
+        ];
+    }
+
+    // --------------------------------------------------------------------------
+    // CAPA 2: CLIENTE (FRONTEND / NAVEGADOR WEB)
+    // --------------------------------------------------------------------------
+    subgraph cluster_frontend {
+        label="2. CAPA DE PRESENTACIÓN FRONTEND (BLADE + TAILWIND + JS)";
+        style="filled,rounded";
+        fillcolor="#FFFFFF";
+        color="#94A3B8";
+        fontsize="12";
+
+        vistas_blade [
+            label="Plantillas Blade (HTML5 Reactivo)\n- Layouts Principales y Parciales\n- Vistas Públicas y Paneles Privados\n- Componentes UI Reutilizables",
+            fillcolor="#FEF2F2",
+            color="#DC2626",
+            fontcolor="#991B1B"
+        ];
+
+        estilos_tailwind [
+            label="Tailwind CSS v3.4\n- Sistema de diseño utilitario\n- Diseño responsivo (Mobile-First)\n- Paleta deportiva esmeralda / blanco",
+            fillcolor="#F0FDFA",
+            color="#0D9488",
+            fontcolor="#115E59"
+        ];
+
+        interactividad_js [
+            label="Librerías JavaScript Ligeras\n- Alpine.js (Estado reactivo)\n- FullCalendar (Agenda interactiva)\n- Chart.js (Métricas e ingresos)\n- DataTables (Filtro y búsqueda)\n- Toastify (Alertas flotantes)\n- FilePond (Subida de fotos)",
+            fillcolor="#FEFCE8",
+            color="#CA8A04",
+            fontcolor="#854D0E"
+        ];
+
+        compilador_vite [
+            label="Vite Build Tool (Node.js/npm)\n- Empaquetador ultra-rápido\n- Minificación CSS y JS\n- HMR (Hot Module Replacement)",
+            fillcolor="#FDF4FF",
+            color="#C026D3",
+            fontcolor="#86198F"
+        ];
+    }
+
+    // --------------------------------------------------------------------------
+    // CAPA 3: SERVIDOR WEB Y ENRUTAMIENTO (HTTP KERNEL)
+    // --------------------------------------------------------------------------
+    subgraph cluster_servidor_web {
+        label="3. CAPA SERVIDOR WEB, ENRUTAMIENTO Y SEGURIDAD";
+        style="filled,rounded";
+        fillcolor="#F8FAFC";
+        color="#94A3B8";
+        fontsize="12";
+
+        web_server [
+            label="Servidor Web (Apache XAMPP / Nginx)\n- Redirección a public/index.php\n- Entrega de archivos estáticos",
+            fillcolor="#E2E8F0",
+            color="#475569"
+        ];
+
+        http_kernel [
+            label="Front Controller (index.php) y HTTP Kernel\n- Bootstrap de la aplicación\n- Carga de variables (.env)\n- Detección de sesión y cookies",
+            fillcolor="#E0E7FF",
+            color="#4338CA",
+            fontcolor="#312E81"
+        ];
+
+        middleware_security [
+            label="Middleware de Seguridad\n- VerifyCsrfToken (Protección anti-CSRF)\n- Authenticate (Middleware 'auth')\n- Control de Acceso basado en Roles (RBAC)",
+            fillcolor="#FEE2E2",
+            color="#B91C1C",
+            fontcolor="#7F1D1D"
+        ];
+
+        routes_web [
+            label="Router (routes/web.php)\n- Grupo de Rutas Públicas (/ , /horarios, /torneos)\n- Rutas de Autenticación (/login, /logout)\n- Grupo Privado /admin/*\n- Grupo Privado /organizador/*\n- Grupo Privado /trabajador/*",
+            fillcolor="#EDE9FE",
+            color="#6D28D9",
+            fontcolor="#4C1D95"
+        ];
+    }
+
+    // --------------------------------------------------------------------------
+    // CAPA 4: CONTROLADORES Y LÓGICA DE NEGOCIO (BACKEND MVC)
+    // --------------------------------------------------------------------------
+    subgraph cluster_controladores {
+        label="4. CAPA DE CONTROLADORES Y LÓGICA DE NEGOCIO (app/Http/Controllers)";
+        style="filled,rounded";
+        fillcolor="#FFFFFF";
+        color="#94A3B8";
+        fontsize="12";
+
+        ctrl_publico [
+            label="Controladores Públicos\n- HomeController (Presentación)\n- HorariosController (Disponibilidad 3 sem)\n- TorneosController (Fases y tablas)\n- AnunciosController / ContactoController",
+            fillcolor="#ECFDF5",
+            color="#059669"
+        ];
+
+        ctrl_auth [
+            label="Controlador de Autenticación\n- LoginController (Validación de credenciales,\nregeneración de sesión y redirección por rol)",
+            fillcolor="#F3E8FF",
+            color="#9333EA"
+        ];
+
+        ctrl_admin [
+            label="Controladores Administrador\n- ReservasController (CRUD, validación traslape)\n- CalendarioController (Vista FullCalendar)\n- TorneosController, EquiposController, Jugadores\n- EstadisticasController (Cálculo de ingresos Q.)\n- ConfiguracionController (Respaldos BD)\n- BloqueosController, TarifasController, Galeria",
+            fillcolor="#EFF6FF",
+            color="#2563EB"
+        ];
+
+        ctrl_organizador [
+            label="Controladores Organizador\n- MisTorneosController (Estado torneo)\n- EquiposController y JugadoresController (DPI)\n- PartidosController (Marcadores y árbitros)\n- PosicionesController (Cómputo automático)",
+            fillcolor="#FAF5FF",
+            color="#7E22CE"
+        ];
+
+        ctrl_trabajador [
+            label="Controladores Trabajador\n- ReservasController (Creación manual)\n- CalendarioController (Ocupación diaria)\n- DashboardController (Resumen del turno)",
+            fillcolor="#FFFBEB",
+            color="#D97706"
+        ];
+
+        form_requests [
+            label="Validación de Peticiones (app/Http/Requests)\n- StoreReservaTrabajadorRequest\n- StoreTorneoRequest / StoreEquipoOrganizadorRequest\n- StoreBloqueoCanchaRequest / StorePlanTarifaRequest",
+            fillcolor="#FEF3C7",
+            color="#B45309"
+        ];
+    }
+
+    // --------------------------------------------------------------------------
+    // CAPA 5: MODELOS ELOQUENT ORM (PERSISTENCIA Y DOMINIO)
+    // --------------------------------------------------------------------------
+    subgraph cluster_modelos {
+        label="5. CAPA DE MODELOS ELOQUENT ORM (app/Models)";
+        style="filled,rounded";
+        fillcolor="#F8FAFC";
+        color="#94A3B8";
+        fontsize="12";
+
+        model_reserva [
+            label="Reserva\n- Estados: confirmada, pendiente, cancelada\n- Relaciones: Instalacion, Torneo, Partido, Usuario\n- Scopes: activas(), confirmadas(), deFecha()",
+            fillcolor="#DBEAFE",
+            color="#1D4ED8"
+        ];
+
+        model_torneo [
+            label="Torneo / Partido / Equipo / Jugador\n- Gestión de campeonato y calendario\n- Registro de goles, tarjetas y DPI\n- Generación de tabla de posiciones",
+            fillcolor="#F3E8FF",
+            color="#7E22CE"
+        ];
+
+        model_operacion [
+            label="Operación de Cancha\n- Instalacion (Césped FIFA, iluminación)\n- BloqueoCancha (Mantenimiento / Clima)\n- PlanTarifa (Tarifas normales y nocturnas Q.)\n- HorarioAtencion (Horarios semanales)",
+            fillcolor="#D1FAE5",
+            color="#059669"
+        ];
+
+        model_sistema [
+            label="Sistema y Auditoría\n- Usuario (Roles: admin, organizador, trabajador)\n- HistorialReserva / RegistroActividad\n- Configuracion (Parámetros generales, GTQ)\n- Anuncio / GaleriaImagen / InformacionContacto",
+            fillcolor="#FEF3C7",
+            color="#D97706"
+        ];
+    }
+
+    // --------------------------------------------------------------------------
+    // CAPA 6: BASE DE DATOS RELACIONAL (MYSQL / MARIADB)
+    // --------------------------------------------------------------------------
+    subgraph cluster_basedatos {
+        label="6. CAPA DE BASE DE DATOS RELACIONAL (MySQL / MariaDB)";
+        style="filled,rounded";
+        fillcolor="#EEF2F6";
+        color="#64748B";
+        fontsize="12";
+
+        db_mysql [
+            label="Motor MySQL / MariaDB (canchasintetica_db)\n=======================================================\n- Tablas: reservas, torneos, partidos, equipos, jugadores\n- Tablas: bloqueos_canchas, planes_tarifas, instalaciones\n- Tablas: usuarios, anuncios, galeria_imagenes, configuraciones\n- Tablas: historial_reservas, registros_actividad, horarios_atencion\n- Restricciones: Claves Foráneas (FK) con integridad referencial\n- Migraciones versionadas y Seeders idempotentes",
+            shape="cylinder",
+            fillcolor="#E2E8F0",
+            color="#334155",
+            fontcolor="#0F172A"
+        ];
+    }
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES Y FLUJO DE DATOS ENTRE CAPAS
+    // --------------------------------------------------------------------------
+
+    // Actores hacia el Frontend
+    actor_publico -> vistas_blade [label="Consulta web pública"];
+    actor_admin -> vistas_blade [label="Gestiona sistema"];
+    actor_organizador -> vistas_blade [label="Gestiona torneo"];
+    actor_trabajador -> vistas_blade [label="Registra reservas"];
+
+    // Frontend hacia Vite / Servidor
+    vistas_blade -> estilos_tailwind [dir=none, style=dotted];
+    vistas_blade -> interactividad_js [dir=none, style=dotted];
+    compilador_vite -> vistas_blade [label="Compila assets (npm run build)"];
+    vistas_blade -> web_server [label="Petición HTTP (GET/POST/PUT/DELETE)"];
+
+    // Servidor Web hacia Kernel y Middleware
+    web_server -> http_kernel [label="Redirige petición"];
+    http_kernel -> middleware_security [label="Aplica filtros"];
+    middleware_security -> routes_web [label="Petición autorizada"];
+
+    // Enrutador hacia Controladores
+    routes_web -> ctrl_publico [label="Rutas públicas"];
+    routes_web -> ctrl_auth [label="POST /login, /logout"];
+    routes_web -> ctrl_admin [label="Rutas /admin/*"];
+    routes_web -> ctrl_organizador [label="Rutas /organizador/*"];
+    routes_web -> ctrl_trabajador [label="Rutas /trabajador/*"];
+
+    // Controladores y Validaciones FormRequests
+    ctrl_admin -> form_requests [label="Valida datos entrantes"];
+    ctrl_organizador -> form_requests [label="Valida datos entrantes"];
+    ctrl_trabajador -> form_requests [label="Valida datos entrantes"];
+
+    // Controladores hacia Modelos Eloquent
+    ctrl_publico -> model_reserva [label="Consulta turnos ocupados"];
+    ctrl_publico -> model_torneo [label="Consulta partidos"];
+    ctrl_admin -> model_reserva [label="Crea / Modifica reserva"];
+    ctrl_admin -> model_operacion [label="Gestiona tarifas y bloqueos"];
+    ctrl_admin -> model_sistema [label="Configura parámetros"];
+    ctrl_organizador -> model_torneo [label="Actualiza marcadores"];
+    ctrl_trabajador -> model_reserva [label="Registra reserva manual"];
+    ctrl_auth -> model_sistema [label="Verifica credenciales"];
+
+    // Modelos Eloquent hacia Base de Datos
+    model_reserva -> db_mysql [label="Consultas SQL (PDO)", color="#0284C7"];
+    model_torneo -> db_mysql [label="Consultas SQL (PDO)", color="#7E22CE"];
+    model_operacion -> db_mysql [label="Consultas SQL (PDO)", color="#059669"];
+    model_sistema -> db_mysql [label="Consultas SQL (PDO)", color="#D97706"];
+
+    // Retorno de datos hacia la vista
+    ctrl_admin -> vistas_blade [label="Renderiza Vista con datos compactados", color="#1D4ED8", style="dashed"];
+    ctrl_publico -> vistas_blade [label="Renderiza Vista con calendario", color="#059669", style="dashed"];
+}
+

@@ -131,6 +131,7 @@ Route::middleware('auth')->group(function () {
         // Apartado de partidos - organizador
         Route::get('/partidos', [App\Http\Controllers\Organizador\PartidosController::class, 'index'])->name('partidos.index');
         Route::get('/partidos/crear', [App\Http\Controllers\Organizador\PartidosController::class, 'create'])->name('partidos.create');
+        Route::get('/partidos/imprimir', [App\Http\Controllers\Organizador\PartidosController::class, 'imprimir'])->name('partidos.imprimir');
         Route::post('/partidos', [App\Http\Controllers\Organizador\PartidosController::class, 'store'])->name('partidos.store');
         Route::get('/partidos/{partido}', [App\Http\Controllers\Organizador\PartidosController::class, 'show'])->name('partidos.show');
         Route::get('/partidos/{partido}/editar', [App\Http\Controllers\Organizador\PartidosController::class, 'edit'])->name('partidos.edit');

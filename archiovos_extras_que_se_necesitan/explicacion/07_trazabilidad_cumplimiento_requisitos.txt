@@ -1,0 +1,184 @@
+// ==============================================================================
+// DEMOSTRACIÓN DE CUMPLIMIENTO Y TRAZABILIDAD DE REQUISITOS
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Formato: Graphviz (DOT Language)
+// Herramienta recomendada para visualizar: https://dreampuf.github.io/GraphvizOnline/
+// ==============================================================================
+
+digraph TrazabilidadCumplimientoRequisitos {
+    // Configuración general del gráfico
+    graph [
+        rankdir="LR",
+        splines="polyline",
+        nodesep="0.3",
+        ranksep="0.7",
+        bgcolor="#FFFFFF",
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="16",
+        label="TRAZABILIDAD Y DEMOSTRACIÓN DE CUMPLIMIENTO DE REQUISITOS\n(Requisito -> Componente de Software -> Caso de Prueba Dusk -> Verificación 100%)",
+        labelloc="t"
+    ];
+
+    // Configuración de nodos
+    node [
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="9",
+        style="filled,rounded",
+        shape="box",
+        margin="0.18,0.12",
+        penwidth=1.3
+    ];
+
+    // Configuración de aristas
+    edge [
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="8",
+        color="#334155",
+        fontcolor="#475569",
+        penwidth=1.1,
+        arrowsize=0.7
+    ];
+
+    // --------------------------------------------------------------------------
+    // COLUMNA 1: REQUISITOS ESPECIFICADOS (RF Y RNF)
+    // --------------------------------------------------------------------------
+    subgraph cluster_col1_requisitos {
+        label="1. REQUISITO DEFINIDO";
+        style="filled,rounded";
+        fillcolor="#F8FAFC";
+        color="#CBD5E1";
+        fontsize="11";
+
+        req_rf01 [label="[RF-01] Calendario Público\n(Disponibilidad por bloques de 1 hora)", fillcolor="#EFF6FF", color="#3B82F6"];
+        req_rf02 [label="[RF-02] Autenticación y Roles\n(Admin, Org, Trabajador con Bcrypt)", fillcolor="#EFF6FF", color="#3B82F6"];
+        req_rf03 [label="[RF-03] Gestión de Reservas\n(CRUD, validación traslapes, precios Q.)", fillcolor="#EFF6FF", color="#3B82F6"];
+        req_rf04 [label="[RF-04] Gestión de Torneos\n(Costos en Q., organizador, estados)", fillcolor="#EFF6FF", color="#3B82F6"];
+        req_rf05 [label="[RF-05] Sección Pública\n(Anuncios, contacto, tablas de torneo)", fillcolor="#EFF6FF", color="#3B82F6"];
+        req_rf06 [label="[RF-06] Historial y Auditoría\n(Trazabilidad de cambios, usuario, IP)", fillcolor="#EFF6FF", color="#3B82F6"];
+        req_rf07 [label="[RF-07] Métricas y Estadísticas\n(Ingresos mensuales en Quetzales)", fillcolor="#EFF6FF", color="#3B82F6"];
+        req_rf08 [label="[RF-08] Equipos y Jugadores\n(Padrón de jugadores con DPI y dorsal)", fillcolor="#EFF6FF", color="#3B82F6"];
+        req_rf09 [label="[RF-09] Partidos y Posiciones\n(Marcadores y cálculo PJ, PG, GF, PTS)", fillcolor="#EFF6FF", color="#3B82F6"];
+        req_rf10 [label="[RF-10] Parámetros y Respaldos\n(Zona GTQ, backup SQL descargable)", fillcolor="#EFF6FF", color="#3B82F6"];
+        req_rf11 [label="[RF-11] Tarifas y Bloqueos\n(Tarifas horarias e inhabilitación)", fillcolor="#EFF6FF", color="#3B82F6"];
+        req_rf12 [label="[RF-12] Cancha y Galería\n(Césped FIFA, iluminación, fotos)", fillcolor="#EFF6FF", color="#3B82F6"];
+
+        req_rnf01 [label="[RNF-01] Diseño Responsivo\n(Adaptabilidad móvil, tablet y PC)", fillcolor="#F0FDF4", color="#16A34A"];
+        req_rnf02 [label="[RNF-02] Seguridad Robusta\n(Hash Bcrypt, tokens CSRF, PDO)", fillcolor="#F0FDF4", color="#16A34A"];
+        req_rnf03 [label="[RNF-03] Rendimiento Ágil\n(Tiempos de respuesta menores a 2s)", fillcolor="#F0FDF4", color="#16A34A"];
+        req_rnf04 [label="[RNF-04] Interfaz Intuitiva\n(Diseño limpio esmeralda y blanco)", fillcolor="#F0FDF4", color="#16A34A"];
+        req_rnf05 [label="[RNF-05] Mantenibilidad MVC\n(Patrón Laravel, seeders, tests)", fillcolor="#F0FDF4", color="#16A34A"];
+    }
+
+    // --------------------------------------------------------------------------
+    // COLUMNA 2: COMPONENTES DE SOFTWARE IMPLEMENTADOS
+    // --------------------------------------------------------------------------
+    subgraph cluster_col2_implementacion {
+        label="2. IMPLEMENTACIÓN TÉCNICA EN EL CÓDIGO";
+        style="filled,rounded";
+        fillcolor="#F8FAFC";
+        color="#CBD5E1";
+        fontsize="11";
+
+        imp_rf01 [label="HorariosController@index +\nhorarios.blade.php + Alpine.js", fillcolor="#FFFFFF", color="#64748B"];
+        imp_rf02 [label="LoginController + Middleware 'auth' +\nHash::check + Redirección RBAC", fillcolor="#FFFFFF", color="#64748B"];
+        imp_rf03 [label="Admin/ReservasController +\nTrabajador/ReservasController + Model Reserva", fillcolor="#FFFFFF", color="#64748B"];
+        imp_rf04 [label="Admin/TorneosController +\nModel Torneo + Migración torneos", fillcolor="#FFFFFF", color="#64748B"];
+        imp_rf05 [label="Publico/TorneosController +\nPublico/AnunciosController + ContactoController", fillcolor="#FFFFFF", color="#64748B"];
+        imp_rf06 [label="HistorialController + Model HistorialReserva +\nRegistroActividad en cada mutación", fillcolor="#FFFFFF", color="#64748B"];
+        imp_rf07 [label="EstadisticasController + Chart.js +\nAgrupaciones SQL SUM(precio_total)", fillcolor="#FFFFFF", color="#64748B"];
+        imp_rf08 [label="Organizador/EquiposController +\nJugadoresController + Validación de DPI", fillcolor="#FFFFFF", color="#64748B"];
+        imp_rf09 [label="Organizador/PartidosController +\nPosicionesController (Cálculo matemático)", fillcolor="#FFFFFF", color="#64748B"];
+        imp_rf10 [label="ConfiguracionController +\nServicio de Volcado SQL / Archivos .sql", fillcolor="#FFFFFF", color="#64748B"];
+        imp_rf11 [label="TarifasController + BloqueosController +\nModel BloqueoCancha y PlanTarifa", fillcolor="#FFFFFF", color="#64748B"];
+        imp_rf12 [label="InstalacionesController + GaleriaController +\nFilePond + storage/app/public", fillcolor="#FFFFFF", color="#64748B"];
+
+        imp_rnf01 [label="Tailwind CSS v3.4 (Grid, Flexbox, media queries)\nLayouts responsivos móviles y desktop", fillcolor="#FFFFFF", color="#64748B"];
+        imp_rnf02 [label="Hash::make (Bcrypt) + VerifyCsrfToken Middleware\nConsultas con PDO Prepared Statements", fillcolor="#FFFFFF", color="#64748B"];
+        imp_rnf03 [label="Consultas indexadas en MySQL (fecha, estado)\nCarga ligera sin recarga con Alpine.js", fillcolor="#FFFFFF", color="#64748B"];
+        imp_rnf04 [label="Diseño visual unificado con Heroicons, Toastify\ny paleta deportiva armoniosa", fillcolor="#FFFFFF", color="#64748B"];
+        imp_rnf05 [label="Estructura estándar Laravel 11 (app/Http, Models)\nDatosBaseSeeder y pruebas E2E Dusk", fillcolor="#FFFFFF", color="#64748B"];
+    }
+
+    // --------------------------------------------------------------------------
+    // COLUMNA 3: CASOS DE PRUEBA Y EVIDENCIA DUSK
+    // --------------------------------------------------------------------------
+    subgraph cluster_col3_pruebas {
+        label="3. CASO DE PRUEBA Y EVIDENCIA (TESTING)";
+        style="filled,rounded";
+        fillcolor="#F8FAFC";
+        color="#CBD5E1";
+        fontsize="11";
+
+        test_rf01 [label="CP-PUB-002\nModuloPublicoTest@test_calendario_semanal", fillcolor="#FEF3C7", color="#D97706"];
+        test_rf02 [label="CP-AUTH-001\nAutenticacionTest@test_login_exitoso_y_roles", fillcolor="#FEF3C7", color="#D97706"];
+        test_rf03 [label="CP-ADM-002\nPanelAdministradorTest@test_crear_reserva", fillcolor="#FEF3C7", color="#D97706"];
+        test_rf04 [label="CP-ADM-004\nPanelAdministradorTest@test_crear_torneo", fillcolor="#FEF3C7", color="#D97706"];
+        test_rf05 [label="CP-PUB-005\nModuloPublicoTest@test_secciones_publicas", fillcolor="#FEF3C7", color="#D97706"];
+        test_rf06 [label="CP-ADM-012\nPanelAdministradorTest@test_historial_auditoria", fillcolor="#FEF3C7", color="#D97706"];
+        test_rf07 [label="CP-ADM-011\nPanelAdministradorTest@test_estadisticas_ingresos", fillcolor="#FEF3C7", color="#D97706"];
+        test_rf08 [label="CP-ORG-003\nPanelOrganizadorTest@test_equipos_y_jugadores", fillcolor="#FEF3C7", color="#D97706"];
+        test_rf09 [label="CP-ORG-004\nPanelOrganizadorTest@test_partidos_y_tabla", fillcolor="#FEF3C7", color="#D97706"];
+        test_rf10 [label="CP-ADM-014\nPanelAdministradorTest@test_respaldos_bd", fillcolor="#FEF3C7", color="#D97706"];
+        test_rf11 [label="CP-ADM-008\nPanelAdministradorTest@test_tarifas_y_bloqueos", fillcolor="#FEF3C7", color="#D97706"];
+        test_rf12 [label="CP-ADM-007\nPanelAdministradorTest@test_galeria_instalacion", fillcolor="#FEF3C7", color="#D97706"];
+
+        test_rnf01 [label="CP-PUB-001\nModuloPublicoTest@test_diseño_responsivo", fillcolor="#FEF3C7", color="#D97706"];
+        test_rnf02 [label="CP-AUTH-004\nAutenticacionTest@test_seguridad_csrf_bcrypt", fillcolor="#FEF3C7", color="#D97706"];
+        test_rnf03 [label="CP-PUB-004\nModuloPublicoTest@test_tiempo_respuesta_menor_2s", fillcolor="#FEF3C7", color="#D97706"];
+        test_rnf04 [label="CP-PUB-003\nModuloPublicoTest@test_usabilidad_interfaz", fillcolor="#FEF3C7", color="#D97706"];
+        test_rnf05 [label="CP-ADM-013\nPanelAdministradorTest@test_integridad_mvc", fillcolor="#FEF3C7", color="#D97706"];
+    }
+
+    // --------------------------------------------------------------------------
+    // COLUMNA 4: ESTADO DE CUMPLIMIENTO VERIFICADO
+    // --------------------------------------------------------------------------
+    subgraph cluster_col4_resultado {
+        label="4. ESTADO DE CUMPLIMIENTO";
+        style="filled,rounded";
+        fillcolor="#F0FDF4";
+        color="#86EFAC";
+        fontsize="11";
+
+        ok_rf01 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+        ok_rf02 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+        ok_rf03 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+        ok_rf04 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+        ok_rf05 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+        ok_rf06 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+        ok_rf07 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+        ok_rf08 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+        ok_rf09 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+        ok_rf10 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+        ok_rf11 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+        ok_rf12 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+
+        ok_rnf01 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+        ok_rnf02 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+        ok_rnf03 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+        ok_rnf04 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+        ok_rnf05 [label="CUMPLE 100%\n[Verificado OK]", fillcolor="#DCFCE7", color="#16A34A", fontcolor="#14532D"];
+    }
+
+    // --------------------------------------------------------------------------
+    // CONEXIONES DE TRAZABILIDAD (FLECHAS HORIZONTALES)
+    // --------------------------------------------------------------------------
+    req_rf01 -> imp_rf01 -> test_rf01 -> ok_rf01;
+    req_rf02 -> imp_rf02 -> test_rf02 -> ok_rf02;
+    req_rf03 -> imp_rf03 -> test_rf03 -> ok_rf03;
+    req_rf04 -> imp_rf04 -> test_rf04 -> ok_rf04;
+    req_rf05 -> imp_rf05 -> test_rf05 -> ok_rf05;
+    req_rf06 -> imp_rf06 -> test_rf06 -> ok_rf06;
+    req_rf07 -> imp_rf07 -> test_rf07 -> ok_rf07;
+    req_rf08 -> imp_rf08 -> test_rf08 -> ok_rf08;
+    req_rf09 -> imp_rf09 -> test_rf09 -> ok_rf09;
+    req_rf10 -> imp_rf10 -> test_rf10 -> ok_rf10;
+    req_rf11 -> imp_rf11 -> test_rf11 -> ok_rf11;
+    req_rf12 -> imp_rf12 -> test_rf12 -> ok_rf12;
+
+    req_rnf01 -> imp_rnf01 -> test_rnf01 -> ok_rnf01;
+    req_rnf02 -> imp_rnf02 -> test_rnf02 -> ok_rnf02;
+    req_rnf03 -> imp_rnf03 -> test_rnf03 -> ok_rnf03;
+    req_rnf04 -> imp_rnf04 -> test_rnf04 -> ok_rnf04;
+    req_rnf05 -> imp_rnf05 -> test_rnf05 -> ok_rnf05;
+}
+

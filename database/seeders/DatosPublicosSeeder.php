@@ -66,7 +66,7 @@ class DatosPublicosSeeder extends Seeder
         // ============================================
         $admin = Usuario::create([
             'nombre' => 'Administrador',
-            'email' => 'admin@gmail',
+            'email' => 'admin@gmail.com',
             'password' => Hash::make('admincancha123'),
             'rol' => 'admin',
             'telefono' => '+502 5555 0000',

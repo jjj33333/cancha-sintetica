@@ -1,0 +1,231 @@
+// ==============================================================================
+// ESTRUCTURA DE CARPETAS Y LÓGICA DE ORGANIZACIÓN DEL PROYECTO
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Formato: Graphviz (DOT Language)
+// Herramienta recomendada para visualizar: https://dreampuf.github.io/GraphvizOnline/
+// ==============================================================================
+
+digraph EstructuraCarpetasYLogica {
+    // Configuración general del lienzo
+    graph [
+        rankdir="LR",
+        splines="ortho",
+        nodesep="0.4",
+        ranksep="0.8",
+        bgcolor="#FFFFFF",
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="16",
+        label="ESTRUCTURA DE CARPETAS Y LÓGICA DE ARQUITECTURA\nOrganización de Archivos y Separación de Responsabilidades (Laravel MVC)",
+        labelloc="t"
+    ];
+
+    // Configuración general de nodos
+    node [
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="10",
+        style="filled,rounded",
+        shape="box",
+        margin="0.2,0.15",
+        penwidth=1.4
+    ];
+
+    // Configuración de aristas
+    edge [
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="9",
+        color="#334155",
+        fontcolor="#475569",
+        penwidth=1.3,
+        arrowsize=0.7
+    ];
+
+    // --------------------------------------------------------------------------
+    // NODO RAÍZ DEL PROYECTO
+    // --------------------------------------------------------------------------
+    raiz [
+        label="cancha-sintetica/\n[Raíz del Proyecto Laravel 11]",
+        shape="folder",
+        fillcolor="#0F172A",
+        color="#020617",
+        fontcolor="#FFFFFF",
+        fontsize="12"
+    ];
+
+    // --------------------------------------------------------------------------
+    // CARPETAS DE PRIMER NIVEL
+    // --------------------------------------------------------------------------
+    dir_app [
+        label="app/\n[Núcleo de Lógica de la Aplicación]",
+        shape="folder",
+        fillcolor="#EFF6FF",
+        color="#2563EB",
+        fontcolor="#1E40AF"
+    ];
+
+    dir_routes [
+        label="routes/\n[Enrutamiento y Endpoints HTTP]",
+        shape="folder",
+        fillcolor="#FAF5FF",
+        color="#9333EA",
+        fontcolor="#6B21A8"
+    ];
+
+    dir_resources [
+        label="resources/\n[Vistas Blade y Assets Fuente]",
+        shape="folder",
+        fillcolor="#FEF2F2",
+        color="#EF4444",
+        fontcolor="#991B1B"
+    ];
+
+    dir_database [
+        label="database/\n[Esquema, Migraciones y Semillas]",
+        shape="folder",
+        fillcolor="#ECFDF5",
+        color="#059669",
+        fontcolor="#065F46"
+    ];
+
+    dir_public [
+        label="public/\n[Raíz Web Expuesta al Servidor]",
+        shape="folder",
+        fillcolor="#FEFCE8",
+        color="#CA8A04",
+        fontcolor="#854D0E"
+    ];
+
+    dir_config [
+        label="config/\n[Configuración Global del Framework]",
+        shape="folder",
+        fillcolor="#F1F5F9",
+        color="#64748B",
+        fontcolor="#334155"
+    ];
+
+    dir_storage [
+        label="storage/\n[Almacenamiento Interno y Caché]",
+        shape="folder",
+        fillcolor="#F8FAFC",
+        color="#94A3B8",
+        fontcolor="#475569"
+    ];
+
+    dir_extras [
+        label="archiovos_extras_que_se_necesitan/\n[Documentación, Pruebas y Explicaciones]",
+        shape="folder",
+        fillcolor="#E0E7FF",
+        color="#4F46E5",
+        fontcolor="#3730A3"
+    ];
+
+    raiz -> dir_app;
+    raiz -> dir_routes;
+    raiz -> dir_resources;
+    raiz -> dir_database;
+    raiz -> dir_public;
+    raiz -> dir_config;
+    raiz -> dir_storage;
+    raiz -> dir_extras;
+
+    // --------------------------------------------------------------------------
+    // DETALLE Y LÓGICA DE: app/
+    // --------------------------------------------------------------------------
+    app_controllers [
+        label="app/Http/Controllers/\n-------------------------------------------------\n- Admin/ (Reservas, Torneos, Finanzas, Config)\n- Organizador/ (Torneos, Partidos, Jugadores)\n- Trabajador/ (Reservas diarias, Calendario)\n- Publico/ (Home, Horarios, Torneos, Contacto)\n- Auth/ (Inicio y cierre de sesión)\n-------------------------------------------------\nLÓGICA: Separación por roles (RBAC). Cada carpeta\nagrupa controladores con atribuciones específicas\npara evitar código espagueti.",
+        fillcolor="#DBEAFE",
+        color="#1D4ED8"
+    ];
+
+    app_requests [
+        label="app/Http/Requests/\n-------------------------------------------------\n- StoreReservaTrabajadorRequest.php\n- StoreTorneoRequest.php, StoreEquipo...Request.php\n-------------------------------------------------\nLÓGICA: Desacopla las reglas de validación de los\ncontroladores, asegurando validación robusta y limpia.",
+        fillcolor="#DBEAFE",
+        color="#1D4ED8"
+    ];
+
+    app_models [
+        label="app/Models/\n-------------------------------------------------\n- Reserva.php, Torneo.php, Partido.php, Equipo.php\n- Jugador.php, Instalacion.php, BloqueoCancha.php\n- PlanTarifa.php, Usuario.php, Anuncio.php, etc.\n-------------------------------------------------\nLÓGICA: Patrón Active Record (Eloquent). Cada clase\nrepresenta una entidad de BD y define relaciones\n(belongsTo, hasMany) y scopes de consulta.",
+        fillcolor="#DBEAFE",
+        color="#1D4ED8"
+    ];
+
+    dir_app -> app_controllers;
+    dir_app -> app_requests;
+    dir_app -> app_models;
+
+    // --------------------------------------------------------------------------
+    // DETALLE Y LÓGICA DE: routes/
+    // --------------------------------------------------------------------------
+    routes_web [
+        label="routes/web.php\n-------------------------------------------------\n- Rutas públicas (/horarios, /torneos, /anuncios)\n- Rutas Auth (POST /login, POST /logout)\n- Grupo middleware('auth'):\n  * Prefijo /admin (Rutas del Super Administrador)\n  * Prefijo /organizador (Gestión de campeonatos)\n  * Prefijo /trabajador (Operación de cancha)\n-------------------------------------------------\nLÓGICA: Centraliza todos los puntos de entrada HTTP.\nAplica seguridad por grupos de middleware en un solo archivo.",
+        fillcolor="#F3E8FF",
+        color="#7E22CE"
+    ];
+
+    dir_routes -> routes_web;
+
+    // --------------------------------------------------------------------------
+    // DETALLE Y LÓGICA DE: resources/
+    // --------------------------------------------------------------------------
+    res_views [
+        label="resources/views/\n-------------------------------------------------\n- layouts/ (Plantillas base con head, navbar, footer)\n- publico/ (Portal para clientes y visitantes)\n- admin/ (Vistas completas del panel administrador)\n- organizador/ (Vistas para torneos y planillas)\n- trabajador/ (Vistas simplificadas de reservas)\n- components/ (Tarjetas, modales, botones Blade)\n-------------------------------------------------\nLÓGICA: Motor de plantillas Blade. Modulariza el código HTML\nmediante herencia de layouts e inclusión de componentes.",
+        fillcolor="#FEE2E2",
+        color="#DC2626"
+    ];
+
+    res_assets [
+        label="resources/css/ y resources/js/\n-------------------------------------------------\n- app.css (Directivas de Tailwind: base, components, utilities)\n- app.js (Inicialización de Alpine.js y librerías)\n-------------------------------------------------\nLÓGICA: Código fuente del cliente antes de ser procesado.",
+        fillcolor="#FEE2E2",
+        color="#DC2626"
+    ];
+
+    dir_resources -> res_views;
+    dir_resources -> res_assets;
+
+    // --------------------------------------------------------------------------
+    // DETALLE Y LÓGICA DE: database/
+    // --------------------------------------------------------------------------
+    db_migrations [
+        label="database/migrations/\n-------------------------------------------------\n- Migraciones ordenadas por fecha/hora (blueprints)\n- Crea tablas: usuarios, reservas, torneos, bloqueos...\n-------------------------------------------------\nLÓGICA: Control de versiones del esquema relacional en código.",
+        fillcolor="#D1FAE5",
+        color="#047857"
+    ];
+
+    db_seeders [
+        label="database/seeders/\n-------------------------------------------------\n- DatabaseSeeder.php\n- DatosBaseSeeder.php (Usuarios, cancha, tarifas, contacto)\n- DatosPublicosSeeder.php (Torneos, anuncios demo)\n-------------------------------------------------\nLÓGICA: Poblado idempotente de datos esenciales y de prueba.",
+        fillcolor="#D1FAE5",
+        color="#047857"
+    ];
+
+    dir_database -> db_migrations;
+    dir_database -> db_seeders;
+
+    // --------------------------------------------------------------------------
+    // DETALLE Y LÓGICA DE: public/
+    // --------------------------------------------------------------------------
+    pub_index [
+        label="public/index.php\n-------------------------------------------------\n- Front Controller único\n- Recibe todas las peticiones web\n-------------------------------------------------\nLÓGICA: SEGURIDAD CRÍTICA. Es la única carpeta expuesta\nal servidor web. El resto del código PHP está protegido.",
+        fillcolor="#FEF9C3",
+        color="#A16207"
+    ];
+
+    pub_build [
+        label="public/build/ y public/storage/\n-------------------------------------------------\n- build/: Assets finales compilados por Vite (CSS/JS minificados)\n- storage/: Enlace simbólico a storage/app/public para fotos\n-------------------------------------------------\nLÓGICA: Entrega rápida de archivos estáticos y fotos subidas.",
+        fillcolor="#FEF9C3",
+        color="#A16207"
+    ];
+
+    dir_public -> pub_index;
+    dir_public -> pub_build;
+
+    // --------------------------------------------------------------------------
+    // DETALLE Y LÓGICA DE: archiovos_extras_que_se_necesitan/
+    // --------------------------------------------------------------------------
+    extras_contenido [
+        label="Contenido Documental y de Aseguramiento:\n-------------------------------------------------\n- explicacion/ (Diagramas Graphviz de arquitectura y procesos)\n- Diagrama_de_Ganntt/ (Cronograma de fases del proyecto)\n- cumplimiento de requisitos/ (Matriz de trazabilidad y RF/RNF)\n- Caso_de_pruebas/ y Plan_caso_de_pruebas/ (Diseño de QA)\n- tests_de_caso_de_pruebas_en_laravel_dusk/ (Pruebas E2E)\n- cambios_para_subir_el_proyecto/ (Guías de despliegue en nube)\n-------------------------------------------------\nLÓGICA: Centralizar todos los entregables formales de ingeniería\nde software que respaldan la calidad y completitud del sistema.",
+        fillcolor="#EEF2FF",
+        color="#4338CA"
+    ];
+
+    dir_extras -> extras_contenido;
+}
+

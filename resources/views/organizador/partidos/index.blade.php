@@ -13,11 +13,28 @@
             <p class="text-xs sm:text-sm text-gray-500 mt-0.5 sm:mt-1">Programa partidos y registra resultados de tus torneos.</p>
         </div>
         @if($torneoSeleccionado)
-            <a href="{{ route('organizador.partidos.create', ['torneo_id' => $torneoSeleccionado->id]) }}" 
-               class="w-full sm:w-auto inline-flex items-center justify-center min-h-[44px] px-4 py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-white text-xs sm:text-sm font-semibold rounded-lg shadow-sm hover:shadow-md transition-all">
-                <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                <span>Programar Partido</span>
-            </a>
+            @php
+                $paramsImpresion = array_filter([
+                    'torneo_id' => $torneoSeleccionado->id,
+                    'jornada' => $jornadaSeleccionada,
+                    'orden' => $orden,
+                ], fn ($valor) => $valor !== null && $valor !== '');
+            @endphp
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                <a href="{{ route('organizador.partidos.imprimir', $paramsImpresion) }}" 
+                   target="_blank" rel="noopener"
+                   class="w-full sm:w-auto inline-flex items-center justify-center min-h-[44px] px-4 py-2.5 bg-white border border-[#065F46] text-[#065F46] hover:bg-[#ECFDF5] text-xs sm:text-sm font-semibold rounded-lg shadow-sm hover:shadow-md transition-all">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z"></path>
+                    </svg>
+                    <span>Imprimir Partidos</span>
+                </a>
+                <a href="{{ route('organizador.partidos.create', ['torneo_id' => $torneoSeleccionado->id]) }}" 
+                   class="w-full sm:w-auto inline-flex items-center justify-center min-h-[44px] px-4 py-2.5 bg-[#F59E0B] hover:bg-[#D97706] text-white text-xs sm:text-sm font-semibold rounded-lg shadow-sm hover:shadow-md transition-all">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    <span>Programar Partido</span>
+                </a>
+            </div>
         @endif
     </div>
 
@@ -47,13 +64,13 @@
             <p class="text-xs sm:text-sm text-gray-500">Contacta al administrador para que te asigne torneos.</p>
         </div>
     @else
-        <!-- Selector de Torneo -->
+        <!-- Selector de Torneo, Orden y Jornada -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-3.5 sm:p-4 mb-4 sm:mb-6">
-            <form method="GET" action="{{ route('organizador.partidos.index') }}" class="flex flex-col sm:flex-row gap-3">
-                <div class="flex-1">
-                    <label class="block text-xs font-medium text-gray-500 mb-1">Seleccionar Torneo</label>
+            <form method="GET" action="{{ route('organizador.partidos.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-end">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Seleccionar Torneo</label>
                     <select name="torneo_id" onchange="this.form.submit()" 
-                            class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-base sm:text-sm">
+                            class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-base sm:text-sm bg-white">
                         @foreach($torneosAsignados as $torneo)
                             <option value="{{ $torneo->id }}" {{ $torneoSeleccionado && $torneoSeleccionado->id === $torneo->id ? 'selected' : '' }}>
                                 {{ $torneo->nombre }}
@@ -61,6 +78,42 @@
                         @endforeach
                     </select>
                 </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Ordenar por Fecha y Hora</label>
+                    <select name="orden" onchange="this.form.submit()" 
+                            class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-base sm:text-sm bg-white">
+                        <option value="desc" {{ ($orden ?? 'desc') === 'desc' ? 'selected' : '' }}>
+                            ⬇️ Fecha y Hora: Descendente (Más recientes primero)
+                        </option>
+                        <option value="asc" {{ ($orden ?? 'desc') === 'asc' ? 'selected' : '' }}>
+                            ⬆️ Fecha y Hora: Ascendente (Más antiguos primero)
+                        </option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Filtrar por Jornada</label>
+                    <select name="jornada" onchange="this.form.submit()" 
+                            class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-base sm:text-sm bg-white">
+                        <option value="">Todas las jornadas</option>
+                        @foreach($jornadas as $jornada)
+                            <option value="{{ $jornada }}" {{ (string) $jornadaSeleccionada === (string) $jornada ? 'selected' : '' }}>
+                                Jornada {{ $jornada }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                @if(request('orden') === 'asc' || request()->filled('jornada'))
+                    <div class="flex items-center">
+                        <a href="{{ route('organizador.partidos.index', ['torneo_id' => $torneoSeleccionado?->id]) }}" 
+                           class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-500 hover:text-[#D97706] hover:bg-[#FEF3C7] rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            Restablecer filtros
+                        </a>
+                    </div>
+                @endif
             </form>
         </div>
 
@@ -80,11 +133,11 @@
                             <span class="break-words">{{ $torneoSeleccionado->nombre }}</span>
                         </h2>
                         <p class="text-xs sm:text-sm text-white/90 mt-1">
-                            {{ $partidos->count() }} partido{{ $partidos->count() !== 1 ? 's' : '' }} programado{{ $partidos->count() !== 1 ? 's' : '' }}
+                            {{ $totalPartidos }} partido{{ $totalPartidos !== 1 ? 's' : '' }} programado{{ $totalPartidos !== 1 ? 's' : '' }}
                         </p>
                     </div>
                     <div class="sm:text-right flex items-center sm:block gap-2">
-                        <div class="text-2xl sm:text-3xl font-bold">{{ $partidos->where('estado', 'finalizado')->count() }}/{{ $partidos->count() }}</div>
+                        <div class="text-2xl sm:text-3xl font-bold">{{ $totalFinalizados }}/{{ $totalPartidos }}</div>
                         <p class="text-[11px] sm:text-xs text-white/80">Partidos finalizados</p>
                     </div>
                 </div>
@@ -114,9 +167,11 @@
                             <div class="flex items-center justify-between text-xs text-gray-500">
                                 <span class="flex items-center gap-1 font-medium text-gray-700">
                                     <svg class="w-3.5 h-3.5 text-[#F59E0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    {{ $partido->fecha_partido->format('d/m/Y') }} • {{ \Carbon\Carbon::parse($partido->hora_inicio)->format('H:i') }}
+                                    {{ $partido->fecha_partido->format('d/m/Y') }} • {{ \Carbon\Carbon::parse($partido->hora_inicio)->format('g:i A') }}
                                     @if($partido->hora_fin)
-                                        - {{ \Carbon\Carbon::parse($partido->hora_fin)->format('H:i') }}
+                                        - {{ \Carbon\Carbon::parse($partido->hora_fin)->format('g:i A') }}
+                                    @else
+                                        - {{ \Carbon\Carbon::parse($partido->hora_inicio)->addHours(2)->format('g:i A') }}
                                     @endif
                                 </span>
                                 @php
@@ -140,6 +195,18 @@
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold {{ $estadoBadge }}">
                                     {{ $estadoTexto }}
                                 </span>
+                            </div>
+
+                            <!-- No. y Jornada -->
+                            <div class="flex items-center gap-2 text-[10px] text-gray-500">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-gray-100 font-semibold text-gray-600">
+                                    No. {{ $partidos->firstItem() + $loop->index }}
+                                </span>
+                                @if($partido->numero_jornada)
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-[#FEF3C7] font-semibold text-[#92400E]">
+                                        Jornada {{ $partido->numero_jornada }}
+                                    </span>
+                                @endif
                             </div>
 
                             <!-- Marcador / Enfrentamiento -->
@@ -199,14 +266,14 @@
                                     Detalles
                                 </a>
 
-                                @if($partido->estado === 'programado' || $partido->estado === 'en_curso')
+                                @if($partido->estado !== 'finalizado')
                                     <a href="{{ route('organizador.partidos.edit', $partido) }}" 
                                        class="inline-flex items-center justify-center min-h-[36px] px-3 py-1.5 bg-amber-50 text-[#F59E0B] hover:bg-[#FEF3C7] rounded-lg text-xs font-semibold transition-colors">
                                         <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                         Editar
                                     </a>
 
-                                    @if($partido->estado === 'programado')
+                                    @if(in_array($partido->estado, ['programado', 'en_curso', 'aplazado']))
                                         <button onclick="abrirModalResultado({{ $partido->id }}, '{{ addslashes($partido->equipoLocal->nombre) }}', '{{ addslashes($partido->equipoVisitante->nombre) }}')" 
                                                 class="inline-flex items-center justify-center min-h-[36px] px-3 py-1.5 bg-emerald-50 text-[#10B981] hover:bg-[#D1FAE5] rounded-lg text-xs font-semibold transition-colors">
                                             <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -223,7 +290,7 @@
                                     </button>
                                 @endif
 
-                                @if($partido->estado !== 'finalizado')
+                                @if($partido->estado !== 'finalizado' && $partido->estado !== 'cancelado')
                                     <form action="{{ route('organizador.partidos.destroy', $partido) }}" method="POST" 
                                           class="inline" onsubmit="return confirm('¿Estás seguro de cancelar este partido? La reserva asociada también será cancelada.');">
                                         @csrf
@@ -251,34 +318,84 @@
                 </div>
 
                 <!-- Vista Desktop (Tabla) -->
+                @php
+                    $paramsOrden = array_filter([
+                        'torneo_id' => $torneoSeleccionado?->id,
+                        'jornada' => $jornadaSeleccionada,
+                    ], fn ($valor) => $valor !== null && $valor !== '');
+                    $paramsOrdenToggle = array_merge($paramsOrden, [
+                        'orden' => ($orden ?? 'desc') === 'asc' ? 'desc' : 'asc',
+                    ]);
+                @endphp
                 <div class="hidden md:block overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-[#F9FAFB] border-b-2 border-gray-200">
-                                <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Fecha/Hora</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">No.</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    <a href="{{ route('organizador.partidos.index', $paramsOrdenToggle) }}" 
+                                       class="inline-flex items-center gap-1.5 hover:text-[#F59E0B] transition-colors"
+                                       title="Ordenar por fecha y hora: {{ ($orden ?? 'desc') === 'asc' ? 'Ascendente (Clic para Descendente)' : 'Descendente (Clic para Ascendente)' }}">
+                                        <span>Fecha y Hora</span>
+                                        @if(($orden ?? 'desc') === 'desc')
+                                            <svg class="w-3.5 h-3.5 text-[#F59E0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                        @else
+                                            <svg class="w-3.5 h-3.5 text-[#F59E0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                                        @endif
+                                    </a>
+                                </th>
                                 <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Local</th>
                                 <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Visitante</th>
                                 <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">Marcador</th>
-                                <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Cancha</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">Jornada</th>
                                 <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">Estado</th>
                                 <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             @forelse($partidos as $partido)
+                                @php
+                                    $partidoEstadoBadge = match($partido->estado) {
+                                        'programado' => 'bg-[#DBEAFE] text-[#1E40AF]',
+                                        'en_curso' => 'bg-[#FEF3C7] text-[#92400E]',
+                                        'finalizado' => 'bg-[#D1FAE5] text-[#065F46]',
+                                        'aplazado' => 'bg-[#F3F4F6] text-[#374151]',
+                                        'cancelado' => 'bg-[#FEE2E2] text-[#991B1B]',
+                                        default => 'bg-gray-100 text-gray-600',
+                                    };
+                                    $partidoEstadoTexto = match($partido->estado) {
+                                        'programado' => 'Programado',
+                                        'en_curso' => 'En curso',
+                                        'finalizado' => 'Finalizado',
+                                        'aplazado' => 'Aplazado',
+                                        'cancelado' => 'Cancelado',
+                                        default => ucfirst($partido->estado),
+                                    };
+                                @endphp
                                 <tr class="hover:bg-[#FEF3C7] transition-colors duration-150 group {{ !$partido->esta_activo ? 'opacity-50' : '' }}">
-                                    <!-- Fecha/Hora -->
+                                    <!-- No. -->
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F3F4F6] text-xs font-bold text-gray-600">
+                                            {{ $partidos->firstItem() + $loop->index }}
+                                        </span>
+                                    </td>
+
+                                    <!-- Fecha y Hora (Formato 12 Horas) -->
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center gap-2">
-                                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                             </svg>
-                                            <div>
-                                                <p class="text-sm font-medium text-gray-900">{{ $partido->fecha_partido->format('d/m/Y') }}</p>
-                                                <p class="text-xs text-gray-500">
-                                                    {{ \Carbon\Carbon::parse($partido->hora_inicio)->format('H:i') }} - 
-                                                    {{ $partido->hora_fin ? \Carbon\Carbon::parse($partido->hora_fin)->format('H:i') : \Carbon\Carbon::parse($partido->hora_inicio)->addHours(2)->format('H:i') }}
-                                                </p>
+                                            <div class="flex flex-col">
+                                                <span class="text-sm font-medium text-gray-900">{{ $partido->fecha_partido->format('d/m/Y') }}</span>
+                                                <span class="text-sm font-semibold text-gray-600">
+                                                    {{ \Carbon\Carbon::parse($partido->hora_inicio)->format('g:i A') }}
+                                                    @if($partido->hora_fin)
+                                                        - {{ \Carbon\Carbon::parse($partido->hora_fin)->format('g:i A') }}
+                                                    @else
+                                                        - {{ \Carbon\Carbon::parse($partido->hora_inicio)->addHours(2)->format('g:i A') }}
+                                                    @endif
+                                                </span>
                                             </div>
                                         </div>
                                     </td>
@@ -326,15 +443,21 @@
                                         @endif
                                     </td>
 
-                                    <!-- Cancha -->
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                        {{ $partido->instalacion->nombre ?? 'N/A' }}
+                                    <!-- Jornada -->
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        @if($partido->numero_jornada)
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#FEF3C7] text-[#92400E]">
+                                                Jornada {{ $partido->numero_jornada }}
+                                            </span>
+                                        @else
+                                            <span class="text-sm text-gray-400">—</span>
+                                        @endif
                                     </td>
 
                                     <!-- Estado -->
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold {{ $estadoBadge }}">
-                                            {{ $estadoTexto }}
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold {{ $partidoEstadoBadge }}">
+                                            {{ $partidoEstadoTexto }}
                                         </span>
                                     </td>
 
@@ -347,14 +470,14 @@
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                             </a>
 
-                                            @if($partido->estado === 'programado' || $partido->estado === 'en_curso')
+                                            @if($partido->estado !== 'finalizado')
                                                 <a href="{{ route('organizador.partidos.edit', $partido) }}" 
                                                    class="p-2 text-gray-500 hover:text-[#F59E0B] hover:bg-[#FEF3C7] rounded-lg transition-colors" 
                                                    title="Editar">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                                 </a>
 
-                                                @if($partido->estado === 'programado')
+                                                @if(in_array($partido->estado, ['programado', 'en_curso', 'aplazado']))
                                                     <button onclick="abrirModalResultado({{ $partido->id }}, '{{ addslashes($partido->equipoLocal->nombre) }}', '{{ addslashes($partido->equipoVisitante->nombre) }}')" 
                                                             class="p-2 text-gray-500 hover:text-[#10B981] hover:bg-[#D1FAE5] rounded-lg transition-colors" 
                                                             title="Registrar resultado">
@@ -371,7 +494,7 @@
                                                 </button>
                                             @endif
 
-                                            @if($partido->estado !== 'finalizado')
+                                            @if($partido->estado !== 'finalizado' && $partido->estado !== 'cancelado')
                                                 <form action="{{ route('organizador.partidos.destroy', $partido) }}" method="POST" 
                                                       class="inline" onsubmit="return confirm('¿Estás seguro de cancelar este partido? La reserva asociada también será cancelada.');">
                                                     @csrf
@@ -388,7 +511,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="px-6 py-12 text-center">
+                                    <td colspan="8" class="px-6 py-12 text-center">
                                         <div class="text-gray-400 mb-3">
                                             <svg class="w-16 h-16 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -403,6 +526,12 @@
                     </table>
                 </div>
             </div>
+
+            @if($partidos->hasPages())
+                <div class="mt-4 bg-white rounded-xl shadow-sm border border-gray-100 px-4 py-3">
+                    {{ $partidos->links() }}
+                </div>
+            @endif
 
             <!-- Nota informativa -->
             <div class="mt-4 sm:mt-6 bg-[#FEF3C7] border border-[#F59E0B] rounded-xl p-3.5 sm:p-4 flex items-start gap-3">

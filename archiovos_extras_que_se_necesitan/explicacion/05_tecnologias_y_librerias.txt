@@ -1,0 +1,271 @@
+// ==============================================================================
+// STACK TECNOLÓGICO Y LIBRERÍAS UTILIZADAS EN EL PROYECTO
+// Proyecto: Sistema de Gestión de Cancha Sintética Deportiva
+// Formato: Graphviz (DOT Language)
+// Herramienta recomendada para visualizar: https://dreampuf.github.io/GraphvizOnline/
+// ==============================================================================
+
+digraph TecnologiasYLibrerias {
+    // Configuración general del gráfico
+    graph [
+        rankdir="TB",
+        splines="polyline",
+        nodesep="0.5",
+        ranksep="0.7",
+        bgcolor="#F8FAFC",
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="16",
+        label="STACK TECNOLÓGICO, VERSIONES Y LIBRERÍAS DEL PROYECTO\n(Backend, Base de Datos, Frontend, Build Tools y Runtimes)",
+        labelloc="t",
+        compound=true
+    ];
+
+    // Configuración de nodos
+    node [
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="10",
+        style="filled,rounded",
+        shape="box",
+        margin="0.22,0.16",
+        penwidth=1.4
+    ];
+
+    // Configuración de aristas
+    edge [
+        fontname="Helvetica, Arial, sans-serif",
+        fontsize="9",
+        color="#334155",
+        fontcolor="#1E293B",
+        penwidth=1.3,
+        arrowsize=0.8
+    ];
+
+    // --------------------------------------------------------------------------
+    // CLÚSTER 1: RUNTIMES, HERRAMIENTAS Y CONTROL DE VERSIONES
+    // --------------------------------------------------------------------------
+    subgraph cluster_entorno {
+        label="1. ENTORNO DE EJECUCIÓN, RUNTIMES Y CONTROL DE VERSIONES";
+        style="filled,rounded";
+        fillcolor="#F1F5F9";
+        color="#94A3B8";
+        fontsize="11";
+
+        env_php [
+            label="PHP (CLI / Web Runtime)\n=====================================\nPHP 8.2.12 (cli) (built: Oct 24 2023 21:15:15)\n(ZTS Visual C++ 2019 x64)\n- Tipado estricto, Enums, Readonly properties",
+            fillcolor="#EDE9FE",
+            color="#6D28D9",
+            fontcolor="#4C1D95"
+        ];
+
+        env_composer [
+            label="Composer (Gestor de Paquetes PHP)\n=====================================\nComposer version 2.10.3 2026-08-27 13:34:23\n- Autoloading PSR-4, gestión de dependencias",
+            fillcolor="#EDE9FE",
+            color="#6D28D9",
+            fontcolor="#4C1D95"
+        ];
+
+        env_node [
+            label="Node.js (Runtime de JavaScript)\n=====================================\nVersión: v24.21.0\n- Motor V8 para ejecución de scripts de compilación",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        env_npm [
+            label="npm (Node Package Manager)\n=====================================\nVersión: 11.19.0\n- Instalación y gestión de paquetes frontend",
+            fillcolor="#DCFCE7",
+            color="#16A34A",
+            fontcolor="#14532D"
+        ];
+
+        env_git [
+            label="Git (Control de Versiones)\n=====================================\n- Control de ramas, historial de commits\n- Trazabilidad y versionado del código fuente",
+            fillcolor="#FEE2E2",
+            color="#DC2626",
+            fontcolor="#991B1B"
+        ];
+    }
+
+    // --------------------------------------------------------------------------
+    // CLÚSTER 2: BACKEND & FRAMEWORK
+    // --------------------------------------------------------------------------
+    subgraph cluster_backend {
+        label="2. CAPA BACKEND (LENGUAJE Y FRAMEWORK)";
+        style="filled,rounded";
+        fillcolor="#EFF6FF";
+        color="#60A5FA";
+        fontsize="11";
+
+        back_laravel [
+            label="Laravel Framework (v10 / v11)\n=====================================\n- Patrón Arquitectónico Modelo-Vista-Controlador (MVC)\n- Eloquent ORM (Mapeo Objeto-Relacional activo)\n- Motor de Rutas y Middleware de Seguridad\n- Artisan CLI (Comandos, migraciones, seeders)\n- Carbon (Manipulación precisa de fechas y horas)",
+            fillcolor="#DBEAFE",
+            color="#1D4ED8",
+            fontcolor="#1E3A8A"
+        ];
+    }
+
+    // --------------------------------------------------------------------------
+    // CLÚSTER 3: BASE DE DATOS RELACIONAL
+    // --------------------------------------------------------------------------
+    subgraph cluster_database {
+        label="3. CAPA DE PERSISTENCIA (BASE DE DATOS RELACIONAL)";
+        style="filled,rounded";
+        fillcolor="#EEF2F6";
+        color="#64748B";
+        fontsize="11";
+
+        db_sql [
+            label="SQL / MySQL / MariaDB (canchasintetica_db)\n=====================================\n- Motor relacional compatible con InnoDB\n- Claves foráneas (FK) con integridad referencial\n- Transacciones ACID para reservas y partidos\n- Consultas preparadas mediante PDO Driver",
+            shape="cylinder",
+            fillcolor="#E2E8F0",
+            color="#334155",
+            fontcolor="#0F172A"
+        ];
+    }
+
+    // --------------------------------------------------------------------------
+    // CLÚSTER 4: ENTORNO DE COMPILACIÓN Y ASSETS (BUILD TOOLS)
+    // --------------------------------------------------------------------------
+    subgraph cluster_build {
+        label="4. ENTORNO DE BUILD Y EMPAQUETADO";
+        style="filled,rounded";
+        fillcolor="#FAF5FF";
+        color="#A855F7";
+        fontsize="11";
+
+        tool_vite [
+            label="Vite (Compilador por defecto de Laravel)\n=====================================\n- Vite v5.0 + laravel-vite-plugin v1.0\n- PostCSS v8.5 + Autoprefixer v10.6\n- HMR (Hot Module Replacement)\n- Genera bundles optimizados en public/build/",
+            fillcolor="#F3E8FF",
+            color="#7E22CE",
+            fontcolor="#581C87"
+        ];
+    }
+
+    // --------------------------------------------------------------------------
+    // CLÚSTER 5: FRONTEND - ESTRUCTURA, ESTILOS E ICONOS
+    // --------------------------------------------------------------------------
+    subgraph cluster_front_design {
+        label="5. FRONTEND: ESTRUCTURA, ESTILOS E ICONOGRAFÍA";
+        style="filled,rounded";
+        fillcolor="#FEF2F2";
+        color="#F87171";
+        fontsize="11";
+
+        front_blade [
+            label="Estructura: HTML5 + Blade\n=====================================\n- Motor de plantillas nativo de Laravel\n- Layouts maestros, directivas @if, @foreach\n- Renderizado ágil del lado del servidor (SSR)",
+            fillcolor="#FEE2E2",
+            color="#DC2626",
+            fontcolor="#991B1B"
+        ];
+
+        front_tailwind [
+            label="Estilos: CSS3 + Tailwind CSS v3.4\n=====================================\n- Framework CSS Utilitario (Utility-First)\n- Diseño totalmente responsivo (Mobile-First)\n- Paleta personalizada deportiva (Esmeralda / Blanco)",
+            fillcolor="#F0FDFA",
+            color="#0D9488",
+            fontcolor="#115E59"
+        ];
+
+        front_heroicons [
+            label="Iconografía: SVG + Heroicons\n=====================================\n- Iconos vectoriales limpios y escalables\n- Integración directa en componentes Blade",
+            fillcolor="#FDF2F8",
+            color="#DB2777",
+            fontcolor="#831843"
+        ];
+    }
+
+    // --------------------------------------------------------------------------
+    // CLÚSTER 6: FRONTEND - INTERACTIVIDAD Y LIBRERÍAS JAVASCRIPT
+    // --------------------------------------------------------------------------
+    subgraph cluster_front_js {
+        label="6. FRONTEND: INTERACTIVIDAD Y LIBRERÍAS JAVASCRIPT";
+        style="filled,rounded";
+        fillcolor="#FEFCE8";
+        color="#FACC15";
+        fontsize="11";
+
+        js_alpine [
+            label="Alpine.js v3.17\n=====================================\n- Reactividad declarativa ligera en el DOM\n- Manejo de modales, dropdowns y filtros dinámicos\n- Cálculo en tiempo real de costos y horas",
+            fillcolor="#FEF9C3",
+            color="#CA8A04",
+            fontcolor="#713F12"
+        ];
+
+        js_fullcalendar [
+            label="FullCalendar\n=====================================\n- Visualización interactiva de agenda semanal\n- Eventos de reservas, torneos y bloqueos",
+            fillcolor="#FEF9C3",
+            color="#CA8A04",
+            fontcolor="#713F12"
+        ];
+
+        js_chart [
+            label="Chart.js\n=====================================\n- Gráficas de barras, líneas y donas\n- Estadísticas de ingresos monetarios en Q.",
+            fillcolor="#FEF9C3",
+            color="#CA8A04",
+            fontcolor="#713F12"
+        ];
+
+        js_datatables [
+            label="DataTables\n=====================================\n- Tablas dinámicas interactivas\n- Paginación, ordenamiento por columnas y buscador",
+            fillcolor="#FEF9C3",
+            color="#CA8A04",
+            fontcolor="#713F12"
+        ];
+
+        js_toastify [
+            label="Toastify.js\n=====================================\n- Alertas emergentes y notificaciones toast\n- Confirmación instantánea de operaciones exitosas",
+            fillcolor="#FEF9C3",
+            color="#CA8A04",
+            fontcolor="#713F12"
+        ];
+
+        js_filepond [
+            label="FilePond\n=====================================\n- Carga de imágenes moderna mediante Drag & Drop\n- Validación y previsualización de fotografías",
+            fillcolor="#FEF9C3",
+            color="#CA8A04",
+            fontcolor="#713F12"
+        ];
+
+        js_choices [
+            label="Choices.js\n=====================================\n- Selects avanzados con buscador integrado\n- Selección rápida de equipos, árbitros y clientes",
+            fillcolor="#FEF9C3",
+            color="#CA8A04",
+            fontcolor="#713F12"
+        ];
+    }
+
+    // --------------------------------------------------------------------------
+    // RELACIONES E INTEGRACIÓN DEL ECOSISTEMA
+    // --------------------------------------------------------------------------
+
+    // Gestión del entorno hacia las herramientas
+    env_php -> back_laravel [label="Ejecuta backend"];
+    env_composer -> back_laravel [label="Instala paquetes PHP"];
+    env_node -> tool_vite [label="Ejecuta proceso de build"];
+    env_npm -> tool_vite [label="Instala paquetes npm"];
+    env_git -> back_laravel [label="Versiona código", style="dotted"];
+
+    // Backend con Base de Datos
+    back_laravel -> db_sql [label="Consultas SQL vía Eloquent / PDO", color="#1D4ED8", penwidth=1.6];
+
+    // Backend y Vistas Blade
+    back_laravel -> front_blade [label="Procesa y renderiza plantillas", color="#1D4ED8"];
+
+    // Compilación con Vite
+    tool_vite -> front_tailwind [label="Procesa utilidades Tailwind"];
+    tool_vite -> js_alpine [label="Empaqueta dependencias JS"];
+    tool_vite -> front_blade [label="Inyecta assets compilados (@vite)", style="dashed"];
+
+    // Integración de diseño en Blade
+    front_blade -> front_tailwind [label="Aplica clases CSS", style="dotted"];
+    front_blade -> front_heroicons [label="Inserta iconos SVG", style="dotted"];
+
+    // Librerías JS operando sobre Blade
+    front_blade -> js_alpine [label="Inicializa reactividad en vistas"];
+    front_blade -> js_fullcalendar [label="Renderiza agenda"];
+    front_blade -> js_chart [label="Renderiza métricas"];
+    front_blade -> js_datatables [label="Monta tablas interactivas"];
+    front_blade -> js_toastify [label="Despliega notificaciones"];
+    front_blade -> js_filepond [label="Controla subida de archivos"];
+    front_blade -> js_choices [label="Controla dropdowns de selección"];
+}
+
