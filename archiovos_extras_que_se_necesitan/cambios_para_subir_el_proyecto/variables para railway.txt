@@ -27,7 +27,7 @@ DB_PASSWORD=MYvPyKJOAIVQUdeQyKGUMQXYUkstJjJS
 # Se utiliza 'file' porque tu base de datos no tiene creadas las tablas 'sessions' ni 'cache'.
 # Esto evita errores 500 al navegar o iniciar sesión.
 SESSION_DRIVER=file
-SESSION_LIFETIME=120
+SESSION_LIFETIME=43200
 CACHE_STORE=file
 QUEUE_CONNECTION=sync
 FILESYSTEM_DISK=public

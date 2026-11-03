@@ -215,6 +215,16 @@
                     </div>
                 </div>
 
+                <label class="flex items-center gap-2.5 cursor-pointer select-none">
+                    <input type="hidden" name="remember" value="0">
+                    <input type="checkbox"
+                           name="remember"
+                           value="1"
+                           @checked(old('remember', '1') === '1')
+                           class="h-4 w-4 rounded border-gray-300 text-[#10B981] focus:ring-[#10B981]">
+                    <span class="text-sm text-gray-600">Mantener sesión iniciada</span>
+                </label>
+
                 <button type="submit" class="w-full bg-[#10B981] hover:bg-[#059669] text-white font-semibold py-3 rounded-lg shadow-md transition-all transform hover:-translate-y-0.5">
                     Entrar al Sistema
                 </button>

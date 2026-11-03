@@ -32,5 +32,7 @@
             </div>
         </main>
     </div>
+
+    @include('layouts.partials.sesion-activa')
 </body>
 </html>

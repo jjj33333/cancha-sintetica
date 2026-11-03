@@ -25,8 +25,17 @@ Route::get('/contacto', [ContactoController::class, 'index'])->name('contacto');
 // ==========================================
 // AUTENTICACIÓN
 // ==========================================
+// Página de login. Es el destino al que Laravel redirige cuando una sesión
+// caduca (middleware "auth"); sin esta ruta el panel devolvía un error 500
+// con "Route [login] not defined".
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// Latido de sesión para los paneles. No lleva el middleware "auth" a
+// propósito: así responde 401 en JSON en lugar de redirigir y contaminar
+// la URL "intended" del usuario.
+Route::get('/sesion/activa', [LoginController::class, 'sesionActiva'])->name('sesion.activa');
 
 // ==========================================
 // RUTAS PROTEGIDAS (Requieren Auth)
