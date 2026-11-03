@@ -19,6 +19,13 @@ class StoreEquipoOrganizadorRequest extends FormRequest
                 'torneo_id' => $this->route('equipo')->torneo_id,
             ]);
         }
+
+        // Al crear un equipo, el estado confirmado es el valor por defecto.
+        if (!$this->route('equipo') && !$this->filled('estado')) {
+            $this->merge([
+                'estado' => 'confirmado',
+            ]);
+        }
     }
 
     public function rules(): array
@@ -34,8 +41,8 @@ class StoreEquipoOrganizadorRequest extends FormRequest
                 Rule::unique('equipos', 'nombre')->where('torneo_id', $torneoId)->ignore($this->route('equipo')?->id)
             ],
             'nombre_corto' => ['nullable', 'string', 'max:50'],
-            'nombre_capitan' => ['required', 'string', 'max:255'],
-            'telefono_capitan' => ['required', 'string', 'max:20'],
+            'nombre_capitan' => ['nullable', 'string', 'max:255'],
+            'telefono_capitan' => ['nullable', 'string', 'max:20'],
             'email_capitan' => ['nullable', 'email', 'max:255'],
             'color_uniforme' => ['nullable', 'string', 'max:100'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
@@ -50,8 +57,6 @@ class StoreEquipoOrganizadorRequest extends FormRequest
             'torneo_id.exists' => 'El torneo seleccionado no existe.',
             'nombre.required' => 'El nombre del equipo es obligatorio.',
             'nombre.unique' => 'Ya existe un equipo con este nombre en el torneo.',
-            'nombre_capitan.required' => 'El nombre del capitán es obligatorio.',
-            'telefono_capitan.required' => 'El teléfono del capitán es obligatorio.',
             'email_capitan.email' => 'El email del capitán no es válido.',
             'logo.image' => 'El logo debe ser una imagen.',
             'logo.max' => 'El logo no debe superar los 2MB.',

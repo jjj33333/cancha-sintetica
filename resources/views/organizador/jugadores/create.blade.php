@@ -29,7 +29,7 @@
                 </h2>
                 @php
                     $equipoSeleccionado = old('equipo_id') ? $equipos->firstWhere('id', old('equipo_id')) : null;
-                    $torneoSeleccionadoId = old('torneo_id', request('torneo_id', $equipoSeleccionado?->torneo_id));
+                    $torneoSeleccionadoId = old('torneo_id', $equipoSeleccionado?->torneo_id ?? $torneos->firstWhere('id', request('torneo_id'))?->id ?? $torneos->first()?->id);
                 @endphp
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
                     <div>

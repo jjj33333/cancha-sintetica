@@ -17,15 +17,12 @@ class TorneosController extends Controller
         // Torneos públicos (en curso o con inscripciones abiertas)
         $torneos = Torneo::activos()
             ->publicos()
-            ->withCount('equipos')
-            ->with('organizador')
             ->orderByDesc('estado')
             ->get();
 
         // También incluir borradores como "Próximamente"
         $torneosProximos = Torneo::activos()
             ->where('estado', 'borrador')
-            ->withCount('equipos')
             ->get();
 
         $torneos = $torneos->merge($torneosProximos);
@@ -76,7 +73,7 @@ class TorneosController extends Controller
         // Pestaña activa al ingresar (permite abrir el calendario desde otro apartado)
         $tabInicial = in_array($request->input('tab'), ['activos', 'calendario', 'posiciones'], true)
             ? $request->input('tab')
-            : 'activos';
+            : 'posiciones';
 
         return view('publico.torneos', compact(
             'contacto',

@@ -95,6 +95,12 @@ class EquiposController extends Controller
     {
         $datos = $request->validated();
 
+        // Los datos del capitán son opcionales. La tabla mantiene las columnas
+        // como NOT NULL, así que se guarda una cadena vacía cuando no se envían.
+        $datos['nombre_capitan'] = $datos['nombre_capitan'] ?? '';
+        $datos['telefono_capitan'] = $datos['telefono_capitan'] ?? '';
+        $datos['estado'] = $datos['estado'] ?? 'confirmado';
+
         // Verificar que el torneo esté asignado al organizador
         $torneo = Torneo::where('id', $datos['torneo_id'])
             ->where('organizador_asignado_id', auth()->id())
@@ -158,6 +164,10 @@ class EquiposController extends Controller
         }
 
         $datos = $request->validated();
+
+        // Mantener compatibilidad con las columnas NOT NULL de la tabla.
+        $datos['nombre_capitan'] = $datos['nombre_capitan'] ?? '';
+        $datos['telefono_capitan'] = $datos['telefono_capitan'] ?? '';
 
         // Manejar subida de nuevo logo
         if ($request->hasFile('logo')) {

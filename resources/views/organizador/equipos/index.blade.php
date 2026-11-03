@@ -190,7 +190,7 @@
                             <div class="bg-gray-50 rounded-lg p-2.5 text-xs text-gray-600 space-y-1">
                                 <div class="flex justify-between items-center">
                                     <span class="text-gray-400">Capitán:</span>
-                                    <span class="font-medium text-gray-800">{{ $equipo->nombre_capitan }}</span>
+                                    <span class="font-medium text-gray-800">{{ $equipo->nombre_capitan ?: '—' }}</span>
                                 </div>
                                 @if($equipo->telefono_capitan)
                                     <div class="flex justify-between items-center">
@@ -279,7 +279,7 @@
 
                                     <!-- Capitán -->
                                     <td class="px-6 py-4">
-                                        <div class="text-sm font-medium text-gray-900">{{ $equipo->nombre_capitan }}</div>
+                                        <div class="text-sm font-medium text-gray-900">{{ $equipo->nombre_capitan ?: '—' }}</div>
                                         @if($equipo->email_capitan)
                                             <div class="text-xs text-gray-500">{{ $equipo->email_capitan }}</div>
                                         @endif
@@ -287,7 +287,7 @@
 
                                     <!-- Teléfono -->
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        {{ $equipo->telefono_capitan }}
+                                        {{ $equipo->telefono_capitan ?: '—' }}
                                     </td>
 
                                     <!-- Jugadores -->

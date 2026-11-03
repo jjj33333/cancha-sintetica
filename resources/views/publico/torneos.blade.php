@@ -17,48 +17,40 @@
             <!-- Tabs de navegación -->
             <div class="flex flex-wrap gap-2 mb-10 border-b-2 border-gray-100 pb-4" x-data="{ tab: @js($tabInicial) }">
 
-                <button @click="tab = 'activos'"
-                    :class="tab === 'activos' ? 'bg-[#10B981] text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+                <button @click="tab = 'posiciones'"
+                    :class="tab === 'posiciones' ? 'bg-[#10B981] text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
                     class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all">
-                    Torneos Activos
+                    Tabla de Posiciones
                 </button>
                 <button @click="tab = 'calendario'"
                     :class="tab === 'calendario' ? 'bg-[#10B981] text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
                     class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all">
                     Calendario de Partidos
                 </button>
-                <button @click="tab = 'posiciones'"
-                    :class="tab === 'posiciones' ? 'bg-[#10B981] text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+                <!-- <button @click="tab = 'activos'"
+                    :class="tab === 'activos' ? 'bg-[#10B981] text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
                     class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all">
-                    Tabla de Posiciones
-                </button>
+                    Torneos Activos
+                </button> -->
 
                 <!-- TAB 1: Torneos Activos -->
-                <div x-show="tab === 'activos'" x-transition class="w-full mt-6">
+                <!-- <div x-show="tab === 'activos'" x-transition class="w-full mt-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @forelse($torneos as $torneo)
                             <div class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 overflow-hidden">
-                                <div class="h-2 {{ $torneo->estado === 'en_curso' ? 'bg-[#10B981]' : ($torneo->estado === 'inscripciones_abiertas' ? 'bg-[#F59E0B]' : 'bg-gray-300') }}"></div>
                                 <div class="p-6">
-                                    <div class="flex items-start justify-between mb-3">
-                                        <h3 class="text-lg font-bold text-gray-800">
+                                    <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-start gap-2">
+                                        <span>
                                             @if($torneo->categoria === 'libre') 🏆
                                             @elseif($torneo->categoria === 'sub20') 🥇
                                             @elseif($torneo->categoria === 'femenino') ⭐
                                             @endif
-                                            {{ $torneo->nombre }}
-                                        </h3>
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold {{ $torneo->estado_badge }}">
-                                            {{ $torneo->estado_texto }}
                                         </span>
-                                    </div>
-                                    <div class="space-y-2 text-sm text-gray-600">
-                                        <p><span class="font-medium text-gray-700">Categoría:</span> {{ ucfirst(str_replace('_', ' ', $torneo->categoria)) }}</p>
-                                        <p><span class="font-medium text-gray-700">Inicio:</span> {{ $torneo->fecha_inicio->format('d/m/Y') }}</p>
-                                        <p><span class="font-medium text-gray-700">Fin:</span> {{ $torneo->fecha_fin->format('d/m/Y') }}</p>
-                                        <p><span class="font-medium text-gray-700">Equipos:</span> {{ $torneo->equipos_count }}/{{ $torneo->max_equipos }}</p>
-                                        <p><span class="font-medium text-gray-700">Organizador:</span> {{ $torneo->organizador->nombre ?? 'Por asignar' }}</p>
-                                    </div>
+                                        <span>{{ $torneo->nombre }}</span>
+                                    </h3>
+                                    <p class="text-sm text-gray-600">
+                                        <span class="font-medium text-gray-700">Categoría:</span> {{ ucfirst(str_replace('_', ' ', $torneo->categoria)) }}
+                                    </p>
                                     <a href="{{ route('torneos', ['tab' => 'calendario', 'torneo_id' => $torneo->id]) }}"
                                        class="mt-4 block w-full text-center bg-[#ECFDF5] hover:bg-[#D1FAE5] text-[#065F46] font-semibold py-2 rounded-lg transition-colors text-sm">
                                         Ver partidos
@@ -72,7 +64,7 @@
                             </div>
                         @endforelse
                     </div>
-                </div>
+                </div> -->
 
                 <!-- TAB 2: Calendario de Partidos -->
                 <div x-show="tab === 'calendario'" x-transition class="w-full mt-6">

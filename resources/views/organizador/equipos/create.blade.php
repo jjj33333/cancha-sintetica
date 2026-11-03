@@ -85,8 +85,8 @@
                         </label>
                         <select name="estado" id="estado" required
                                 class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-base sm:text-sm @error('estado') border-red-500 @enderror">
-                            <option value="registrado" {{ old('estado') === 'registrado' ? 'selected' : '' }}>Registrado</option>
-                            <option value="confirmado" {{ old('estado') === 'confirmado' ? 'selected' : '' }}>Confirmado</option>
+                            <option value="registrado" {{ old('estado', 'confirmado') === 'registrado' ? 'selected' : '' }}>Registrado</option>
+                            <option value="confirmado" {{ old('estado', 'confirmado') === 'confirmado' ? 'selected' : '' }}>Confirmado</option>
                         </select>
                         @error('estado') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
@@ -112,18 +112,18 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
                     <div>
                         <label for="nombre_capitan" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                            Nombre Completo <span class="text-red-500">*</span>
+                            Nombre Completo (Opcional)
                         </label>
-                        <input type="text" name="nombre_capitan" id="nombre_capitan" value="{{ old('nombre_capitan') }}" required
+                        <input type="text" name="nombre_capitan" id="nombre_capitan" value="{{ old('nombre_capitan') }}"
                                class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-base sm:text-sm @error('nombre_capitan') border-red-500 @enderror">
                         @error('nombre_capitan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
                         <label for="telefono_capitan" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                            Teléfono <span class="text-red-500">*</span>
+                            Teléfono (Opcional)
                         </label>
-                        <input type="text" name="telefono_capitan" id="telefono_capitan" value="{{ old('telefono_capitan') }}" required
+                        <input type="text" name="telefono_capitan" id="telefono_capitan" value="{{ old('telefono_capitan') }}"
                                placeholder="999-999-999"
                                class="w-full px-3.5 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-transparent outline-none text-base sm:text-sm @error('telefono_capitan') border-red-500 @enderror">
                         @error('telefono_capitan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
